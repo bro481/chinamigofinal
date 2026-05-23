@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A private ChinaMigo concierge experience proposal for modern China travel and lifestyle support."
+    />
+    <title>ChinaMigo Trip</title>
+    <link rel="stylesheet" href="/styles.css?v=trip-itinerary-booklet-20260517" />
+    <script src="/site.js?v=i18n-auth-20260523d" defer></script>
+  </head>
+  <body class="trip-page-body">
+    <header class="site-header guides-header is-compact" aria-label="Primary navigation">
+      <a class="brand" href="/" aria-label="ChinaMigo home">
+        <span>China</span><strong>Migo</strong>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="/guides">China Guides</a>
+        <a href="/trips" aria-current="page">Trips & Services</a>
+        <a href="/about">About</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <a
+        class="pill-button dark header-cta"
+        href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20my%20China%20visit."
+        aria-label="Chat with ChinaMigo on WhatsApp"
+      >
+        <span>WhatsApp</span>
+      </a>
+    </header>
+
+    <main class="trip-page trip-booklet" data-trip-page>
+      <section class="trip-booklet-intro">
+        <div class="trip-booklet-copy">
+          <a class="article-back" href="/trips">← Trips & Services</a>
+          <p class="article-meta" data-trip-label>SHANGHAI EXPERIENCE</p>
+          <h1 data-trip-title>Shanghai Lifestyle Trip</h1>
+          <div class="trip-booklet-meta" data-trip-meta>3 Days · Shanghai · Lifestyle</div>
+          <p data-trip-subtitle>Quiet cafés, skyline mornings and flexible local support designed around your pace.</p>
+          <a class="pill-button dark" data-plan-link href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20to%20plan%20a%20Shanghai%20Lifestyle%20Trip.">Plan This Journey</a>
+        </div>
+        <figure class="trip-booklet-image">
+          <img data-trip-image src="/assets/experience-shanghai-lifestyle.png" alt="Rooftop breakfast and coffee in modern Shanghai morning light" />
+        </figure>
+      </section>
+
+      <section class="trip-itinerary trip-booklet-section" aria-labelledby="itinerary-title">
+        <div class="trip-booklet-heading">
+          <h2 id="itinerary-title">Itinerary</h2>
+        </div>
+        <div class="trip-day-list" data-trip-itinerary></div>
+      </section>
+
+      <section class="trip-included-support trip-booklet-section">
+        <div class="trip-booklet-heading">
+          <p class="eyebrow">Included support</p>
+          <h2>Quiet support throughout the journey</h2>
+        </div>
+        <ul data-trip-support></ul>
+      </section>
+
+      <section class="trip-booklet-final" id="contact">
+        <h2>Planning your China journey?</h2>
+        <p>Quiet concierge planning for international visitors.</p>
+        <a class="pill-button dark" data-final-link href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20private%20local%20support%20for%20my%20China%20journey.">Chat on WhatsApp</a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>ChinaMigo</span>
+      <span>Private China concierge for global visitors.</span>
+    </footer>
+
+    <script>
+      const tripData = {
+        "shanghai-lifestyle-trip": {
+          label: "Shanghai Experience",
+          title: "Shanghai Lifestyle Trip",
+          duration: "3 Days",
+          city: "Shanghai",
+          category: "Lifestyle",
+          description: "Luxury stays, slower mornings and calm local experiences arranged around your pace.",
+          image: "/assets/experience-shanghai-lifestyle.png",
+          alt: "Rooftop breakfast and coffee in modern Shanghai morning light",
+          days: [
+            {
+              title: "Day 1 — Arrival & Slow Evening",
+              morning: "Airport arrival and private hotel coordination are arranged before you land.",
+              afternoon: "Check in slowly, rest at the hotel and adjust the evening timing around your energy.",
+              evening: "Private riverside dinner with an easy skyline walk if you feel like going out.",
+              notes: "Bund skyline hotel or similar.",
+              image: "/assets/experience-shanghai-lifestyle.png",
+              alt: "Shanghai skyline and calm hotel lifestyle moment"
+            },
+            {
+              title: "Day 2 — Local Rhythm",
+              morning: "A slower breakfast followed by French Concession cafés and quiet neighborhood streets.",
+              afternoon: "Boutique shopping, local design stops and private transport between areas.",
+              evening: "Rooftop cocktails or a low-key dinner reservation with timing handled for you.",
+              notes: "Flexible route depending on weather and your pace.",
+              image: "/assets/guide-shanghai-cafes.png",
+              alt: "Modern Shanghai cafe lifestyle"
+            },
+            {
+              title: "Day 3 — Flexible Departure",
+              morning: "Wellness breakfast, final café time or a short local errand before checkout.",
+              afternoon: "Chauffeur transfer to the airport or station with luggage coordination.",
+              evening: "Optional extension support if your flight departs late.",
+              notes: "Airport or station support included.",
+              image: "/assets/hero-china-concierge.png",
+              alt: "Modern China local concierge support"
+            }
+          ],
+          includedSupport: ["Airport pickup", "Hotel coordination", "Restaurant reservations", "Private transport", "Translation help", "Flexible itinerary adjustments", "WhatsApp support"]
+        },
+        "china-beauty-trip": {
+          label: "Beauty & Wellness",
+          title: "China Beauty Trip",
+          duration: "3 Days",
+          city: "Shanghai / Shenzhen",
+          category: "Wellness",
+          description: "Skincare, wellness recovery and clinic coordination with calm local support.",
+          image: "/assets/experience-china-beauty-trip.png",
+          alt: "Quiet luxury skincare and wellness recovery moment",
+          days: [
+            {
+              title: "Day 1 — Soft Arrival",
+              morning: "Airport pickup and hotel check-in with recovery-friendly timing.",
+              afternoon: "Clinic appointment confirmation, payment setup and translation preparation.",
+              evening: "Light dinner and a quiet hotel evening before treatment or consultation.",
+              notes: "Recovery-friendly hotel location recommended.",
+              image: "/assets/experience-china-beauty-trip.png",
+              alt: "Quiet skincare and wellness arrival moment"
+            },
+            {
+              title: "Day 2 — Clinic & Wellness",
+              morning: "Private transfer to consultation with translation and local coordination.",
+              afternoon: "Treatment, skincare shopping or hotel rest depending on your plan.",
+              evening: "Wellness dinner, room setup and follow-up details reviewed calmly.",
+              notes: "Timing adjusts to clinic guidance.",
+              image: "/assets/guide-beauty-clinic.png",
+              alt: "Modern beauty clinic support in China"
+            },
+            {
+              title: "Day 3 — Recovery & Departure",
+              morning: "Slow breakfast, optional spa time or skincare errands.",
+              afternoon: "Private transfer, checkout and airport or station support.",
+              evening: "Follow-up message support for practical local questions.",
+              notes: "Designed for comfort and privacy.",
+              image: "/assets/experience-wellness-stays.png",
+              alt: "Calm wellness stay in China"
+            }
+          ],
+          includedSupport: ["Clinic coordination", "Translation help", "Private transport", "Hotel coordination", "Payment setup help", "Recovery-friendly planning", "WhatsApp support"]
+        },
+        "shenzhen-tech-journey": {
+          label: "Shenzhen Experience",
+          title: "Shenzhen Tech Journey",
+          duration: "3 Days",
+          city: "Shenzhen",
+          category: "Business",
+          description: "Innovation, sourcing and founder-focused support through modern Shenzhen.",
+          image: "/assets/experience-shenzhen-tech-journey.png",
+          alt: "Modern founder worklife in Shenzhen at night",
+          days: [
+            {
+              title: "Day 1 — Arrival & Founder Briefing",
+              morning: "Airport or station pickup with hotel coordination.",
+              afternoon: "Coffee briefing to shape the route around your product or business interests.",
+              evening: "Founder dinner or quiet work session with local recommendations nearby.",
+              notes: "Workspace or hotel meeting area can be arranged.",
+              image: "/assets/experience-shenzhen-tech-journey.png",
+              alt: "Founder worklife in Shenzhen"
+            },
+            {
+              title: "Day 2 — Markets & Meetings",
+              morning: "Private transfer to key market or showroom areas with local orientation.",
+              afternoon: "Supplier conversations, sample review and translation support.",
+              evening: "Notes review, dinner reservation and next-step planning.",
+              notes: "Route adapts to sourcing goals.",
+              image: "/assets/service-shopping-sourcing.png",
+              alt: "Product sourcing support in China"
+            },
+            {
+              title: "Day 3 — Follow-Up & Departure",
+              morning: "Focused follow-up visits, sample pickup or second meeting.",
+              afternoon: "Private transfer and airport or station coordination.",
+              evening: "Remote notes and contact organization after the day ends.",
+              notes: "Useful for founders and small product teams.",
+              image: "/assets/experience-shenzhen-tech-journey.png",
+              alt: "Shenzhen city route support"
+            }
+          ],
+          includedSupport: ["Airport pickup", "Market orientation", "Supplier coordination", "Translation help", "Private transport", "Sample notes support", "WhatsApp support"]
+        },
+        "visa-local-support": {
+          label: "Local Support",
+          title: "Visa & Local Support",
+          duration: "Flexible",
+          city: "China Cities",
+          category: "Essentials",
+          description: "Translation, payments and arrival support for an easier first few days in China.",
+          image: "/assets/service-visa-local-support.png",
+          alt: "International traveler receiving local concierge support in modern China",
+          days: [
+            {
+              title: "Day 1 — Arrival Setup",
+              morning: "Airport pickup, hotel address confirmation and arrival coordination.",
+              afternoon: "Alipay, WeChat and local app setup with practical walkthroughs.",
+              evening: "Restaurant help, taxi guidance and next-day planning.",
+              notes: "Available as a first-day support service.",
+              image: "/assets/service-visa-local-support.png",
+              alt: "Arrival support for international visitors in China"
+            },
+            {
+              title: "Day 2 — Local Essentials",
+              morning: "Translation help for appointments, hotels or service providers.",
+              afternoon: "Local navigation, SIM/payment checks and practical errands.",
+              evening: "Simple restaurant booking or address support for the evening.",
+              notes: "Can be adapted to your city and schedule.",
+              image: "/assets/guide-alipay-tourists.png",
+              alt: "Payment app setup support for tourists in China"
+            },
+            {
+              title: "Day 3 — Flexible Assistance",
+              morning: "Document, station or local service coordination if needed.",
+              afternoon: "Private transfer, route planning or final setup checks.",
+              evening: "WhatsApp support for small questions as you continue traveling.",
+              notes: "Best for first-time visitors who want a calm start.",
+              image: "/assets/guide-first-time-china.png",
+              alt: "First time China visitor support"
+            }
+          ],
+          includedSupport: ["Airport pickup", "Payment setup help", "Translation help", "Local navigation", "Document coordination", "Restaurant assistance", "WhatsApp support"]
+        },
+        "shopping-sourcing": {
+          label: "Shopping & Sourcing",
+          title: "Shopping & Sourcing",
+          duration: "1–4 Days",
+          city: "Shenzhen / Guangzhou / Shanghai",
+          category: "Sourcing",
+          description: "Markets, factories and private support for focused China buying trips.",
+          image: "/assets/service-shopping-sourcing.png",
+          alt: "Premium sourcing meeting with product samples and private support",
+          days: [
+            {
+              title: "Day 1 — Market Orientation",
+              morning: "Briefing, product priorities and private transfer to the relevant district.",
+              afternoon: "Market visits with translation and purchase support.",
+              evening: "Sample notes, supplier contact organization and hotel return.",
+              notes: "Can run as a one-day intensive route.",
+              image: "/assets/service-shopping-sourcing.png",
+              alt: "Sourcing meeting with product samples"
+            },
+            {
+              title: "Day 2 — Supplier Conversations",
+              morning: "Showroom or factory visit with timing and transport arranged.",
+              afternoon: "Sample review, pricing questions and practical interpretation.",
+              evening: "Quiet dinner and follow-up planning.",
+              notes: "Best when meetings are confirmed ahead of arrival.",
+              image: "/assets/experience-shenzhen-tech-journey.png",
+              alt: "Modern Shenzhen business route"
+            },
+            {
+              title: "Day 3 — Final Checks",
+              morning: "Second visits, sample pickup or additional shopping support.",
+              afternoon: "Shipping questions, contact review and private transfer.",
+              evening: "Summary notes shared for next steps.",
+              notes: "Route expands or contracts based on sourcing scope.",
+              image: "/assets/service-shopping-sourcing.png",
+              alt: "Product sourcing support and local coordination"
+            }
+          ],
+          includedSupport: ["Market visits", "Supplier coordination", "Translation help", "Private transport", "Sample notes support", "Shopping assistance", "WhatsApp support"]
+        },
+        "vip-custom-trip": {
+          label: "Custom China",
+          title: "VIP Custom Trip",
+          duration: "Flexible",
+          city: "Multi-City",
+          category: "Concierge",
+          description: "Private driver, hotel coordination and a flexible route shaped around your stay.",
+          image: "/assets/service-vip-custom-trip.png",
+          alt: "Luxury concierge assistance with private car and luggage",
+          days: [
+            {
+              title: "Day 1 — Private Arrival",
+              morning: "Airport pickup, hotel coordination and a calm first-day setup.",
+              afternoon: "Flexible city entry shaped around rest, family needs or meetings.",
+              evening: "Dinner reservation and next-day route review.",
+              notes: "Hotel and driver logic arranged before arrival.",
+              image: "/assets/service-vip-custom-trip.png",
+              alt: "Private car and luggage concierge support"
+            },
+            {
+              title: "Day 2 — Personal Route",
+              morning: "Slow start with a private driver and route timing adjusted to your pace.",
+              afternoon: "Dining, shopping, wellness, business or cultural stops based on your interests.",
+              evening: "Hotel return, dinner or evening view arranged with local support.",
+              notes: "Designed personally after your inquiry.",
+              image: "/assets/experience-local-discoveries.png",
+              alt: "Local discovery moment in China"
+            },
+            {
+              title: "Day 3 — Flexible Continuation",
+              morning: "Optional city transfer, local errands or a lighter neighborhood route.",
+              afternoon: "Driver support, station transfer or next-city coordination.",
+              evening: "Ongoing WhatsApp support for changes during the journey.",
+              notes: "Can extend across multiple cities.",
+              image: "/assets/hero-china-concierge.png",
+              alt: "Modern China concierge journey support"
+            }
+          ],
+          includedSupport: ["Private itinerary design", "Airport pickup", "Hotel coordination", "Private driver", "Restaurant reservations", "Flexible adjustments", "WhatsApp support"]
+        }
+      };
+
+      function escapeHtml(value) {
+        return String(value || "").replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+        })[char]);
+      }
+
+      const slug = location.pathname.split("/").filter(Boolean).at(-1);
+      const trip = tripData[slug] || tripData["shanghai-lifestyle-trip"];
+      const message = encodeURIComponent(`Hi ChinaMigo, I'd like to plan the ${trip.title}.`);
+      const whatsappUrl = `https://wa.me/8613800000000?text=${message}`;
+
+      document.title = `${trip.title} | ChinaMigo`;
+      document.querySelector("[data-trip-label]").textContent = trip.label;
+      document.querySelector("[data-trip-title]").textContent = trip.title;
+      document.querySelector("[data-trip-subtitle]").textContent = trip.description;
+      document.querySelector("[data-trip-meta]").textContent = `${trip.duration} · ${trip.city} · ${trip.category}`;
+
+      const heroImage = document.querySelector("[data-trip-image]");
+      heroImage.src = trip.image;
+      heroImage.alt = trip.alt;
+      document.querySelectorAll("[data-plan-link], [data-final-link]").forEach((link) => {
+        link.href = whatsappUrl;
+      });
+
+      document.querySelector("[data-trip-itinerary]").innerHTML = trip.days.map((day) => `
+        <article class="trip-day">
+          <div class="trip-day-copy">
+            <h3>${escapeHtml(day.title)}</h3>
+            <dl class="trip-day-schedule">
+              <div>
+                <dt>Morning</dt>
+                <dd>${escapeHtml(day.morning)}</dd>
+              </div>
+              <div>
+                <dt>Afternoon</dt>
+                <dd>${escapeHtml(day.afternoon)}</dd>
+              </div>
+              <div>
+                <dt>Evening</dt>
+                <dd>${escapeHtml(day.evening)}</dd>
+              </div>
+              ${day.notes ? `
+                <div>
+                  <dt>Stay / Notes</dt>
+                  <dd>${escapeHtml(day.notes)}</dd>
+                </div>
+              ` : ""}
+            </dl>
+          </div>
+          <figure>
+            <img src="${escapeHtml(day.image)}" alt="${escapeHtml(day.alt)}" />
+          </figure>
+        </article>
+      `).join("");
+
+      document.querySelector("[data-trip-support]").innerHTML = trip.includedSupport.map((item) => `
+        <li>${escapeHtml(item)}</li>
+      `).join("");
+    </script>
+  </body>
+</html>

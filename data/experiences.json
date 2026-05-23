@@ -1,0 +1,87 @@
+[
+  {
+    "id": "experience-shanghai-lifestyle-trip",
+    "title": "Shanghai Lifestyle Trip",
+    "slug": "shanghai-lifestyle-trip",
+    "city": "shanghai",
+    "type": "recommended_journey",
+    "duration": "3-5 Days",
+    "excerpt": "Luxury stays, skyline mornings and modern local experiences.",
+    "coverImage": "assets/experience-shanghai-lifestyle.png",
+    "galleryImages": [
+      "assets/experience-shanghai-lifestyle.png",
+      "assets/guide-shanghai-cafes.png"
+    ],
+    "tags": [
+      "Shanghai",
+      "Lifestyle",
+      "Private"
+    ],
+    "contentBlocks": [],
+    "sortOrder": 1,
+    "published": true,
+    "createdAt": "2026-05-16T00:00:00.000Z",
+    "updatedAt": "2026-05-16T00:00:00.000Z"
+  },
+  {
+    "id": "experience-modern-shanghai-starter",
+    "title": "Modern Shanghai Starter",
+    "slug": "modern-shanghai-starter",
+    "city": "shanghai",
+    "type": "recommended_journey",
+    "duration": "3 Days",
+    "excerpt": "A soft first-time route through stays, cafes, neighborhoods and essentials.",
+    "coverImage": "assets/guide-first-time-china.png",
+    "galleryImages": [],
+    "tags": [
+      "First-time visitors",
+      "Concierge support"
+    ],
+    "contentBlocks": [],
+    "sortOrder": 2,
+    "published": true,
+    "createdAt": "2026-05-16T00:00:00.000Z",
+    "updatedAt": "2026-05-16T00:00:00.000Z"
+  },
+  {
+    "id": "experience-french-concession-cafe-walk",
+    "title": "French Concession Cafe Walk",
+    "slug": "french-concession-cafe-walk",
+    "city": "shanghai",
+    "type": "short_experience",
+    "duration": "4 Hours",
+    "excerpt": "Coffee, quiet streets and slower local neighborhoods.",
+    "coverImage": "assets/guide-shanghai-cafes.png",
+    "galleryImages": [],
+    "tags": [
+      "Cafes",
+      "Neighborhoods"
+    ],
+    "contentBlocks": [],
+    "sortOrder": 10,
+    "published": true,
+    "createdAt": "2026-05-16T00:00:00.000Z",
+    "updatedAt": "2026-05-16T00:00:00.000Z"
+  },
+  {
+    "id": "experience-shenzhen-tech-journey",
+    "title": "Shenzhen Tech Journey",
+    "slug": "shenzhen-tech-journey",
+    "city": "shenzhen",
+    "type": "recommended_journey",
+    "duration": "2-4 Days",
+    "excerpt": "Innovation, sourcing and founder lifestyle support.",
+    "coverImage": "assets/experience-shenzhen-tech-journey.png",
+    "galleryImages": [],
+    "tags": [
+      "Shenzhen",
+      "Innovation",
+      "Private"
+    ],
+    "contentBlocks": [],
+    "sortOrder": 1,
+    "published": true,
+    "createdAt": "2026-05-16T00:00:00.000Z",
+    "updatedAt": "2026-05-16T00:00:00.000Z"
+  }
+]

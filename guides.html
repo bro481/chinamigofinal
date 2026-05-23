@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="ChinaMigo China Guides is a premium editorial hub for practical China tips, local insights and modern lifestyle ideas for international visitors."
+    />
+    <title>China Guides | ChinaMigo</title>
+    <link rel="stylesheet" href="styles.css?v=guide-detail-20260516" />
+    <script src="/site.js?v=i18n-auth-20260523d" defer></script>
+  </head>
+  <body class="guides-page-body">
+    <header class="site-header guides-header is-compact" aria-label="Primary navigation">
+      <a class="brand" href="/" aria-label="ChinaMigo home">
+        <span>China</span><strong>Migo</strong>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="/guides" aria-current="page">China Guides</a>
+        <a href="/trips">Trips & Services</a>
+        <a href="/about">About</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <a
+        class="pill-button dark header-cta"
+        href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20my%20China%20visit."
+        aria-label="Chat with ChinaMigo on WhatsApp"
+      >
+        <span>WhatsApp</span>
+      </a>
+    </header>
+
+    <main class="guides-page">
+      <section class="guides-hero" aria-label="China Guides hub">
+        <p class="eyebrow">China Guides</p>
+        <h1>China Guides</h1>
+        <p>
+          Practical guides, local insights and modern China lifestyle ideas for international visitors.
+        </p>
+        <label class="guide-search">
+          <span>Search</span>
+          <input type="search" placeholder="Search China guides..." data-guide-search />
+        </label>
+      </section>
+
+      <section class="guide-collections" aria-label="Featured guide collections">
+        <div class="guides-section-heading">
+          <div>
+            <p class="eyebrow">Curated starting points</p>
+            <h2>Featured Collections</h2>
+          </div>
+        </div>
+        <div class="collection-track">
+          <article class="collection-card">
+            <img src="assets/guide-first-time-china.png" alt="Visitor arriving in modern China by high-speed rail" />
+            <div>
+              <span>Starter Collection</span>
+              <h3>First Time in China</h3>
+              <p>A starter pack for new visitors: payments, rail, apps, internet, arrival and local tips.</p>
+            </div>
+          </article>
+          <article class="collection-card">
+            <img src="assets/guide-alipay-tourists.png" alt="Traveler using mobile payment in a Chinese cafe" />
+            <div>
+              <span>Visitor Essentials</span>
+              <h3>Digital China Essentials</h3>
+              <p>Apps, payments, maps, mobile data and the everyday digital layer of modern China.</p>
+            </div>
+          </article>
+          <article class="collection-card">
+            <img src="assets/guide-shanghai-cafes.png" alt="Warm modern Shanghai cafe lifestyle" />
+            <div>
+              <span>Curated Series</span>
+              <h3>Modern Shanghai</h3>
+              <p>Cafes, neighborhoods, stays, lifestyle scenes and city experiences worth saving.</p>
+            </div>
+          </article>
+          <article class="collection-card">
+            <img src="assets/guide-beauty-clinic.png" alt="Quiet luxury wellness and skincare consultation in China" />
+            <div>
+              <span>Editor's Collection</span>
+              <h3>China Wellness Guide</h3>
+              <p>Beauty clinics, spa culture, recovery stays and calm wellness moments in China.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="guides-directory" aria-label="All China guide articles">
+        <div class="guides-section-heading">
+          <div>
+            <p class="eyebrow">Explore by category</p>
+            <h2>All Guides</h2>
+            <p class="guides-section-intro">Explore guides by category and discover modern China at your own pace.</p>
+          </div>
+        </div>
+        <div class="guide-tabs" role="tablist" aria-label="Guide categories">
+          <button class="is-active" type="button" data-category="All">All</button>
+          <button type="button" data-category="Payments">Payments</button>
+          <button type="button" data-category="Transportation">Transportation</button>
+          <button type="button" data-category="Apps & Digital Life">Apps & Digital Life</button>
+          <button type="button" data-category="Food & Cafes">Food & Cafes</button>
+          <button type="button" data-category="Lifestyle">Lifestyle</button>
+          <button type="button" data-category="Beauty & Wellness">Beauty & Wellness</button>
+          <button type="button" data-category="Shopping & Sourcing">Shopping & Sourcing</button>
+        </div>
+        <div class="article-grid" data-article-grid></div>
+        <p class="guide-empty" data-guide-empty hidden>No guides found. Try another search or category.</p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>ChinaMigo</span>
+      <span>Private China concierge for global visitors.</span>
+    </footer>
+
+    <script>
+      const articles = [
+        {
+          category: "Payments",
+          slug: "can-tourists-use-alipay",
+          meta: "PAYMENTS · 5 MIN READ",
+          title: "Can Tourists Use Alipay?",
+          description: "Mobile payments in China explained.",
+          image: "assets/guide-alipay-tourists.png",
+          alt: "Traveler paying with a phone in a modern Chinese cafe"
+        },
+        {
+          category: "Transportation",
+          slug: "china-high-speed-rail-guide",
+          meta: "TRANSPORTATION · 6 MIN READ",
+          title: "China High-Speed Rail Guide",
+          description: "Tickets, stations and travel tips.",
+          image: "assets/guide-high-speed-rail.png",
+          alt: "International visitor at a modern high-speed rail station in China"
+        },
+        {
+          category: "Apps & Digital Life",
+          slug: "essential-apps-for-china",
+          meta: "APPS & DIGITAL LIFE · 5 MIN READ",
+          title: "Essential Apps for China",
+          description: "The apps foreign visitors actually need.",
+          image: "assets/guide-first-time-china.png",
+          alt: "Visitor using a smartphone while navigating modern China"
+        },
+        {
+          category: "Food & Cafes",
+          slug: "best-cafes-in-shanghai",
+          meta: "FOOD & CAFES · 4 MIN READ",
+          title: "Best Cafes in Shanghai",
+          description: "Modern local lifestyle and coffee culture.",
+          image: "assets/guide-shanghai-cafes.png",
+          alt: "Modern Shanghai cafe with warm morning light"
+        },
+        {
+          category: "Beauty & Wellness",
+          slug: "china-beauty-clinic-guide",
+          meta: "BEAUTY & WELLNESS · 7 MIN READ",
+          title: "China Beauty Clinic Guide",
+          description: "Prices, recovery and translation support.",
+          image: "assets/guide-beauty-clinic.png",
+          alt: "Quiet luxury beauty clinic consultation in China"
+        },
+        {
+          category: "Shopping & Sourcing",
+          slug: "shenzhen-electronics-market-guide",
+          meta: "SHOPPING & SOURCING · 6 MIN READ",
+          title: "Shenzhen Electronics Market Guide",
+          description: "What to know before sourcing in Shenzhen.",
+          image: "assets/experience-shenzhen-tech-journey.png",
+          alt: "Modern Shenzhen founder lifestyle and technology atmosphere"
+        },
+        {
+          category: "Apps & Digital Life",
+          slug: "internet-setup-in-china",
+          meta: "APPS & DIGITAL LIFE · 4 MIN READ",
+          title: "Internet Setup in China",
+          description: "SIM cards, eSIM options, Wi-Fi and everyday connection tips.",
+          image: "assets/experience-china-cafes.png",
+          alt: "Traveler working from a modern Chinese cafe"
+        },
+        {
+          category: "Lifestyle",
+          slug: "modern-local-discoveries",
+          meta: "LIFESTYLE · 5 MIN READ",
+          title: "Modern Local Discoveries",
+          description: "Neighborhoods, markets and hidden places beyond the usual route.",
+          image: "assets/experience-local-discoveries.png",
+          alt: "Modern local neighborhood discovery in China"
+        }
+      ];
+
+      const grid = document.querySelector("[data-article-grid]");
+      const empty = document.querySelector("[data-guide-empty]");
+      const search = document.querySelector("[data-guide-search]");
+      const tabs = [...document.querySelectorAll("[data-category]")];
+      let activeCategory = "All";
+
+      function articleMarkup(article) {
+        return `
+          <a class="guide-article-card" href="/guides/${article.slug}" aria-label="Read ${article.title}">
+            <img src="${article.image}" alt="${article.alt}" />
+            <div>
+              <span>${article.meta}</span>
+              <h3>${article.title}</h3>
+              <p>${article.description}</p>
+            </div>
+          </a>
+        `;
+      }
+
+      function renderArticles() {
+        const term = search.value.trim().toLowerCase();
+        const visibleArticles = articles.filter((article) => {
+          const categoryMatch = activeCategory === "All" || article.category === activeCategory;
+          const searchMatch = !term || [article.category, article.title, article.description].join(" ").toLowerCase().includes(term);
+          return categoryMatch && searchMatch;
+        });
+
+        grid.innerHTML = visibleArticles.map(articleMarkup).join("");
+        empty.hidden = visibleArticles.length > 0;
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          activeCategory = tab.dataset.category;
+          tabs.forEach((item) => item.classList.toggle("is-active", item === tab));
+          renderArticles();
+        });
+      });
+
+      search.addEventListener("input", renderArticles);
+      renderArticles();
+    </script>
+  </body>
+</html>

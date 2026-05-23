@@ -1,0 +1,15 @@
+{
+  "name": "chinamigo-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ChinaMigo native HTML, CSS, JavaScript and Node website.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "HOST=127.0.0.1 PORT=4174 node server.js",
+    "check": "node --check server.js && node --check site.js && node --check admin.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

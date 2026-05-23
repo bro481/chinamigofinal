@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore ChinaMigo private China experiences by city, from short lifestyle moments to multi-day concierge journeys."
+    />
+    <title>Trips & Services | ChinaMigo</title>
+    <link rel="stylesheet" href="/styles.css?v=trips-concierge-balance-20260517" />
+    <script src="/site.js?v=i18n-auth-20260523d" defer></script>
+  </head>
+  <body class="trips-platform-body">
+    <header class="site-header guides-header is-compact" aria-label="Primary navigation">
+      <a class="brand" href="/" aria-label="ChinaMigo home">
+        <span>China</span><strong>Migo</strong>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="/guides">China Guides</a>
+        <a href="/trips" aria-current="page">Trips & Services</a>
+        <a href="/about">About</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <a
+        class="pill-button dark header-cta"
+        href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20my%20China%20visit."
+      >
+        <span>WhatsApp</span>
+      </a>
+    </header>
+
+    <main class="trips-platform">
+      <section class="city-directory" aria-label="ChinaMigo city experiences">
+        <div class="platform-section-heading trips-directory-heading">
+          <div>
+            <p class="eyebrow">Trips & Services</p>
+            <h2>Choose where your China journey begins.</h2>
+          </div>
+        </div>
+        <nav class="city-selector" aria-label="Choose city" data-city-selector></nav>
+        <div class="city-dynamic-content" data-city-content></div>
+      </section>
+
+      <section class="platform-note inquiry-section" aria-labelledby="custom-route-title">
+        <div class="inquiry-copy">
+          <p class="eyebrow">Private concierge</p>
+          <h2 id="custom-route-title">Need a custom route?</h2>
+          <p>Tell us your travel rhythm, pace and preferred cities. We’ll shape a quieter China journey around you.</p>
+          <div class="concierge-points" aria-label="Concierge planning details">
+            <article>
+              <span>✓</span>
+              <div>
+                <h3>Slow travel focused</h3>
+                <p>Quiet, flexible journeys shaped around your pace.</p>
+              </div>
+            </article>
+            <article>
+              <span>✓</span>
+              <div>
+                <h3>Local coordination</h3>
+                <p>Restaurants, transport and local assistance.</p>
+              </div>
+            </article>
+            <article>
+              <span>✓</span>
+              <div>
+                <h3>Designed personally</h3>
+                <p>Routes adjusted to your stay level and interests.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <form class="inquiry-form" method="post" action="/api/inquiries" target="inquiry-frame" data-inquiry-form>
+          <div class="inquiry-success" aria-live="polite">
+            <h3>Inquiry received.</h3>
+            <p>We’ll reach out shortly.</p>
+            <a class="inquiry-whatsapp" href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27ve%20submitted%20a%20travel%20inquiry%20and%20would%20like%20to%20continue%20on%20WhatsApp.">Continue on WhatsApp →</a>
+          </div>
+          <div class="inquiry-fields">
+            <div class="inquiry-form-grid">
+              <label>
+                <span>Name</span>
+                <input name="name" autocomplete="name" required />
+              </label>
+              <label>
+                <span>Email</span>
+                <input name="email" autocomplete="email" type="email" required />
+              </label>
+              <label>
+                <span>WhatsApp / Phone</span>
+                <input name="phone" autocomplete="tel" required />
+              </label>
+              <label>
+                <span>Travel Dates</span>
+                <input name="travelDates" placeholder="May 12–18" />
+              </label>
+              <label>
+                <span>Travelers</span>
+                <input name="travelers" placeholder="2 adults" />
+              </label>
+              <label>
+                <span>Cities Interested In</span>
+                <input name="citiesInterestedIn" placeholder="Shanghai, Hangzhou" />
+              </label>
+              <label class="inquiry-wide">
+                <span>Preferred Stay Level</span>
+              <select name="preferredStayLevel">
+                  <option value="">Select preference</option>
+                  <option>Luxury hotel</option>
+                  <option>Boutique hotel</option>
+                  <option>Serviced apartment</option>
+                  <option>Not sure yet</option>
+                </select>
+              </label>
+            </div>
+            <fieldset class="trip-style-selector" data-trip-style-selector>
+              <legend>Trip Style</legend>
+              <button class="trip-style-toggle" type="button" aria-expanded="false" data-trip-style-toggle>
+                <span data-trip-style-summary>Select travel moods</span>
+                <strong>Choose</strong>
+              </button>
+              <div class="trip-style-chips" data-trip-style-chips>
+                <label><input type="checkbox" name="tripStyle" value="Slow Travel" /><span>Slow Travel</span></label>
+                <label><input type="checkbox" name="tripStyle" value="Food & Café" /><span>Food & Café</span></label>
+                <label><input type="checkbox" name="tripStyle" value="Wellness" /><span>Wellness</span></label>
+                <label><input type="checkbox" name="tripStyle" value="Shopping" /><span>Shopping</span></label>
+                <label><input type="checkbox" name="tripStyle" value="Local Culture" /><span>Local Culture</span></label>
+                <label><input type="checkbox" name="tripStyle" value="Nightlife" /><span>Nightlife</span></label>
+                <label><input type="checkbox" name="tripStyle" value="Nature" /><span>Nature</span></label>
+                <label><input type="checkbox" name="tripStyle" value="Design Hotels" /><span>Design Hotels</span></label>
+              </div>
+            </fieldset>
+            <label class="inquiry-notes">
+              <span>Notes <em>(optional)</em></span>
+              <textarea name="notes" rows="3" placeholder="Tell us what would make the trip feel easy, beautiful or useful."></textarea>
+            </label>
+            <div class="inquiry-actions">
+              <input name="sourcePage" type="hidden" value="/trips" />
+              <input class="honeypot-field" name="website" tabindex="-1" autocomplete="off" />
+              <button class="inquiry-submit" type="submit">Send Inquiry</button>
+            </div>
+            <p class="inquiry-status" data-inquiry-status aria-live="polite"></p>
+          </div>
+        </form>
+        <iframe class="inquiry-frame" name="inquiry-frame" title="Inquiry submission"></iframe>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>ChinaMigo</span>
+      <span>Private China concierge for global visitors.</span>
+    </footer>
+    <script>
+      const cityDirectoryData = {
+        shanghai: {
+          name: "Shanghai",
+          note: "Modern lifestyle, skyline mornings and local experiences.",
+          image: "/assets/experience-shanghai-lifestyle.png",
+          journeys: [
+            ["Shanghai Lifestyle Trip", "3–5 Days", "Luxury stays, skyline mornings and modern local experiences.", "/trips/shanghai-lifestyle-trip", "/assets/experience-shanghai-lifestyle.png", "Luxury Stay · Slow Travel · Private"],
+            ["Modern Shanghai Starter", "3 Days", "A soft first-time route through stays, cafés, neighborhoods and essentials.", "/trips/shanghai-lifestyle-trip", "/assets/guide-first-time-china.png", "First Visit · Slow Travel · Concierge"],
+            ["Shanghai Slow Week", "7 Days", "Wellness, dining, shopping and slower city rhythm with local support.", "/trips/shanghai-lifestyle-trip", "/assets/experience-wellness-stays.png", "Wellness · Private · Slow Week"]
+          ],
+          shortExperiences: [
+            ["French Concession Café Walk", "Slow Walk", "Coffee, quiet streets and slower local neighborhoods.", "/trips/shanghai-lifestyle-trip", "/assets/guide-shanghai-cafes.png", "Cafés · Neighborhoods"],
+            ["Skyline Breakfast Route", "Morning Rhythm", "A soft city start with views, coffee and private transfer timing.", "/trips/shanghai-lifestyle-trip", "/assets/hero-china-concierge.png", "Morning · Skyline"],
+            ["Rooftop Cocktail Night", "Night Moment", "Skyline drinks or a quieter lounge route shaped around your energy.", "/trips/shanghai-lifestyle-trip", "/assets/experience-shanghai-lifestyle.png", "Evening · Social"],
+            ["Quiet Spa Afternoon", "Slow Afternoon", "Wellness, hotel recovery and soft local coordination.", "/trips/china-beauty-trip", "/assets/guide-beauty-clinic.png", "Wellness · Recovery"],
+            ["Riverside Dinner", "Evening Route", "A calm dinner plan with views, timing and transfer support.", "/trips/shanghai-lifestyle-trip", "/assets/experience-local-discoveries.png", "Dining · Views"],
+            ["Local Market Walk", "Local Rhythm", "Modern local shopping, neighborhoods and private support.", "/trips/shopping-sourcing", "/assets/service-shopping-sourcing.png", "Markets · Local support"]
+          ],
+          support: ["Airport pickup", "Alipay setup", "Translation support", "Reservation assistance", "Driver service", "Local WhatsApp support"]
+        },
+        beijing: {
+          name: "Beijing",
+          note: "Culture, private city rhythm and essential first-time support.",
+          image: "/assets/guide-first-time-china.png",
+          journeys: [],
+          shortExperiences: [],
+          support: ["Airport pickup", "Translation support", "Reservation assistance", "Driver service"]
+        },
+        shenzhen: {
+          name: "Shenzhen",
+          note: "Innovation, sourcing, founder worklife and modern city support.",
+          image: "/assets/experience-shenzhen-tech-journey.png",
+          journeys: [
+            ["Shenzhen Tech Journey", "2–4 Days", "Innovation, sourcing and founder lifestyle support.", "/trips/shenzhen-tech-journey", "/assets/experience-shenzhen-tech-journey.png", "Founder Route · Private · Local Access"],
+            ["Sourcing Starter", "1–2 Days", "Market orientation, supplier context and private local support.", "/trips/shopping-sourcing", "/assets/service-shopping-sourcing.png", "Sourcing · Translation · Private"]
+          ],
+          shortExperiences: [
+            ["Founder Workday", "Founder Day", "Cafés, meetings, transport and a practical city rhythm.", "/trips/shenzhen-tech-journey", "/assets/experience-shenzhen-tech-journey.png", "Worklife · Meetings"],
+            ["Factory Visit Support", "Private Support", "Private transport, translation and supplier meeting coordination.", "/trips/shopping-sourcing", "/assets/service-shopping-sourcing.png", "Supplier visits · Support"]
+          ],
+          support: ["Factory visit coordination", "Translation support", "Private transport", "Supplier communication", "Sample assistance"]
+        },
+        chengdu: { name: "Chengdu", note: "Slow neighborhoods, food culture and soft local discovery.", image: "/assets/experience-local-discoveries.png", journeys: [], shortExperiences: [], support: ["Local recommendations", "Restaurant booking", "Driver service"] },
+        hangzhou: { name: "Hangzhou", note: "Wellness, lakeside calm and refined city escapes.", image: "/assets/experience-wellness-stays.png", journeys: [], shortExperiences: [], support: ["Hotel coordination", "Wellness booking", "Driver service"] },
+        guangzhou: { name: "Guangzhou", note: "Trade, sourcing, dining and southern China business support.", image: "/assets/service-shopping-sourcing.png", journeys: [], shortExperiences: [], support: ["Sourcing support", "Translation support", "Private transport"] }
+      };
+
+      const cityOrder = ["shanghai", "beijing", "shenzhen", "chengdu", "hangzhou", "guangzhou"];
+      const selector = document.querySelector("[data-city-selector]");
+      const content = document.querySelector("[data-city-content]");
+      let activeCity = "shanghai";
+
+      function escapeHtml(value) {
+        return String(value || "").replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+        })[char]);
+      }
+
+      function renderSelector() {
+        selector.innerHTML = cityOrder.map((cityKey) => `
+          <button type="button" class="${cityKey === activeCity ? "is-active" : ""}" data-city="${cityKey}">
+            ${escapeHtml(cityDirectoryData[cityKey].name)}
+          </button>
+        `).join("");
+      }
+
+      function routeCard([title, duration, description, href, image, tags], cta = "View Journey →") {
+        const tagMarkup = String(tags || "")
+          .split("·")
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+          .map((tag) => `<span>${escapeHtml(tag)}</span>`)
+          .join("");
+        return `
+          <a class="route-card compact" href="${escapeHtml(href)}">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" />
+            <div>
+              <span>${escapeHtml(duration)}</span>
+              <h3>${escapeHtml(title)}</h3>
+              <p>${escapeHtml(description)}</p>
+              ${tagMarkup ? `<small class="route-tags">${tagMarkup}</small>` : ""}
+              <strong>${escapeHtml(cta)}</strong>
+            </div>
+          </a>
+        `;
+      }
+
+      function renderCity() {
+        const city = cityDirectoryData[activeCity];
+        content.classList.remove("is-visible");
+        window.setTimeout(() => {
+          const hasRoutes = city.journeys.length || city.shortExperiences.length;
+          content.innerHTML = hasRoutes ? `
+            <section class="experience-category compact is-featured">
+              <div class="category-heading">
+                <div>
+                  <h2>Recommended Journeys</h2>
+                  <p>Multi-day routes with private planning and concierge support.</p>
+                </div>
+              </div>
+              <div class="route-card-grid compact featured">
+                ${city.journeys.map((route) => routeCard(route, "View Journey →")).join("")}
+              </div>
+            </section>
+            <section class="experience-category compact">
+              <div class="category-heading">
+                <div>
+                  <h2>Short Experiences</h2>
+                  <p>Half-day and one-day moments for a lighter way into the city.</p>
+                </div>
+              </div>
+              <div class="route-card-grid compact small">
+                ${city.shortExperiences.map((route) => routeCard(route, "View Experience →")).join("")}
+              </div>
+            </section>
+          ` : `
+            <section class="experience-category compact">
+              <div class="empty-city-note">
+                <p class="eyebrow">${escapeHtml(city.name)}</p>
+                <h2>Curated routes are coming soon.</h2>
+                <p>Tell us your dates and priorities. ChinaMigo can still arrange private local support in this city.</p>
+                <a class="pill-button dark" href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20${encodeURIComponent(city.name)}.">Chat on WhatsApp</a>
+              </div>
+            </section>
+          `;
+          content.classList.add("is-visible");
+        }, 120);
+        renderSelector();
+      }
+
+      selector.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-city]");
+        if (!button) return;
+        activeCity = button.dataset.city;
+        renderCity();
+      });
+
+      renderSelector();
+      renderCity();
+
+      const inquiryForm = document.querySelector("[data-inquiry-form]");
+      const inquiryStatus = document.querySelector("[data-inquiry-status]");
+      const inquirySubmit = inquiryForm?.querySelector(".inquiry-submit");
+      const tripStyleSelector = document.querySelector("[data-trip-style-selector]");
+      const tripStyleToggle = document.querySelector("[data-trip-style-toggle]");
+      const tripStyleSummary = document.querySelector("[data-trip-style-summary]");
+      const tripStyleInputs = Array.from(document.querySelectorAll("[data-trip-style-chips] input"));
+      let inquirySubmitted = false;
+
+      function updateTripStyleSummary() {
+        if (!tripStyleSummary) return;
+        const selected = tripStyleInputs.filter((input) => input.checked).map((input) => input.value);
+        tripStyleSummary.textContent = selected.length ? selected.slice(0, 2).join(", ") + (selected.length > 2 ? ` +${selected.length - 2}` : "") : "Select travel moods";
+      }
+
+      tripStyleToggle?.addEventListener("click", () => {
+        const isOpen = tripStyleSelector?.classList.toggle("is-open");
+        tripStyleToggle.setAttribute("aria-expanded", String(Boolean(isOpen)));
+      });
+
+      tripStyleInputs.forEach((input) => input.addEventListener("change", updateTripStyleSummary));
+      updateTripStyleSummary();
+
+      inquiryForm?.addEventListener("submit", () => {
+        inquirySubmitted = true;
+        inquiryForm.classList.add("is-sending");
+        inquiryStatus.textContent = "Sending your inquiry...";
+        if (inquirySubmit) inquirySubmit.textContent = "Sending...";
+      });
+
+      document.querySelector(".inquiry-frame")?.addEventListener("load", () => {
+        if (!inquirySubmitted) return;
+        inquiryForm.reset();
+        inquiryStatus.textContent = "";
+        inquiryForm.classList.remove("is-sending");
+        inquiryForm.classList.add("is-sent");
+        if (inquirySubmit) inquirySubmit.textContent = "Inquiry received";
+        inquiryForm.querySelectorAll("input, select, textarea, button").forEach((control) => {
+          control.disabled = true;
+        });
+        inquirySubmitted = false;
+      });
+    </script>
+  </body>
+</html>

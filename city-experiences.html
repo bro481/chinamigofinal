@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Browse ChinaMigo city experiences by category, from recommended journeys to short local moments and concierge support."
+    />
+    <title>City Experiences | ChinaMigo</title>
+    <link rel="stylesheet" href="/styles.css?v=trips-platform-20260516" />
+    <script src="/site.js?v=i18n-auth-20260523d" defer></script>
+  </head>
+  <body class="trips-platform-body">
+    <header class="site-header guides-header is-compact" aria-label="Primary navigation">
+      <a class="brand" href="/" aria-label="ChinaMigo home">
+        <span>China</span><strong>Migo</strong>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="/guides">China Guides</a>
+        <a href="/trips" aria-current="page">Trips & Services</a>
+        <a href="/about">About</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <a class="pill-button dark header-cta" href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20my%20China%20visit.">
+        <span>WhatsApp</span>
+      </a>
+    </header>
+
+    <main class="city-experience-page">
+      <section class="city-hero">
+        <div>
+          <a class="article-back" href="/trips">← All Cities</a>
+          <p class="eyebrow" data-city-label>Shanghai</p>
+          <h1 data-city-title>Shanghai Experiences</h1>
+          <p data-city-description>Modern China at a slower pace. Skyline mornings, quiet neighborhoods, local cafés and private concierge support.</p>
+        </div>
+        <img data-city-image src="/assets/experience-shanghai-lifestyle.png" alt="Shanghai lifestyle experience" />
+      </section>
+
+      <section class="experience-browser" data-experience-browser></section>
+    </main>
+
+    <footer class="footer">
+      <span>ChinaMigo</span>
+      <span>Private China concierge for global visitors.</span>
+    </footer>
+
+    <script>
+      const cityData = {
+        shanghai: {
+          label: "Shanghai",
+          title: "Shanghai Experiences",
+          description: "Modern China at a slower pace. Skyline mornings, quiet neighborhoods, local cafés and private concierge support.",
+          image: "/assets/experience-shanghai-lifestyle.png",
+          categories: [
+            {
+              title: "Recommended Journeys",
+              description: "Multi-day routes with private planning and concierge support.",
+              routes: [
+                ["Shanghai Lifestyle Trip", "3–5 Days", "Luxury stays, skyline mornings and modern local experiences.", "/trips/shanghai-lifestyle-trip", "/assets/experience-shanghai-lifestyle.png"],
+                ["Modern Shanghai Starter", "3 Days", "A soft first-time route through stays, cafés, neighborhoods and essentials.", "/trips/shanghai-lifestyle-trip", "/assets/guide-first-time-china.png"],
+                ["Shanghai Slow Week", "7 Days", "A calmer city rhythm with wellness, dining, shopping and local support.", "/trips/shanghai-lifestyle-trip", "/assets/experience-wellness-stays.png"]
+              ]
+            },
+            {
+              title: "Short Experiences",
+              description: "Lightweight half-day and daytime moments.",
+              routes: [
+                ["French Concession Morning", "4 Hours", "Coffee, quiet streets and local neighborhoods away from tour-bus routes.", "/trips/shanghai-lifestyle-trip", "/assets/guide-shanghai-cafes.png"],
+                ["Skyline Breakfast Route", "Morning", "A soft city start with views, coffee and private transfer timing.", "/trips/shanghai-lifestyle-trip", "/assets/hero-china-concierge.png"],
+                ["Local Café Culture", "Half Day", "Modern Shanghai coffee, brunch and city-life moments selected around your taste.", "/trips/shanghai-lifestyle-trip", "/assets/experience-china-cafes.png"]
+              ]
+            },
+            {
+              title: "Night & Social",
+              description: "Evenings arranged with private reservations and local confidence.",
+              routes: [
+                ["Riverside Dinner", "Evening", "A calm dinner plan with views, timing and transfer support.", "/trips/shanghai-lifestyle-trip", "/assets/experience-local-discoveries.png"],
+                ["Rooftop Evening", "Evening", "Skyline drinks or a quieter lounge route shaped around your energy.", "/trips/shanghai-lifestyle-trip", "/assets/experience-shanghai-lifestyle.png"]
+              ]
+            },
+            {
+              title: "Wellness & Beauty",
+              description: "Beauty, skincare and recovery support with translation and transport.",
+              routes: [
+                ["China Beauty Trip", "2–5 Days", "Skincare, wellness recovery and clinic concierge support.", "/trips/china-beauty-trip", "/assets/experience-china-beauty-trip.png"],
+                ["Quiet Spa Afternoon", "Half Day", "Wellness, hotel recovery and soft local coordination.", "/trips/china-beauty-trip", "/assets/guide-beauty-clinic.png"]
+              ]
+            },
+            {
+              title: "Local Support",
+              description: "Practical comfort before and during your stay.",
+              routes: [
+                ["Airport Soft Landing", "Arrival", "Pickup, hotel coordination, payments and first-day local support.", "/trips/visa-local-support", "/assets/service-visa-local-support.png"],
+                ["Private Driver & Translation", "Flexible", "Chauffeur, restaurant help, reservations and on-trip WhatsApp support.", "/trips/vip-custom-trip", "/assets/service-vip-custom-trip.png"]
+              ]
+            }
+          ]
+        }
+      };
+
+      const fallbackCities = {
+        beijing: ["Beijing Experiences", "Culture, private city rhythm and essential first-time support.", "/assets/guide-first-time-china.png"],
+        shenzhen: ["Shenzhen Experiences", "Innovation, sourcing, founder worklife and modern city support.", "/assets/experience-shenzhen-tech-journey.png"],
+        chengdu: ["Chengdu Experiences", "Slow neighborhoods, food culture and soft local discovery.", "/assets/experience-local-discoveries.png"],
+        guangzhou: ["Guangzhou Experiences", "Trade, sourcing, dining and southern China business support.", "/assets/service-shopping-sourcing.png"],
+        hangzhou: ["Hangzhou Experiences", "Wellness, lakeside calm and refined city escapes.", "/assets/experience-wellness-stays.png"],
+        chongqing: ["Chongqing Experiences", "Vertical city views, local food and dramatic urban routes.", "/assets/guide-high-speed-rail.png"]
+      };
+
+      function escapeHtml(value) {
+        return String(value || "").replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+        })[char]);
+      }
+
+      const slug = location.pathname.split("/").filter(Boolean)[1] || "shanghai";
+      const city = cityData[slug] || {
+        label: slug.replace(/-/g, " "),
+        title: fallbackCities[slug]?.[0] || "City Experiences",
+        description: fallbackCities[slug]?.[1] || "Curated China experiences and private concierge support.",
+        image: fallbackCities[slug]?.[2] || "/assets/hero-china-concierge.png",
+        categories: cityData.shanghai.categories.slice(0, 2)
+      };
+
+      document.title = `${city.title} | ChinaMigo`;
+      document.querySelector("[data-city-label]").textContent = city.label;
+      document.querySelector("[data-city-title]").textContent = city.title;
+      document.querySelector("[data-city-description]").textContent = city.description;
+      document.querySelector("[data-city-image]").src = city.image;
+
+      document.querySelector("[data-experience-browser]").innerHTML = city.categories.map((category) => `
+        <section class="experience-category">
+          <div class="category-heading">
+            <div>
+              <p class="eyebrow">${escapeHtml(category.title)}</p>
+              <h2>${escapeHtml(category.title)}</h2>
+              <p>${escapeHtml(category.description)}</p>
+            </div>
+          </div>
+          <div class="route-card-grid">
+            ${category.routes.map(([title, duration, description, href, image]) => `
+              <a class="route-card" href="${escapeHtml(href)}">
+                <img src="${escapeHtml(image)}" alt="${escapeHtml(title)}" />
+                <div>
+                  <span>${escapeHtml(duration)}</span>
+                  <h3>${escapeHtml(title)}</h3>
+                  <p>${escapeHtml(description)}</p>
+                  <strong>View Experience →</strong>
+                </div>
+              </a>
+            `).join("")}
+          </div>
+        </section>
+      `).join("");
+    </script>
+  </body>
+</html>

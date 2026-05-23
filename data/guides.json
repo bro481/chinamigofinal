@@ -1,0 +1,75 @@
+{
+  "section": {
+    "eyebrow": "Trips & Services",
+    "title": "Trips & Services",
+    "description": "Private China experiences and modern concierge services for international visitors."
+  },
+  "cards": [
+    {
+      "id": "shanghai-lifestyle-trip",
+      "title": "Shanghai Lifestyle Trip",
+      "subtitle": "Luxury stays · rooftop views · local experiences",
+      "image": "assets/experience-shanghai-lifestyle.png",
+      "alt": "Rooftop breakfast and coffee in modern Shanghai morning light",
+      "imageFit": "cover",
+      "imagePosition": "center",
+      "imageScale": 1.02,
+      "ratio": "4 / 5"
+    },
+    {
+      "id": "china-beauty-trip",
+      "title": "China Beauty Trip",
+      "subtitle": "Skincare · wellness · medical concierge",
+      "image": "assets/experience-china-beauty-trip.png",
+      "alt": "Quiet luxury skincare and wellness recovery moment",
+      "imageFit": "cover",
+      "imagePosition": "center",
+      "imageScale": 1.02,
+      "ratio": "4 / 5"
+    },
+    {
+      "id": "shenzhen-tech-journey",
+      "title": "Shenzhen Tech Journey",
+      "subtitle": "Innovation · sourcing · founder lifestyle",
+      "image": "assets/experience-shenzhen-tech-journey.png",
+      "alt": "Modern founder worklife in Shenzhen at night",
+      "imageFit": "cover",
+      "imagePosition": "center",
+      "imageScale": 1.02,
+      "ratio": "4 / 5"
+    },
+    {
+      "id": "visa-local-support",
+      "title": "Visa & Local Support",
+      "subtitle": "Translation · payments · local assistance",
+      "image": "assets/service-visa-local-support.png",
+      "alt": "International traveler receiving local concierge support in modern China",
+      "imageFit": "cover",
+      "imagePosition": "center",
+      "imageScale": 1.02,
+      "ratio": "4 / 5"
+    },
+    {
+      "id": "shopping-sourcing",
+      "title": "Shopping & Sourcing",
+      "subtitle": "Markets · factories · private support",
+      "image": "assets/service-shopping-sourcing.png",
+      "alt": "Premium sourcing meeting with product samples and private support",
+      "imageFit": "cover",
+      "imagePosition": "center",
+      "imageScale": 1.02,
+      "ratio": "4 / 5"
+    },
+    {
+      "id": "vip-custom-trip",
+      "title": "VIP Custom Trip",
+      "subtitle": "Private driver · hotel · itinerary support",
+      "image": "assets/service-vip-custom-trip.png",
+      "alt": "Luxury concierge assistance with private car and luggage",
+      "imageFit": "cover",
+      "imagePosition": "center",
+      "imageScale": 1.02,
+      "ratio": "4 / 5"
+    }
+  ]
+}

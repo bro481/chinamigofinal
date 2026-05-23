@@ -1,0 +1,192 @@
+[
+  {
+    "id": "inquiry-1779020540398",
+    "createdAt": "2026-05-17T12:22:20.398Z",
+    "updatedAt": "2026-05-17T12:31:21.691Z",
+    "name": "hy",
+    "email": "1165096788@qq.com",
+    "phone": "swd",
+    "travelDates": "jan",
+    "travelers": "3",
+    "citiesInterestedIn": "beijing",
+    "preferredStayLevel": "Luxury hotel",
+    "tripStyle": [
+      "Slow Travel",
+      "Food & Café",
+      "Wellness"
+    ],
+    "tags": [],
+    "notes": "",
+    "sourcePage": "/trips",
+    "status": "lost",
+    "internalNotes": "",
+    "statusHistory": [
+      {
+        "from": "new",
+        "to": "lost",
+        "at": "2026-05-17T12:31:21.691Z",
+        "by": "admin"
+      }
+    ],
+    "activity": [
+      {
+        "type": "submitted",
+        "label": "Inquiry submitted",
+        "at": "2026-05-17T12:22:20.398Z"
+      },
+      {
+        "type": "status",
+        "label": "Status changed from new to lost",
+        "at": "2026-05-17T12:31:21.691Z"
+      }
+    ]
+  },
+  {
+    "id": "inquiry-1778997605041",
+    "createdAt": "2026-05-17T06:00:05.041Z",
+    "updatedAt": "2026-05-17T06:00:05.041Z",
+    "name": "Codex Preview",
+    "email": "preview@example.com",
+    "phone": "+8613800000000",
+    "travelDates": "June 12-16",
+    "travelers": "2 adults",
+    "citiesInterestedIn": "Shanghai",
+    "preferredStayLevel": "",
+    "tripStyle": [],
+    "tags": [],
+    "notes": "Inline success verification.",
+    "sourcePage": "/trips",
+    "status": "new",
+    "internalNotes": "",
+    "statusHistory": [],
+    "activity": [
+      {
+        "type": "submitted",
+        "label": "Inquiry submitted",
+        "at": "2026-05-17T06:00:05.041Z"
+      }
+    ]
+  },
+  {
+    "id": "inquiry-1778952790422",
+    "createdAt": "2026-05-16T17:33:10.429Z",
+    "updatedAt": "2026-05-17T05:26:28.319Z",
+    "name": "hey",
+    "email": "",
+    "phone": "",
+    "travelDates": "may12",
+    "travelers": "3",
+    "citiesInterestedIn": "",
+    "preferredStayLevel": "Luxury hotel",
+    "tripStyle": [
+      "Slow Travel",
+      "Nightlife",
+      "Nature"
+    ],
+    "tags": [
+      "Urgent"
+    ],
+    "notes": "",
+    "sourcePage": "/trips",
+    "status": "lost",
+    "internalNotes": "",
+    "statusHistory": [
+      {
+        "from": "new",
+        "to": "lost",
+        "at": "2026-05-17T05:20:45.554Z",
+        "by": "admin"
+      },
+      {
+        "from": "lost",
+        "to": "confirmed",
+        "at": "2026-05-17T05:21:14.684Z",
+        "by": "admin"
+      },
+      {
+        "from": "confirmed",
+        "to": "lost",
+        "at": "2026-05-17T05:26:28.319Z",
+        "by": "admin"
+      }
+    ],
+    "activity": [
+      {
+        "type": "submitted",
+        "label": "Inquiry submitted",
+        "at": "2026-05-16T17:33:10.429Z"
+      },
+      {
+        "type": "status",
+        "label": "Status changed from new to lost",
+        "at": "2026-05-17T05:20:45.554Z"
+      },
+      {
+        "type": "status",
+        "label": "Status changed from lost to confirmed",
+        "at": "2026-05-17T05:21:14.684Z"
+      },
+      {
+        "type": "status",
+        "label": "Status changed from confirmed to lost",
+        "at": "2026-05-17T05:26:28.319Z"
+      }
+    ]
+  },
+  {
+    "id": "inquiry-1778952283237",
+    "createdAt": "2026-05-16T17:24:43.238Z",
+    "updatedAt": "2026-05-17T05:26:47.395Z",
+    "name": "hey",
+    "email": "",
+    "phone": "",
+    "travelDates": "",
+    "travelers": "3",
+    "citiesInterestedIn": "",
+    "preferredStayLevel": "Boutique hotel",
+    "tripStyle": [
+      "Slow Travel",
+      "Food & Café",
+      "Shopping"
+    ],
+    "tags": [
+      "Luxury",
+      "Wellness"
+    ],
+    "notes": "",
+    "sourcePage": "/trips",
+    "status": "new",
+    "internalNotes": "",
+    "statusHistory": [
+      {
+        "from": "new",
+        "to": "reviewed",
+        "at": "2026-05-17T05:21:18.455Z",
+        "by": "admin"
+      },
+      {
+        "from": "reviewed",
+        "to": "new",
+        "at": "2026-05-17T05:26:47.395Z",
+        "by": "admin"
+      }
+    ],
+    "activity": [
+      {
+        "type": "submitted",
+        "label": "Inquiry submitted",
+        "at": "2026-05-16T17:24:43.238Z"
+      },
+      {
+        "type": "status",
+        "label": "Status changed from new to reviewed",
+        "at": "2026-05-17T05:21:18.455Z"
+      },
+      {
+        "type": "status",
+        "label": "Status changed from reviewed to new",
+        "at": "2026-05-17T05:26:47.395Z"
+      }
+    ]
+  }
+]

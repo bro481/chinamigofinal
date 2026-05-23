@@ -1,0 +1,80 @@
+[
+  {
+    "id": "notification-1779020540405",
+    "type": "inquiry",
+    "to": "admin@chinamigo.local",
+    "subject": "New ChinaMigo inquiry from hy",
+    "inquiryId": "inquiry-1779020540398",
+    "body": "Name: hy\nEmail: 1165096788@qq.com\nWhatsApp / Phone: swd\nTravel dates: jan\nTravelers: 3\nCities: beijing\nStay level: Luxury hotel\nTrip style: Slow Travel, Food & Café, Wellness\nSource: /trips\nNotes: ",
+    "inquiry": {
+      "id": "inquiry-1779020540398",
+      "createdAt": "2026-05-17T12:22:20.398Z",
+      "updatedAt": "2026-05-17T12:22:20.398Z",
+      "name": "hy",
+      "email": "1165096788@qq.com",
+      "phone": "swd",
+      "travelDates": "jan",
+      "travelers": "3",
+      "citiesInterestedIn": "beijing",
+      "preferredStayLevel": "Luxury hotel",
+      "tripStyle": [
+        "Slow Travel",
+        "Food & Café",
+        "Wellness"
+      ],
+      "tags": [],
+      "notes": "",
+      "sourcePage": "/trips",
+      "status": "new",
+      "internalNotes": "",
+      "statusHistory": [],
+      "activity": [
+        {
+          "type": "submitted",
+          "label": "Inquiry submitted",
+          "at": "2026-05-17T12:22:20.398Z"
+        }
+      ]
+    },
+    "createdAt": "2026-05-17T12:22:20.406Z",
+    "delivered": false,
+    "provider": "local-log"
+  },
+  {
+    "id": "notification-1778997605044",
+    "type": "inquiry",
+    "to": "admin@chinamigo.local",
+    "subject": "New ChinaMigo inquiry from Codex Preview",
+    "inquiryId": "inquiry-1778997605041",
+    "body": "Name: Codex Preview\nEmail: preview@example.com\nWhatsApp / Phone: +8613800000000\nTravel dates: June 12-16\nTravelers: 2 adults\nCities: Shanghai\nStay level: \nTrip style: \nSource: /trips\nNotes: Inline success verification.",
+    "inquiry": {
+      "id": "inquiry-1778997605041",
+      "createdAt": "2026-05-17T06:00:05.041Z",
+      "updatedAt": "2026-05-17T06:00:05.041Z",
+      "name": "Codex Preview",
+      "email": "preview@example.com",
+      "phone": "+8613800000000",
+      "travelDates": "June 12-16",
+      "travelers": "2 adults",
+      "citiesInterestedIn": "Shanghai",
+      "preferredStayLevel": "",
+      "tripStyle": [],
+      "tags": [],
+      "notes": "Inline success verification.",
+      "sourcePage": "/trips",
+      "status": "new",
+      "internalNotes": "",
+      "statusHistory": [],
+      "activity": [
+        {
+          "type": "submitted",
+          "label": "Inquiry submitted",
+          "at": "2026-05-17T06:00:05.041Z"
+        }
+      ]
+    },
+    "createdAt": "2026-05-17T06:00:05.044Z",
+    "delivered": false,
+    "provider": "local-log"
+  }
+]

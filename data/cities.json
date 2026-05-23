@@ -1,0 +1,56 @@
+[
+  {
+    "id": "city-shanghai",
+    "name": "Shanghai",
+    "slug": "shanghai",
+    "description": "Modern lifestyle, skyline mornings and local experiences.",
+    "sortOrder": 1,
+    "active": true,
+    "updatedAt": "2026-05-16T00:00:00.000Z"
+  },
+  {
+    "id": "city-beijing",
+    "name": "Beijing",
+    "slug": "beijing",
+    "description": "Culture, private city rhythm and essential first-time support.",
+    "sortOrder": 2,
+    "active": true,
+    "updatedAt": "2026-05-16T00:00:00.000Z"
+  },
+  {
+    "id": "city-shenzhen",
+    "name": "Shenzhen",
+    "slug": "shenzhen",
+    "description": "Innovation, sourcing, founder worklife and modern city support.",
+    "sortOrder": 3,
+    "active": true,
+    "updatedAt": "2026-05-16T00:00:00.000Z"
+  },
+  {
+    "id": "city-chengdu",
+    "name": "Chengdu",
+    "slug": "chengdu",
+    "description": "Slow neighborhoods, food culture and soft local discovery.",
+    "sortOrder": 4,
+    "active": true,
+    "updatedAt": "2026-05-16T00:00:00.000Z"
+  },
+  {
+    "id": "city-hangzhou",
+    "name": "Hangzhou",
+    "slug": "hangzhou",
+    "description": "Wellness, lakeside calm and refined city escapes.",
+    "sortOrder": 5,
+    "active": true,
+    "updatedAt": "2026-05-16T00:00:00.000Z"
+  },
+  {
+    "id": "city-guangzhou",
+    "name": "Guangzhou",
+    "slug": "guangzhou",
+    "description": "Trade, sourcing, dining and southern China business support.",
+    "sortOrder": 6,
+    "active": true,
+    "updatedAt": "2026-05-16T00:00:00.000Z"
+  }
+]

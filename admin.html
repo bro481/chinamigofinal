@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChinaMigo Admin</title>
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <main class="admin-shell">
+      <section class="login-card" data-login>
+        <p class="eyebrow">ChinaMigo Admin</p>
+        <h1>Private content studio.</h1>
+        <p>Manage guides, trips, inquiries and media for the ChinaMigo website.</p>
+        <form class="login-form" data-login-form>
+          <label>
+            Username
+            <input name="username" autocomplete="username" value="admin" required />
+          </label>
+          <label>
+            Password
+            <input name="password" autocomplete="current-password" type="password" required />
+          </label>
+          <button type="submit">Login</button>
+        </form>
+        <p class="status" data-login-status></p>
+      </section>
+
+      <section class="dashboard is-hidden" data-dashboard>
+        <header class="admin-header">
+          <div>
+            <p class="eyebrow">ChinaMigo Admin</p>
+            <h1>Operations Dashboard</h1>
+          </div>
+          <div class="admin-actions">
+            <a href="/" target="_blank" rel="noreferrer">View site</a>
+            <button type="button" data-logout>Logout</button>
+          </div>
+        </header>
+
+        <nav class="admin-tabs" aria-label="Admin sections">
+          <button class="is-active" type="button" data-tab="overview">Overview</button>
+          <button type="button" data-tab="inquiries">Inquiries</button>
+          <button type="button" data-tab="guides">Guides</button>
+          <button type="button" data-tab="cities">Cities</button>
+          <button type="button" data-tab="experiences">Experiences</button>
+          <button type="button" data-tab="media">Media</button>
+        </nav>
+
+        <section class="admin-panel" data-panel="overview">
+          <div class="section-heading">
+            <h2>Overview</h2>
+            <p>Latest activity and content inventory.</p>
+          </div>
+          <div class="stat-grid" data-stats></div>
+          <h3>Latest inquiries</h3>
+          <div class="list" data-latest-inquiries></div>
+        </section>
+
+        <section class="admin-panel is-hidden" data-panel="inquiries">
+          <div class="section-heading">
+            <h2>Inquiries</h2>
+            <p>Review new route requests, update status and add internal notes.</p>
+          </div>
+          <div class="inquiry-toolbar">
+            <input data-inquiry-search placeholder="Search name, email, WhatsApp or notes" />
+            <select data-filter-status>
+              <option value="">All statuses</option>
+              <option>new</option>
+              <option>reviewed</option>
+              <option>contacted</option>
+              <option>planning</option>
+              <option>quoted</option>
+              <option>confirmed</option>
+              <option>lost</option>
+              <option>spam</option>
+            </select>
+            <input data-filter-city placeholder="City" />
+            <input data-filter-dates placeholder="Travel dates" />
+            <input data-filter-created placeholder="Created date" />
+            <input data-filter-stay placeholder="Stay level" />
+            <input data-filter-travelers placeholder="Travelers" />
+            <button class="secondary" type="button" data-export-inquiries>Export CSV</button>
+          </div>
+          <div class="list" data-inquiries-list></div>
+          <aside class="inquiry-detail is-hidden" data-inquiry-detail></aside>
+        </section>
+
+        <section class="admin-panel is-hidden" data-panel="guides">
+          <div class="section-heading">
+            <h2>China Guides</h2>
+            <p>Operate bilingual guide articles with SEO, media, blocks and publishing controls.</p>
+          </div>
+          <div class="guide-toolbar">
+            <input data-guide-search placeholder="Search guides" />
+            <select data-guide-filter-city><option value="">All cities</option></select>
+            <select data-guide-filter-category><option value="">All categories</option></select>
+            <select data-guide-filter-language><option value="">All languages</option><option value="en">EN ready</option><option value="cn">CN ready</option><option value="missing-cn">Missing CN</option></select>
+            <select data-guide-filter-status><option value="">All status</option><option>draft</option><option>published</option><option>scheduled</option><option>archived</option></select>
+            <input data-guide-filter-date placeholder="Published date" />
+            <select data-guide-sort><option value="updated">Sort: updated</option><option value="published">Sort: published</option><option value="title">Sort: title</option></select>
+            <button type="button" data-new-guide>New Guide</button>
+          </div>
+
+          <div class="guide-cms-layout">
+            <div class="guide-list" data-guides-list></div>
+
+            <form class="guide-editor" data-guide-form>
+              <input name="id" type="hidden" />
+              <div class="sticky-editor-actions">
+                <button class="secondary" type="button" data-close-guide-editor>Guides</button>
+                <span data-unsaved-state>Saved just now</span>
+                <button class="secondary" type="button" data-publish-guide>Publish</button>
+                <details class="more-menu editor-more">
+                  <summary>•••</summary>
+                  <div>
+                    <button type="submit">Save Draft</button>
+                    <button type="button" data-open-edit-panel="article">Edit Article</button>
+                    <button type="button" data-open-edit-panel="hero">Edit Hero</button>
+                    <button type="button" data-docx-upload>Import .docx</button>
+                    <button type="button" data-duplicate-guide>Duplicate</button>
+                  </div>
+                </details>
+              </div>
+
+              <section class="simple-editor-shell">
+                <div class="language-tabs">
+                  <button class="is-active" type="button" data-lang-tab="en">English</button>
+                  <button type="button" data-lang-tab="cn">中文</button>
+                </div>
+
+                <input data-docx-file type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+
+                <div class="review-workspace">
+                  <main class="review-canvas">
+                    <div class="language-panel" data-lang-panel="en">
+                      <article class="guide-preview fast-preview" data-fast-preview="en"></article>
+                    </div>
+                    <div class="language-panel is-hidden" data-lang-panel="cn">
+                      <article class="guide-preview fast-preview" data-fast-preview="cn"></article>
+                    </div>
+                  </main>
+
+                  <aside class="review-panel">
+                    <p class="eyebrow">Publishing checks</p>
+                    <div class="editor-checks" data-editor-checks></div>
+                    <div class="review-actions">
+                      <button type="button" data-open-edit-panel="article">Edit Article</button>
+                      <button class="secondary" type="button" data-open-edit-panel="hero">Edit Hero</button>
+                      <button class="secondary" type="button" data-docx-upload>Import .docx</button>
+                    </div>
+                  </aside>
+                </div>
+
+                <div class="edit-panel is-hidden" data-edit-panel>
+                  <div class="edit-panel-head">
+                    <div>
+                      <p class="eyebrow">Edit when needed</p>
+                      <h3>Source content</h3>
+                    </div>
+                    <button class="secondary" type="button" data-close-edit-panel>Done</button>
+                  </div>
+
+                  <div class="article-meta-strip">
+                  <label>Author<input name="author" placeholder="ChinaMigo Editorial" /></label>
+                  <label>Publish date<input name="publishedAt" placeholder="2026-05-17" /></label>
+                  <label>Status<select name="status"><option>draft</option><option>published</option><option>scheduled</option><option>archived</option></select></label>
+                  <input name="category" type="hidden" />
+                  <input name="slug" type="hidden" />
+                  <input name="city" type="hidden" />
+                  <input name="readTime" type="hidden" />
+                  <input name="tags" type="hidden" />
+                  <input name="coverImage" type="hidden" />
+                  <input name="mobileCoverImage" type="hidden" />
+                  <input name="coverAlt" type="hidden" />
+                  <input name="seoTitleEn" type="hidden" />
+                  <input name="seoTitleCn" type="hidden" />
+                  <input name="metaDescriptionEn" type="hidden" />
+                  <input name="metaDescriptionCn" type="hidden" />
+                  <input name="ogImage" type="hidden" />
+                  <input name="canonicalUrl" type="hidden" />
+                  <input name="noindex" type="hidden" value="false" />
+                </div>
+
+                <div class="cover-dropzone" data-cover-dropzone>
+                  <img data-cover-preview alt="" />
+                  <div>
+                    <strong>Drop cover image here</strong>
+                    <span>or click to upload a cover for this article</span>
+                  </div>
+                  <input data-cover-file type="file" accept="image/png,image/jpeg,image/webp,image/gif" />
+                </div>
+
+                <div class="source-language-panel" data-source-lang-panel="en">
+                  <input class="article-title-input" name="titleEn" placeholder="Guide title" required />
+                  <textarea class="article-excerpt-input" name="excerptEn" rows="2" placeholder="Short intro for the article"></textarea>
+                  <div class="fast-editor-grid">
+                    <div class="raw-editor-panel">
+                      <div class="markdown-toolbar">
+                        <span>Paste text, Markdown, itinerary notes, or ChatGPT drafts here.</span>
+                        <button class="secondary" type="button" data-insert-image="en">Upload Image</button>
+                      </div>
+                      <textarea class="raw-editor" data-raw-editor="en" placeholder="# First Time in China&#10;&#10;Paste your travel guide here. Use simple markdown:&#10;&#10;## Payments&#10;- Alipay&#10;- WeChat Pay&#10;&#10;![Cafe in Shanghai](assets/image.png)&#10;&#10;CTA: Chat on WhatsApp | https://wa.me/"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="source-language-panel is-hidden" data-source-lang-panel="cn">
+                  <input class="article-title-input" name="titleCn" placeholder="中文标题" />
+                  <textarea class="article-excerpt-input" name="excerptCn" rows="2" placeholder="文章短摘要"></textarea>
+                  <div class="fast-editor-grid">
+                    <div class="raw-editor-panel">
+                      <div class="markdown-toolbar">
+                        <span>直接粘贴中文攻略、Markdown、行程草稿或 ChatGPT 内容。</span>
+                        <button class="secondary" type="button" data-insert-image="cn">Upload Image</button>
+                      </div>
+                      <textarea class="raw-editor" data-raw-editor="cn" placeholder="# 第一次来中国&#10;&#10;把你的旅行攻略直接粘贴在这里。支持简单 Markdown：&#10;&#10;## 支付方式&#10;- 支付宝&#10;- 微信支付&#10;&#10;![上海咖啡馆](assets/image.png)&#10;&#10;CTA: WhatsApp 咨询 | https://wa.me/"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ai-assist-bar">
+                  <span>AI Assist</span>
+                  <button class="secondary" type="button" data-ai-action="beautify">Beautify Layout</button>
+                  <button class="secondary" type="button" data-ai-action="spacing">Optimize Spacing</button>
+                  <button class="secondary" type="button" data-ai-action="format">Suggest Formatting</button>
+                  <button class="secondary" type="button" data-ai-action="images">Arrange Images</button>
+                </div>
+                <article class="guide-preview desktop is-hidden" data-guide-preview></article>
+                </div>
+              </section>
+            </form>
+          </div>
+        </section>
+
+        <section class="admin-panel is-hidden" data-panel="cities">
+          <div class="section-heading">
+            <h2>Cities</h2>
+            <p>Control city availability and display order.</p>
+          </div>
+          <form class="editor-form" data-city-form>
+            <input name="id" type="hidden" />
+            <div class="form-grid">
+              <label>Name<input name="name" required /></label>
+              <label>Slug<input name="slug" /></label>
+              <label>Sort order<input name="sortOrder" type="number" value="0" /></label>
+              <label>Active<select name="active"><option value="true">active</option><option value="false">inactive</option></select></label>
+              <label class="wide">Description<textarea name="description" rows="2"></textarea></label>
+            </div>
+            <div class="form-actions">
+              <button type="submit">Save City</button>
+              <button class="secondary" type="button" data-new-city>New City</button>
+            </div>
+          </form>
+          <div class="list" data-cities-list></div>
+        </section>
+
+        <section class="admin-panel is-hidden" data-panel="experiences">
+          <div class="section-heading">
+            <h2>Trips & Services</h2>
+            <p>Manage city-based recommended journeys and short experiences.</p>
+          </div>
+          <form class="editor-form" data-experience-form>
+            <input name="id" type="hidden" />
+            <div class="form-grid">
+              <label>Title<input name="title" required /></label>
+              <label>Slug<input name="slug" /></label>
+              <label>City slug<input name="city" placeholder="shanghai" /></label>
+              <label>Type<select name="type"><option value="recommended_journey">recommended_journey</option><option value="short_experience">short_experience</option></select></label>
+              <label>Duration<input name="duration" placeholder="3-5 Days" /></label>
+              <label>Sort order<input name="sortOrder" type="number" value="0" /></label>
+              <label>Cover image<input name="coverImage" /></label>
+              <label>Published<select name="published"><option value="true">published</option><option value="false">draft</option></select></label>
+              <label class="wide">Excerpt<textarea name="excerpt" rows="2"></textarea></label>
+              <label class="wide">Tags<input name="tags" placeholder="Shanghai, Lifestyle, Private" /></label>
+              <label class="wide">Gallery images<input name="galleryImages" placeholder="assets/a.png, assets/b.png" /></label>
+              <label class="wide">Content blocks JSON<textarea name="contentBlocks" rows="6"></textarea></label>
+            </div>
+            <div class="form-actions">
+              <button type="submit">Save Experience</button>
+              <button class="secondary" type="button" data-new-experience>New Experience</button>
+            </div>
+          </form>
+          <div class="list" data-experiences-list></div>
+        </section>
+
+        <section class="admin-panel is-hidden" data-panel="media">
+          <div class="section-heading">
+            <h2>Media</h2>
+            <p>Upload image and GIF assets for guides, trips and city visuals.</p>
+          </div>
+          <div class="media-toolbar">
+            <input data-media-search placeholder="Search media" />
+            <input data-media-folder-filter placeholder="Folder" />
+          </div>
+          <form class="editor-form" data-media-form>
+            <div class="form-grid">
+              <label>Folder<input name="folder" placeholder="guides / trips / cities" /></label>
+              <label>Alt text<input name="alt" /></label>
+              <label>Upload image / GIF<input name="file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" required /></label>
+            </div>
+            <div class="form-actions">
+              <button type="submit">Upload Media</button>
+            </div>
+          </form>
+          <div class="list media-grid" data-media-list></div>
+        </section>
+
+        <p class="status" data-status></p>
+        <div class="admin-toast" data-toast></div>
+      </section>
+    </main>
+    <script src="admin.js"></script>
+  </body>
+</html>
