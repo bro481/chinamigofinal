@@ -36,9 +36,6 @@ const htmlRoutes = [
 
 function rewriteStaticHtml(html) {
   let output = html;
-  if (baseHref && !output.includes("<base ")) {
-    output = output.replace(/<head>/i, `<head>\n    <base href="${baseHref}">`);
-  }
   output = output.replace(
     /<script src="\/site\.js([^"]*)" defer><\/script>/,
     `<script>window.__CHINAMIGO_STATIC__ = true;</script>\n    <script src="site.js$1" defer></script>`
@@ -60,6 +57,9 @@ function rewriteStaticHtml(html) {
   output = output.replace(/(["'`])\/assets\//g, "$1assets/");
   output = output.replace(/(["'`])\/trips\//g, "$1trips/");
   output = output.replace(/(["'`])\/guides\//g, "$1guides/");
+  if (baseHref && !output.includes("<base ")) {
+    output = output.replace(/<head>/i, `<head>\n    <base href="${baseHref}">`);
+  }
   return output;
 }
 
