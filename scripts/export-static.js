@@ -6,7 +6,7 @@ const outDir = path.join(root, "docs");
 const baseHref = process.env.STATIC_BASE_HREF ?? "/chinamigo/";
 
 const htmlRoutes = [
-  ["index.html", "index.html"],
+  ["guides.html", "index.html"],
   ["about.html", "about/index.html"],
   ["guides.html", "guides/index.html"],
   ["trips.html", "trips/index.html"],
@@ -88,7 +88,7 @@ async function main() {
   for (const [source, target] of htmlRoutes) await writeRoute(source, target);
   await fs.writeFile(
     path.join(outDir, "404.html"),
-    rewriteStaticHtml(await fs.readFile(path.join(root, "index.html"), "utf8"))
+    rewriteStaticHtml(await fs.readFile(path.join(root, "guides.html"), "utf8"))
   );
   console.log(`Static GitHub Pages export created at ${outDir}`);
 }
