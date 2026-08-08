@@ -8,8 +8,8 @@
       content="ChinaMigo China Guides is a premium editorial hub for practical China tips, local insights and modern lifestyle ideas for international visitors."
     />
     <title>China Guides | ChinaMigo</title>
-    <link rel="stylesheet" href="styles.css?v=guide-detail-20260516" />
-    <script src="/site.js?v=i18n-auth-20260523d" defer></script>
+    <link rel="stylesheet" href="styles.css?v=guides-search-20260606" />
+    <script src="/site.js?v=guides-search-20260606" defer></script>
   </head>
   <body class="guides-page-body">
     <header class="site-header guides-header is-compact" aria-label="Primary navigation">
@@ -33,81 +33,57 @@
 
     <main class="guides-page">
       <section class="guides-hero" aria-label="China Guides hub">
-        <p class="eyebrow">China Guides</p>
-        <h1>China Guides</h1>
-        <p>
-          Practical guides, local insights and modern China lifestyle ideas for international visitors.
+        <h1 class="visually-hidden">China Guides</h1>
+        <p class="guides-hero-title">Practical guides for easier travel in China.</p>
+        <p class="guides-hero-subtitle">
+          Payments, rail, apps, eSIM, hotels and local tips for international visitors.
         </p>
-        <label class="guide-search">
-          <span>Search</span>
-          <input type="search" placeholder="Search China guides..." data-guide-search />
-        </label>
-      </section>
-
-      <section class="guide-collections" aria-label="Featured guide collections">
-        <div class="guides-section-heading">
-          <div>
-            <p class="eyebrow">Curated starting points</p>
-            <h2>Featured Collections</h2>
-          </div>
-        </div>
-        <div class="collection-track">
-          <article class="collection-card">
-            <img src="assets/guide-first-time-china.png" alt="Visitor arriving in modern China by high-speed rail" />
-            <div>
-              <span>Starter Collection</span>
-              <h3>First Time in China</h3>
-              <p>A starter pack for new visitors: payments, rail, apps, internet, arrival and local tips.</p>
-            </div>
-          </article>
-          <article class="collection-card">
-            <img src="assets/guide-alipay-tourists.png" alt="Traveler using mobile payment in a Chinese cafe" />
-            <div>
-              <span>Visitor Essentials</span>
-              <h3>Digital China Essentials</h3>
-              <p>Apps, payments, maps, mobile data and the everyday digital layer of modern China.</p>
-            </div>
-          </article>
-          <article class="collection-card">
-            <img src="assets/guide-shanghai-cafes.png" alt="Warm modern Shanghai cafe lifestyle" />
-            <div>
-              <span>Curated Series</span>
-              <h3>Modern Shanghai</h3>
-              <p>Cafes, neighborhoods, stays, lifestyle scenes and city experiences worth saving.</p>
-            </div>
-          </article>
-          <article class="collection-card">
-            <img src="assets/guide-beauty-clinic.png" alt="Quiet luxury wellness and skincare consultation in China" />
-            <div>
-              <span>Editor's Collection</span>
-              <h3>China Wellness Guide</h3>
-              <p>Beauty clinics, spa culture, recovery stays and calm wellness moments in China.</p>
-            </div>
-          </article>
+        <div class="guide-search-wrap">
+          <label class="guide-search">
+            <span>Search</span>
+            <input
+              type="search"
+              placeholder="Search payments, rail, apps, eSIM..."
+              autocomplete="off"
+              aria-expanded="false"
+              aria-controls="guide-search-suggestions"
+              data-guide-search
+            />
+          </label>
+          <div class="guide-search-suggestions" id="guide-search-suggestions" data-guide-suggestions hidden></div>
         </div>
       </section>
 
       <section class="guides-directory" aria-label="All China guide articles">
         <div class="guides-section-heading">
           <div>
-            <p class="eyebrow">Explore by category</p>
             <h2>All Guides</h2>
-            <p class="guides-section-intro">Explore guides by category and discover modern China at your own pace.</p>
           </div>
         </div>
         <div class="guide-tabs" role="tablist" aria-label="Guide categories">
           <button class="is-active" type="button" data-category="All">All</button>
           <button type="button" data-category="Payments">Payments</button>
+          <button type="button" data-category="Apps">Apps</button>
           <button type="button" data-category="Transportation">Transportation</button>
-          <button type="button" data-category="Apps & Digital Life">Apps & Digital Life</button>
-          <button type="button" data-category="Food & Cafes">Food & Cafes</button>
-          <button type="button" data-category="Lifestyle">Lifestyle</button>
+          <button type="button" data-category="Food & Cafés">Food & Cafés</button>
+          <button type="button" data-category="Safety">Safety</button>
+          <button type="button" data-category="Hotels">Hotels</button>
+          <button type="button" data-category="Shopping">Shopping</button>
           <button type="button" data-category="Beauty & Wellness">Beauty & Wellness</button>
-          <button type="button" data-category="Shopping & Sourcing">Shopping & Sourcing</button>
         </div>
         <div class="article-grid" data-article-grid></div>
         <p class="guide-empty" data-guide-empty hidden>No guides found. Try another search or category.</p>
       </section>
+
+      <section class="guide-collections" aria-label="Featured guide collections">
+        <div class="guides-section-heading">
+          <div>
+            <h2>Featured Collections</h2>
+          </div>
+        </div>
+        <div class="collection-track" data-collection-track></div>
+      </section>
+
     </main>
 
     <footer class="footer">
@@ -116,7 +92,7 @@
     </footer>
 
     <script>
-      const articles = [
+      let articles = [
         {
           category: "Payments",
           slug: "can-tourists-use-alipay",
@@ -136,18 +112,18 @@
           alt: "International visitor at a modern high-speed rail station in China"
         },
         {
-          category: "Apps & Digital Life",
+          category: "Apps",
           slug: "essential-apps-for-china",
-          meta: "APPS & DIGITAL LIFE · 5 MIN READ",
+          meta: "APPS · 5 MIN READ",
           title: "Essential Apps for China",
           description: "The apps foreign visitors actually need.",
           image: "assets/guide-first-time-china.png",
           alt: "Visitor using a smartphone while navigating modern China"
         },
         {
-          category: "Food & Cafes",
+          category: "Food & Cafés",
           slug: "best-cafes-in-shanghai",
-          meta: "FOOD & CAFES · 4 MIN READ",
+          meta: "FOOD & CAFÉS · 4 MIN READ",
           title: "Best Cafes in Shanghai",
           description: "Modern local lifestyle and coffee culture.",
           image: "assets/guide-shanghai-cafes.png",
@@ -163,43 +139,145 @@
           alt: "Quiet luxury beauty clinic consultation in China"
         },
         {
-          category: "Shopping & Sourcing",
+          category: "Shopping",
           slug: "shenzhen-electronics-market-guide",
-          meta: "SHOPPING & SOURCING · 6 MIN READ",
+          meta: "SHOPPING · 6 MIN READ",
           title: "Shenzhen Electronics Market Guide",
           description: "What to know before sourcing in Shenzhen.",
           image: "assets/experience-shenzhen-tech-journey.png",
           alt: "Modern Shenzhen founder lifestyle and technology atmosphere"
         },
         {
-          category: "Apps & Digital Life",
+          category: "Apps",
           slug: "internet-setup-in-china",
-          meta: "APPS & DIGITAL LIFE · 4 MIN READ",
+          meta: "APPS · 4 MIN READ",
           title: "Internet Setup in China",
           description: "SIM cards, eSIM options, Wi-Fi and everyday connection tips.",
           image: "assets/experience-china-cafes.png",
           alt: "Traveler working from a modern Chinese cafe"
         },
         {
-          category: "Lifestyle",
+          category: "Safety",
           slug: "modern-local-discoveries",
-          meta: "LIFESTYLE · 5 MIN READ",
+          meta: "SAFETY · 5 MIN READ",
           title: "Modern Local Discoveries",
-          description: "Neighborhoods, markets and hidden places beyond the usual route.",
+          description: "Neighborhoods, markets and hidden places with practical local context.",
           image: "assets/experience-local-discoveries.png",
           alt: "Modern local neighborhood discovery in China"
         }
       ];
+      const fallbackArticles = articles;
 
       const grid = document.querySelector("[data-article-grid]");
       const empty = document.querySelector("[data-guide-empty]");
       const search = document.querySelector("[data-guide-search]");
+      const suggestions = document.querySelector("[data-guide-suggestions]");
+      const collectionTrack = document.querySelector("[data-collection-track]");
       const tabs = [...document.querySelectorAll("[data-category]")];
-      let activeCategory = "All";
+      let activeCategory = new URLSearchParams(location.search).get("category") || "All";
+      let cmsCollections = [];
+      const collectionDefinitions = [
+        {
+          title: "Transportation Essentials",
+          description: "High-speed rail, stations, transfers and practical movement through China.",
+          categories: ["Transportation"],
+          image: "assets/guide-high-speed-rail.png",
+          alt: "International visitor at a modern high-speed rail station in China"
+        },
+        {
+          title: "Digital China Essentials",
+          description: "Payments, apps, maps, mobile data and everyday digital setup for visitors.",
+          categories: ["Payments", "Apps"],
+          image: "assets/guide-alipay-tourists.png",
+          alt: "Traveler using mobile payment in a Chinese cafe"
+        },
+        {
+          title: "Food & Cafés",
+          description: "Cafes, restaurants and softer local lifestyle moments worth saving.",
+          categories: ["Food & Cafés"],
+          image: "assets/guide-shanghai-cafes.png",
+          alt: "Warm modern Shanghai cafe lifestyle"
+        },
+        {
+          title: "Beauty & Wellness",
+          description: "Beauty clinics, spa culture, recovery stays and calm wellness support.",
+          categories: ["Beauty & Wellness"],
+          image: "assets/guide-beauty-clinic.png",
+          alt: "Quiet luxury wellness and skincare consultation in China"
+        },
+        {
+          title: "Shopping",
+          description: "Markets, shopping areas and practical buying notes for modern China.",
+          categories: ["Shopping"],
+          image: "assets/experience-local-discoveries.png",
+          alt: "Modern local neighborhood discovery in China"
+        }
+      ];
+      const categorySuggestions = [
+        {
+          label: "Payments",
+          value: "Payments",
+          keywords: "pay payment payments alipay wechat pay card cash money"
+        },
+        {
+          label: "Apps",
+          value: "Apps",
+          keywords: "app apps digital map ride hailing didi esim internet"
+        },
+        {
+          label: "Transportation",
+          value: "Transportation",
+          keywords: "tran transport transportation rail train high-speed taxi airport transfer metro"
+        },
+        {
+          label: "Food & Cafés",
+          value: "Food & Cafés",
+          keywords: "food cafe cafes cafés coffee restaurant dining breakfast"
+        },
+        {
+          label: "Safety",
+          value: "Safety",
+          keywords: "safe safety scam emergency health first time"
+        },
+        {
+          label: "Hotels",
+          value: "Hotels",
+          keywords: "hotel hotels stay accommodation area where to stay"
+        },
+        {
+          label: "Shopping",
+          value: "Shopping",
+          keywords: "shopping market sourcing electronics purchase"
+        },
+        {
+          label: "Beauty & Wellness",
+          value: "Beauty & Wellness",
+          keywords: "beauty wellness spa clinic recovery skincare"
+        }
+      ];
+
+      function guideToArticle(guide) {
+        const translation = guide.translations?.en || {};
+        const image = guide.coverImage || "assets/guide-first-time-china.png";
+        return {
+          category: guide.category || "Guide",
+          city: guide.city || "",
+          tags: guide.tags || [],
+          featured: Boolean(guide.featured),
+          slug: guide.slug,
+          meta: `${String(guide.category || "Guide").toUpperCase()} · ${String(guide.readTime || "5 min read").toUpperCase()}`,
+          title: translation.title || guide.title,
+          description: translation.excerpt || guide.excerpt || "",
+          image: /^(https?:|data:|blob:|\/)/i.test(image) ? image : `/${image}`,
+          alt: guide.coverAlt || guide.title || "",
+          imagePosition: guide.imagePosition || "center center",
+          imageScale: guide.imageScale || 1.02
+        };
+      }
 
       function articleMarkup(article) {
         return `
-          <a class="guide-article-card" href="/guides/${article.slug}" aria-label="Read ${article.title}">
+          <a class="guide-article-card" href="/guides/${article.slug}" aria-label="Read ${article.title}" style="--image-position:${article.imagePosition};--image-scale:${article.imageScale}">
             <img src="${article.image}" alt="${article.alt}" />
             <div>
               <span>${article.meta}</span>
@@ -210,11 +288,58 @@
         `;
       }
 
+      function collectionMarkup(collection) {
+        if (Number(collection.count) > 0 && collection.href) {
+          const countLabel = `${collection.count} ${collection.count === 1 ? "guide" : "guides"}`;
+          return `
+            <a class="collection-card" href="${collection.href}" style="--image-position:${collection.imagePosition || "center center"};--image-scale:${collection.imageScale || 1.02}">
+              <img src="${collection.image}" alt="${collection.alt}" />
+              <div>
+                <h3>${collection.title}</h3>
+                <p>${collection.description}</p>
+                <small>${countLabel}</small>
+              </div>
+            </a>
+          `;
+        }
+        const matched = articles.filter((article) => collection.categories.includes(article.category));
+        if (!matched.length) return "";
+        const firstGuide = matched[0];
+        const href = collection.categories.length === 1
+          ? `/?category=${encodeURIComponent(collection.categories[0])}`
+          : `/guides/${firstGuide.slug}`;
+        const image = firstGuide.image || collection.image;
+        const alt = firstGuide.alt || collection.alt;
+        const countLabel = `${matched.length} ${matched.length === 1 ? "guide" : "guides"}`;
+        return `
+          <a class="collection-card" href="${href}" style="--image-position:${firstGuide.imagePosition || "center center"};--image-scale:${firstGuide.imageScale || 1.02}">
+            <img src="${image}" alt="${alt}" />
+            <div>
+              <h3>${collection.title}</h3>
+              <p>${collection.description}</p>
+              <small>${countLabel}</small>
+            </div>
+          </a>
+        `;
+      }
+
+      function renderCollections(collections = cmsCollections.length ? cmsCollections : collectionDefinitions) {
+        collectionTrack.innerHTML = collections.map(collectionMarkup).filter(Boolean).join("");
+      }
+
+      function articleMatchesTerm(article, term) {
+        if (!term) return true;
+        const primaryText = [article.category, article.city, article.title, ...(article.tags || [])].join(" ").toLowerCase();
+        if (primaryText.includes(term)) return true;
+        if (/^trans?$/.test(term)) return false;
+        return String(article.description || "").toLowerCase().includes(term);
+      }
+
       function renderArticles() {
         const term = search.value.trim().toLowerCase();
         const visibleArticles = articles.filter((article) => {
           const categoryMatch = activeCategory === "All" || article.category === activeCategory;
-          const searchMatch = !term || [article.category, article.title, article.description].join(" ").toLowerCase().includes(term);
+          const searchMatch = articleMatchesTerm(article, term);
           return categoryMatch && searchMatch;
         });
 
@@ -222,16 +347,115 @@
         empty.hidden = visibleArticles.length > 0;
       }
 
+      function setActiveCategory(category) {
+        activeCategory = category;
+        tabs.forEach((item) => item.classList.toggle("is-active", item.dataset.category === activeCategory));
+        const nextUrl = new URL(location.href);
+        if (activeCategory === "All") nextUrl.searchParams.delete("category");
+        else nextUrl.searchParams.set("category", activeCategory);
+        history.replaceState(null, "", nextUrl);
+        renderArticles();
+      }
+
+      function hideSuggestions() {
+        suggestions.hidden = true;
+        search.setAttribute("aria-expanded", "false");
+      }
+
+      function renderSuggestions() {
+        const term = search.value.trim().toLowerCase();
+        if (!term) {
+          hideSuggestions();
+          return;
+        }
+
+        const categoryMatches = categorySuggestions
+          .filter((category) => `${category.label} ${category.keywords}`.toLowerCase().includes(term))
+          .slice(0, 4);
+        const guideMatches = articles
+          .filter((article) => articleMatchesTerm(article, term))
+          .slice(0, 5);
+
+        if (!categoryMatches.length && !guideMatches.length) {
+          hideSuggestions();
+          return;
+        }
+
+        const categoryMarkup = categoryMatches.length
+          ? `<div class="guide-suggestion-group">
+              <p>Categories</p>
+              ${categoryMatches
+                .map((category) => `<button type="button" data-suggestion-category="${category.value}">${category.label}</button>`)
+                .join("")}
+            </div>`
+          : "";
+        const guideMarkup = guideMatches.length
+          ? `<div class="guide-suggestion-group">
+              <p>Guides</p>
+              ${guideMatches
+                .map((article) => `<a href="/guides/${article.slug}"><span>${article.title}</span><small>${article.category}</small></a>`)
+                .join("")}
+            </div>`
+          : "";
+
+        suggestions.innerHTML = categoryMarkup + guideMarkup;
+        suggestions.hidden = false;
+        search.setAttribute("aria-expanded", "true");
+      }
+
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
-          activeCategory = tab.dataset.category;
-          tabs.forEach((item) => item.classList.toggle("is-active", item === tab));
-          renderArticles();
+          setActiveCategory(tab.dataset.category);
+          hideSuggestions();
         });
       });
 
-      search.addEventListener("input", renderArticles);
+      search.addEventListener("input", () => {
+        renderArticles();
+        renderSuggestions();
+      });
+      search.addEventListener("focus", renderSuggestions);
+      search.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") hideSuggestions();
+      });
+      suggestions.addEventListener("click", (event) => {
+        const category = event.target.closest("[data-suggestion-category]")?.dataset.suggestionCategory;
+        if (!category) return;
+        search.value = "";
+        setActiveCategory(category);
+        hideSuggestions();
+      });
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".guide-search-wrap")) hideSuggestions();
+      });
+      tabs.forEach((item) => item.classList.toggle("is-active", item.dataset.category === activeCategory));
       renderArticles();
+      renderCollections();
+
+      fetch("/api/public/guides")
+        .then((response) => response.json())
+        .then((result) => {
+          if (!Array.isArray(result.data)) return;
+          const dynamicArticles = result.data.map(guideToArticle);
+          const seenSlugs = new Set();
+          articles = dynamicArticles.filter((article) => {
+            if (!article.slug || seenSlugs.has(article.slug)) return false;
+            seenSlugs.add(article.slug);
+            return true;
+          });
+          renderArticles();
+          renderCollections();
+          renderSuggestions();
+        })
+        .catch(() => renderArticles());
+
+      fetch("/api/public/guide-collections")
+        .then((response) => response.json())
+        .then((result) => {
+          cmsCollections = Array.isArray(result.data) ? result.data : [];
+          renderCollections(cmsCollections);
+        })
+        .catch(() => renderCollections(collectionDefinitions));
     </script>
   </body>
 </html>

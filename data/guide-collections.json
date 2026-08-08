@@ -1,0 +1,32 @@
+[
+  {
+    "id": "collection-transportation-essentials",
+    "title": "Transportation Essentials",
+    "description": "High-speed rail, stations, transfers and practical movement through China.",
+    "categories": [
+      "Transportation"
+    ],
+    "guideSlugs": [],
+    "image": "assets/guide-high-speed-rail.png",
+    "alt": "International visitor at a modern high-speed rail station in China",
+    "sortOrder": 1,
+    "active": true,
+    "createdAt": "2026-06-07T00:00:00.000Z",
+    "updatedAt": "2026-06-07T00:00:00.000Z"
+  },
+  {
+    "id": "collection-modern-china-lifestyle",
+    "title": "Food & Cafés",
+    "description": "Cafes, restaurants and softer city food moments worth saving.",
+    "categories": [
+      "Food & Cafés"
+    ],
+    "guideSlugs": [],
+    "image": "assets/guide-shanghai-cafes.png",
+    "alt": "Warm modern Shanghai cafe lifestyle",
+    "sortOrder": 2,
+    "active": true,
+    "createdAt": "2026-06-07T00:00:00.000Z",
+    "updatedAt": "2026-06-07T00:00:00.000Z"
+  }
+]

@@ -126,7 +126,7 @@
           <p class="eyebrow" data-guides-eyebrow>Discover Modern China</p>
           <h2 data-guides-title>Modern China, Reimagined.</h2>
           <p>
-            <span data-guides-description>Lifestyle, wellness, travel and local experiences across China.</span>
+            <span data-guides-description>Payments, apps, transportation and local essentials across China.</span>
           </p>
         </div>
         <div class="experience-track" data-guides-grid aria-label="China lifestyle experiences">
@@ -260,8 +260,10 @@
       const header = document.querySelector(".site-header");
       const hero = document.querySelector(".hero");
       const guidesGrid = document.querySelector("[data-guides-grid]");
+      const guideLayout = document.querySelector(".guide-layout");
       const navSectionLinks = [...document.querySelectorAll("[data-nav-target]")];
       let guidesSignature = "";
+      let guideArticlesSignature = "";
 
       function escapeHtml(value) {
         return String(value || "").replace(/[&<>"']/g, (char) => ({
@@ -306,6 +308,57 @@
         }).join("");
       }
 
+      function guideImagePath(path) {
+        if (!path) return "assets/guide-first-time-china.png";
+        return /^(https?:|data:|blob:|\/)/i.test(path) ? path : `/${path}`;
+      }
+
+      function guideCardHtml(guide, className = "guide-card guide-card-overlay") {
+        const translation = guide.translations?.en || {};
+        const title = translation.title || guide.title || "China Guide";
+        const excerpt = translation.excerpt || guide.excerpt || "";
+        const meta = [guide.category, guide.readTime].filter(Boolean).join(" · ").toUpperCase();
+        const image = guideImagePath(guide.coverImage || "assets/guide-first-time-china.png");
+        const position = guide.imagePosition || "center center";
+        const scale = Number(guide.imageScale || 1.02);
+        return `
+          <a class="${className}" href="/guides/${escapeHtml(guide.slug)}" style="--guide-image-position:${escapeHtml(position)};--guide-image-scale:${scale};">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(guide.coverAlt || title)}" />
+            <div>
+              <span>${escapeHtml(meta || "CHINA GUIDE")}</span>
+              <h3>${escapeHtml(title)}</h3>
+              <p>${escapeHtml(excerpt)}</p>
+            </div>
+          </a>
+        `;
+      }
+
+      function renderGuideArticles(guides = []) {
+        if (!guideLayout || !Array.isArray(guides) || !guides.length) return;
+        const nextSignature = JSON.stringify(guides.map((guide) => [guide.slug, guide.updatedAt, guide.publishedAt, guide.coverImage, guide.imagePosition, guide.imageScale]));
+        if (nextSignature === guideArticlesSignature) return;
+        guideArticlesSignature = nextSignature;
+        const [featured, ...rest] = guides;
+        const featuredTitle = featured.translations?.en?.title || featured.title || "China Guide";
+        const featuredExcerpt = featured.translations?.en?.excerpt || featured.excerpt || "";
+        const featuredMeta = [featured.category, featured.readTime].filter(Boolean).join(" · ").toUpperCase();
+        const featuredImage = guideImagePath(featured.coverImage || "assets/guide-first-time-china.png");
+        guideLayout.innerHTML = `
+          <a class="featured-guide" href="/guides/${escapeHtml(featured.slug)}" style="--guide-image-position:${escapeHtml(featured.imagePosition || "center center")};--guide-image-scale:${Number(featured.imageScale || 1.02)};">
+            <img src="${escapeHtml(featuredImage)}" alt="${escapeHtml(featured.coverAlt || featuredTitle)}" />
+            <div class="guide-copy">
+              <span>${escapeHtml(featuredMeta || "CHINA GUIDE")}</span>
+              <h3>${escapeHtml(featuredTitle)}</h3>
+              <p>${escapeHtml(featuredExcerpt)}</p>
+              <small>${escapeHtml((featured.tags || []).slice(0, 4).join(", "))}</small>
+            </div>
+          </a>
+          <div class="guide-grid">
+            ${rest.slice(0, 4).map((guide, index) => guideCardHtml(guide, index === 2 ? "guide-card guide-card-text" : index === 3 ? "guide-card guide-card-image" : "guide-card guide-card-overlay")).join("")}
+          </div>
+        `;
+      }
+
       async function loadGuides() {
         const stamp = Date.now();
         const apiResponse = await fetch(`/api/guides?t=${stamp}`, { cache: "no-store" }).catch(() => null);
@@ -318,6 +371,14 @@
         if (staticResponse?.ok) {
           renderGuides(await staticResponse.json());
         }
+      }
+
+      async function loadGuideArticles() {
+        const stamp = Date.now();
+        const response = await fetch(`/api/public/guides?t=${stamp}`, { cache: "no-store" }).catch(() => null);
+        if (!response?.ok) return;
+        const result = await response.json();
+        renderGuideArticles(result.data || []);
       }
 
       if (header && hero && "IntersectionObserver" in window) {
@@ -354,11 +415,17 @@
       }
 
       loadGuides();
+      loadGuideArticles();
       window.addEventListener("focus", loadGuides);
+      window.addEventListener("focus", loadGuideArticles);
       document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) loadGuides();
+        if (!document.hidden) {
+          loadGuides();
+          loadGuideArticles();
+        }
       });
       setInterval(loadGuides, 3000);
+      setInterval(loadGuideArticles, 3000);
     </script>
   </body>
 </html>

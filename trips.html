@@ -8,7 +8,7 @@
       content="Explore ChinaMigo private China experiences by city, from short lifestyle moments to multi-day concierge journeys."
     />
     <title>Trips & Services | ChinaMigo</title>
-    <link rel="stylesheet" href="/styles.css?v=trips-concierge-balance-20260517" />
+    <link rel="stylesheet" href="/styles.css?v=trips-city-cms-20260524" />
     <script src="/site.js?v=i18n-auth-20260523d" defer></script>
   </head>
   <body class="trips-platform-body">
@@ -32,64 +32,41 @@
 
     <main class="trips-platform">
       <section class="city-directory" aria-label="ChinaMigo city experiences">
-        <div class="platform-section-heading trips-directory-heading">
-          <div>
+        <section class="trips-hero-banner" data-trips-hero-banner>
+          <img data-trips-hero-image src="/assets/experience-shanghai-lifestyle.png" alt="Shanghai atmosphere" />
+          <div class="trips-hero-shade"></div>
+          <div class="trips-hero-content">
             <p class="eyebrow">Trips & Services</p>
-            <h2>Choose where your China journey begins.</h2>
+            <h1>Choose where your China journey begins.</h1>
+            <p data-trips-hero-description>Curated local moments, slower walks and modern city rhythms.</p>
+            <nav class="city-selector" aria-label="Choose city" data-city-selector></nav>
           </div>
-        </div>
-        <nav class="city-selector" aria-label="Choose city" data-city-selector></nav>
+        </section>
         <div class="city-dynamic-content" data-city-content></div>
       </section>
 
-      <section class="platform-note inquiry-section" aria-labelledby="custom-route-title">
-        <div class="inquiry-copy">
-          <p class="eyebrow">Private concierge</p>
-          <h2 id="custom-route-title">Need a custom route?</h2>
-          <p>Tell us your travel rhythm, pace and preferred cities. We’ll shape a quieter China journey around you.</p>
-          <div class="concierge-points" aria-label="Concierge planning details">
-            <article>
-              <span>✓</span>
-              <div>
-                <h3>Slow travel focused</h3>
-                <p>Quiet, flexible journeys shaped around your pace.</p>
-              </div>
-            </article>
-            <article>
-              <span>✓</span>
-              <div>
-                <h3>Local coordination</h3>
-                <p>Restaurants, transport and local assistance.</p>
-              </div>
-            </article>
-            <article>
-              <span>✓</span>
-              <div>
-                <h3>Designed personally</h3>
-                <p>Routes adjusted to your stay level and interests.</p>
-              </div>
-            </article>
+      <section class="inquiry-drawer" aria-labelledby="custom-route-title" aria-modal="true" role="dialog" data-inquiry-drawer hidden>
+        <button class="inquiry-drawer-backdrop" type="button" aria-label="Close custom route form" data-inquiry-close></button>
+        <div class="inquiry-drawer-panel">
+          <div class="inquiry-copy">
+            <button class="inquiry-drawer-close" type="button" aria-label="Close custom route form" data-inquiry-close>×</button>
+            <p class="eyebrow">Private concierge</p>
+            <h2 id="custom-route-title">Need a custom route?</h2>
+            <p>Tell us your travel rhythm, pace and preferred cities. We’ll shape a quieter China journey around you.</p>
+            <p class="inquiry-trust-line">Personalized by local specialists. Response within 24 hours.</p>
           </div>
-        </div>
-        <form class="inquiry-form" method="post" action="/api/inquiries" target="inquiry-frame" data-inquiry-form>
+          <form class="inquiry-form" method="post" action="/api/inquiries" target="inquiry-frame" data-inquiry-form>
           <div class="inquiry-success" aria-live="polite">
             <h3>Inquiry received.</h3>
             <p>We’ll reach out shortly.</p>
             <a class="inquiry-whatsapp" href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27ve%20submitted%20a%20travel%20inquiry%20and%20would%20like%20to%20continue%20on%20WhatsApp.">Continue on WhatsApp →</a>
           </div>
           <div class="inquiry-fields">
-            <div class="inquiry-form-grid">
+            <p class="inquiry-section-label">Trip basics</p>
+            <div class="inquiry-form-grid inquiry-basics-grid">
               <label>
-                <span>Name</span>
-                <input name="name" autocomplete="name" required />
-              </label>
-              <label>
-                <span>Email</span>
-                <input name="email" autocomplete="email" type="email" required />
-              </label>
-              <label>
-                <span>WhatsApp / Phone</span>
-                <input name="phone" autocomplete="tel" required />
+                <span>Cities Interested In</span>
+                <input name="citiesInterestedIn" placeholder="Shanghai, Hangzhou" />
               </label>
               <label>
                 <span>Travel Dates</span>
@@ -100,16 +77,30 @@
                 <input name="travelers" placeholder="2 adults" />
               </label>
               <label>
-                <span>Cities Interested In</span>
-                <input name="citiesInterestedIn" placeholder="Shanghai, Hangzhou" />
+                <span>Trip Length</span>
+                <input name="tripLength" placeholder="4 days" />
               </label>
-              <label class="inquiry-wide">
+            </div>
+            <p class="inquiry-section-label">Travel style</p>
+            <div class="inquiry-form-grid inquiry-style-grid">
+              <label>
                 <span>Preferred Stay Level</span>
               <select name="preferredStayLevel">
                   <option value="">Select preference</option>
                   <option>Luxury hotel</option>
                   <option>Boutique hotel</option>
                   <option>Serviced apartment</option>
+                  <option>Not sure yet</option>
+                </select>
+              </label>
+              <label>
+                <span>Budget Range</span>
+                <select name="budgetRange">
+                  <option value="">Select budget</option>
+                  <option>Under $500</option>
+                  <option>$500–$1,200</option>
+                  <option>$1,200–$2,500</option>
+                  <option>$2,500+</option>
                   <option>Not sure yet</option>
                 </select>
               </label>
@@ -131,19 +122,36 @@
                 <label><input type="checkbox" name="tripStyle" value="Design Hotels" /><span>Design Hotels</span></label>
               </div>
             </fieldset>
+            <p class="inquiry-section-label">What do you need help with?</p>
             <label class="inquiry-notes">
               <span>Notes <em>(optional)</em></span>
-              <textarea name="notes" rows="3" placeholder="Tell us what would make the trip feel easy, beautiful or useful."></textarea>
+              <textarea name="notes" rows="3" placeholder="Hotel preference, pace, food, elderly travelers, kids, private car, photography, shopping or business needs."></textarea>
             </label>
+            <p class="inquiry-section-label">Contact</p>
+            <div class="inquiry-form-grid inquiry-contact-grid">
+              <label>
+                <span>Name</span>
+                <input name="name" autocomplete="name" required />
+              </label>
+              <label>
+                <span>WhatsApp / Phone</span>
+                <input name="phone" autocomplete="tel" required />
+              </label>
+              <label>
+                <span>Email</span>
+                <input name="email" autocomplete="email" type="email" required />
+              </label>
+            </div>
             <div class="inquiry-actions">
               <input name="sourcePage" type="hidden" value="/trips" />
               <input class="honeypot-field" name="website" tabindex="-1" autocomplete="off" />
-              <button class="inquiry-submit" type="submit">Send Inquiry</button>
+              <button class="inquiry-submit" type="submit">Start Planning</button>
             </div>
             <p class="inquiry-status" data-inquiry-status aria-live="polite"></p>
           </div>
-        </form>
-        <iframe class="inquiry-frame" name="inquiry-frame" title="Inquiry submission"></iframe>
+          </form>
+          <iframe class="inquiry-frame" name="inquiry-frame" title="Inquiry submission"></iframe>
+        </div>
       </section>
     </main>
 
@@ -217,7 +225,7 @@
       function renderSelector() {
         selector.innerHTML = cityOrder.map((cityKey) => `
           <button type="button" class="${cityKey === activeCity ? "is-active" : ""}" data-city="${cityKey}">
-            ${escapeHtml(cityDirectoryData[cityKey].name)}
+            ${escapeHtml(cityDirectoryData[cityKey]?.name || cityKey)}
           </button>
         `).join("");
       }
@@ -245,6 +253,7 @@
 
       function renderCity() {
         const city = cityDirectoryData[activeCity];
+        if (!city) return;
         content.classList.remove("is-visible");
         window.setTimeout(() => {
           const hasRoutes = city.journeys.length || city.shortExperiences.length;
@@ -296,6 +305,489 @@
       renderSelector();
       renderCity();
 
+      function normalizeImagePath(path, fallback = "/assets/experience-shanghai-lifestyle.png") {
+        if (!path) return fallback;
+        if (/^(https?:|data:|blob:|\/)/i.test(path)) return path;
+        return `/${path}`;
+      }
+
+      function experienceToRoute(experience) {
+        return [
+          experience.title,
+          experience.duration || (experience.type === "short_experience" ? "Short Experience" : "Private Journey"),
+          experience.excerpt || "",
+          `/trips/${experience.slug}`,
+          normalizeImagePath(experience.coverImage, "/assets/guide-first-time-china.png"),
+          (experience.tags || []).join(" · ")
+        ];
+      }
+
+      async function loadCmsCities() {
+        try {
+          const [cityResponse, experienceResponse] = await Promise.all([
+            fetch("/api/public/cities").then((response) => response.json()),
+            fetch("/api/public/experiences").then((response) => response.json())
+          ]);
+          const cmsCities = cityResponse.data || [];
+          const cmsExperiences = experienceResponse.data || [];
+          if (!cmsCities.length) return;
+
+          cityOrder.length = 0;
+          cmsCities.forEach((city) => {
+            const key = city.slug;
+            const cityExperiences = cmsExperiences.filter((experience) => experience.city === key);
+            cityOrder.push(key);
+            cityDirectoryData[key] = {
+              name: city.name,
+              note: city.shortDescription || city.description || city.longDescription || "",
+              image: normalizeImagePath(city.cardImage || city.bannerImage || city.thumbnailImage, "/assets/experience-shanghai-lifestyle.png"),
+              journeys: cityExperiences
+                .filter((experience) => experience.type === "recommended_journey")
+                .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0))
+                .map(experienceToRoute),
+              shortExperiences: cityExperiences
+                .filter((experience) => experience.type === "short_experience")
+                .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0))
+                .map(experienceToRoute),
+              support: []
+            };
+          });
+
+          if (!cityDirectoryData[activeCity] || !cityOrder.includes(activeCity)) activeCity = cityOrder[0];
+          renderSelector();
+          renderCity();
+        } catch (error) {
+          console.warn("[ChinaMigo] CMS city data unavailable", error);
+        }
+      }
+
+      const serviceCategoryConfig = [
+        ["local-experiences", "Local Experiences", "Half-day and one-day ways into the city: culture, views, design and local rhythm.", ["Traditional Culture", "Scenic Views", "Food", "Art & Design", "Technology"]],
+        ["journeys", "Journeys", "Multi-day curated routes with private planning, hotels, transport and local support.", []],
+        ["food-cafes", "Food & Cafés", "Curated tables, cafés and evening moments with a softer local rhythm.", ["Local Food", "Breakfast", "Coffee", "Bars", "Fine Dining"]],
+        ["hidden-spots", "Hidden Spots", "A curated feed of quieter places, local corners and non-obvious city moments.", []],
+        ["where-to-stay", "Where to Stay", "Area and stay guidance to make the city feel easier before you arrive.", ["Best Areas", "Luxury Hotels", "Boutique Stays"]]
+      ].map(([key, label, intro, subcategories]) => ({ key, label, intro, subcategories }));
+
+      const serviceCityData = {
+        shanghai: {
+          name: "Shanghai",
+          note: "A city of skyline mornings, historic lanes and modern lifestyles.",
+          image: "/assets/hero-china-concierge.png",
+          content: [
+            ["local-experiences", "Scenic Views", "Shanghai Skyline Breakfast", "Morning", "Sunrise coffee with skyline views.", "/trips/shanghai-lifestyle-trip", "/assets/hero-china-concierge.png", "Inquiry", "Coffee|Photography"],
+            ["local-experiences", "Art & Design", "French Concession Design Walk", "Half Day", "Boutiques, cafés and quiet design stops at a softer pace.", "/trips/shanghai-lifestyle-trip", "/assets/guide-shanghai-cafes.png", "Inquiry", "Design|Café|Walking"],
+            ["local-experiences", "Traditional Culture", "Old Shanghai Walk", "Half Day", "Historic lanes, local context and everyday neighborhood rhythm.", "/trips/shanghai-lifestyle-trip", "/assets/experience-local-discoveries.png", "Inquiry", "Culture|Local Life|Walking"],
+            ["local-experiences", "Food", "Local Breakfast Market", "Morning", "A gentle local food route before the city gets busy.", "/trips/shanghai-lifestyle-trip", "/assets/experience-local-discoveries.png", "Inquiry", "Street Food|Local Life|Market"],
+            ["local-experiences", "Technology", "Modern Shanghai Night Drive", "Evening", "A private evening route through skyline lights and city movement.", "/trips/shanghai-lifestyle-trip", "/assets/experience-shanghai-lifestyle.png", "Inquiry", "Night View|Private Car|Skyline"],
+            ["local-experiences", "Art & Design", "Gallery and Boutique Afternoon", "Half Day", "Small galleries, shops and quiet streets at your own pace.", "/trips/shanghai-lifestyle-trip", "/assets/guide-shanghai-cafes.png", "Inquiry", "Gallery|Boutique|Design"],
+            ["journeys", "", "Shanghai Lifestyle Trip", "3-5 Days", "Luxury stays, skyline mornings and modern local experiences with concierge support.", "/trips/shanghai-lifestyle-trip", "/assets/experience-shanghai-lifestyle.png", "Inquiry", "Luxury Stay|Slow Travel|Private"],
+            ["journeys", "", "Modern Shanghai Starter", "3 Days", "A soft first-time route through stays, cafés, neighborhoods and essential setup.", "/trips/shanghai-lifestyle-trip", "/assets/guide-first-time-china.png", "Inquiry", "First Visit|Concierge"],
+            ["food-cafes", "Local Food", "Classic Shanghainese Lunch", "Lunch", "Local flavors and an easy midday stop in the city.", "/trips/classic-shanghainese-lunch", "/assets/experience-local-discoveries.png", "Guide", "Local Food"],
+            ["food-cafes", "Breakfast", "Shanghai Breakfast Stop", "Morning", "A simple local breakfast before the city gets busy.", "/trips/shanghai-breakfast-stop", "/assets/guide-first-time-china.png", "Guide", "Breakfast"],
+            ["food-cafes", "Coffee", "French Concession Café Morning", "3 Hours", "Coffee, quiet streets and a local pace without turning the morning into a checklist.", "/trips/shanghai-lifestyle-trip", "/assets/guide-shanghai-cafes.png", "Inquiry", "Coffee|Local Life"],
+            ["food-cafes", "Bars", "Rooftop Cocktail Evening", "Evening", "A refined skyline evening with reservation timing and private transfer support.", "/trips/shanghai-lifestyle-trip", "/assets/experience-shanghai-lifestyle.png", "Inquiry", "Evening|Skyline"],
+            ["food-cafes", "Fine Dining", "Private Riverside Dinner", "Evening", "A calm dinner plan with views, timing and bilingual reservation support.", "/trips/shanghai-lifestyle-trip", "/assets/experience-local-discoveries.png", "Inquiry", "Fine Dining|Private"],
+            ["hidden-spots", "", "Quiet Streets Behind the Main Route", "Flexible", "Small streets, local cafés and softer corners selected around your hotel area.", "/trips/shanghai-lifestyle-trip", "/assets/experience-local-discoveries.png", "Inquiry", "Insider|Slow Travel"],
+            ["where-to-stay", "Best Areas", "Where to Stay in Shanghai", "Planning", "Area guidance for Bund views, French Concession calm, business access or family convenience.", "/trips/shanghai-lifestyle-trip", "/assets/experience-wellness-stays.png", "Inquiry", "Hotels|Area Guide"],
+            ["where-to-stay", "Luxury Hotels", "Bund Skyline Stay Planning", "Planning", "Hotel area and stay-level guidance for a smoother first arrival in Shanghai.", "/trips/shanghai-lifestyle-trip", "/assets/experience-shanghai-lifestyle.png", "Inquiry", "Luxury Hotels|Arrival"]
+          ]
+        },
+        beijing: {
+          name: "Beijing",
+          note: "Calm cultural routes, local context and easier first arrivals.",
+          image: "/assets/guide-first-time-china.png",
+          content: [
+            ["local-experiences", "Traditional Culture", "Private Hutong Context Walk", "Half Day", "Historic neighborhoods, tea stops and local context without a rushed group-tour feeling.", "/trips/vip-custom-trip", "/assets/guide-first-time-china.png", "Inquiry", "Culture|Private"],
+            ["journeys", "", "Beijing First Visit Support", "3-4 Days", "Airport pickup, hotel coordination, classic sites and practical local support.", "/trips/vip-custom-trip", "/assets/service-vip-custom-trip.png", "Inquiry", "First Visit|Concierge"],
+            ["food-cafes", "Local Food", "Local Dinner With Translation Support", "Evening", "A confident way to try Beijing food with ordering and timing handled.", "/trips/vip-custom-trip", "/assets/experience-local-discoveries.png", "Inquiry", "Local Food|Translation"],
+            ["hidden-spots", "", "Quiet Courtyard Corners", "Flexible", "Less obvious courtyards, streets and local moments selected around your route.", "/trips/vip-custom-trip", "/assets/guide-first-time-china.png", "Inquiry", "Hidden Spots|Culture"],
+            ["where-to-stay", "Best Areas", "Beijing Area Planning", "Planning", "Where to stay based on arrival airport, culture routes, business meetings or family pace.", "/trips/vip-custom-trip", "/assets/service-vip-custom-trip.png", "Inquiry", "Best Areas|Planning"]
+          ]
+        },
+        shenzhen: {
+          name: "Shenzhen",
+          note: "Modern worklife, sourcing support and technology-led city rhythm.",
+          image: "/assets/experience-shenzhen-tech-journey.png",
+          content: [
+            ["local-experiences", "Technology", "Founder Workday Route", "Day Route", "Cafés, meetings, transport and a practical Shenzhen work rhythm.", "/trips/shenzhen-tech-journey", "/assets/experience-shenzhen-tech-journey.png", "Inquiry", "Technology|Founder"],
+            ["journeys", "", "Shenzhen Tech Journey", "2-4 Days", "Innovation, sourcing and founder lifestyle support with private coordination.", "/trips/shenzhen-tech-journey", "/assets/experience-shenzhen-tech-journey.png", "Inquiry", "Founder Route|Private"],
+            ["food-cafes", "Coffee", "Founder Café Work Route", "Half Day", "A quieter work-friendly café route with transfer timing and local context.", "/trips/shenzhen-tech-journey", "/assets/experience-china-cafes.png", "Inquiry", "Coffee|Worklife"],
+            ["hidden-spots", "", "Design and Tech Corners", "Flexible", "Modern neighborhoods, design stops and non-obvious Shenzhen moments.", "/trips/shenzhen-tech-journey", "/assets/service-shopping-sourcing.png", "Inquiry", "Insider|Design"],
+            ["where-to-stay", "Best Areas", "Stay Near Meetings or Sourcing", "Planning", "Area guidance for supplier visits, tech meetings, border access or calmer stays.", "/trips/shenzhen-tech-journey", "/assets/service-vip-custom-trip.png", "Inquiry", "Business|Hotels"]
+          ]
+        },
+        chengdu: {
+          name: "Chengdu",
+          note: "Slow neighborhoods, tea afternoons and softer local discovery.",
+          image: "/assets/experience-local-discoveries.png",
+          content: [
+            ["local-experiences", "Traditional Culture", "Tea House Slow Afternoon", "Half Day", "A calm Chengdu afternoon with tea, local rhythm and easy transport support.", "/trips/vip-custom-trip", "/assets/experience-local-discoveries.png", "Inquiry", "Tea|Slow Travel"],
+            ["food-cafes", "Local Food", "Chengdu Local Food Evening", "Evening", "A guided food evening that keeps the experience easy, safe and not overly touristy.", "/trips/vip-custom-trip", "/assets/experience-local-discoveries.png", "Inquiry", "Local Food|Evening"],
+            ["hidden-spots", "", "Slow Neighborhood Route", "Flexible", "Quiet streets, local cafés and softer daily-life moments selected around your stay.", "/trips/vip-custom-trip", "/assets/experience-china-cafes.png", "Inquiry", "Neighborhoods|Local Life"],
+            ["where-to-stay", "Boutique Stays", "Boutique Stay Guidance", "Planning", "Where to stay for food access, quieter streets and a softer Chengdu rhythm.", "/trips/vip-custom-trip", "/assets/experience-wellness-stays.png", "Inquiry", "Boutique Stays|Planning"]
+          ]
+        },
+        hangzhou: {
+          name: "Hangzhou",
+          note: "Lakeside calm, tea rhythm and refined wellness escapes.",
+          image: "/assets/experience-wellness-stays.png",
+          content: [
+            ["local-experiences", "Scenic Views", "Lakeside Slow Morning", "Morning", "A quiet lakeside route with private timing, tea and soft local movement.", "/trips/china-beauty-trip", "/assets/experience-wellness-stays.png", "Inquiry", "Scenic|Slow Travel"],
+            ["food-cafes", "Coffee", "Tea and Lake Afternoon", "Half Day", "Tea, calm streets and a slower Hangzhou rhythm with transport arranged.", "/trips/china-beauty-trip", "/assets/experience-china-cafes.png", "Inquiry", "Tea|Wellness"],
+            ["journeys", "", "Hangzhou Wellness Extension", "2-3 Days", "A soft extension for lakeside calm, wellness stays and private transport.", "/trips/china-beauty-trip", "/assets/experience-wellness-stays.png", "Inquiry", "Wellness|Private"],
+            ["where-to-stay", "Luxury Hotels", "Lakeside Stay Planning", "Planning", "Stay guidance for lakeside calm, wellness access and easier movement.", "/trips/china-beauty-trip", "/assets/experience-wellness-stays.png", "Inquiry", "Luxury Hotels|Wellness"]
+          ]
+        },
+        guangzhou: {
+          name: "Guangzhou",
+          note: "Southern China food, sourcing routes and practical business support.",
+          image: "/assets/service-shopping-sourcing.png",
+          content: [
+            ["local-experiences", "Food", "Cantonese Food Route", "Half Day", "A calm introduction to local food culture with ordering and transport support.", "/trips/shopping-sourcing", "/assets/experience-local-discoveries.png", "Inquiry", "Local Food|Private"],
+            ["journeys", "", "Sourcing Starter Route", "1-2 Days", "Market orientation, supplier context and private local support.", "/trips/shopping-sourcing", "/assets/service-shopping-sourcing.png", "Inquiry", "Sourcing|Translation"],
+            ["hidden-spots", "", "Old Streets and Local Markets", "Flexible", "A softer city route through local market streets and quieter southern China moments.", "/trips/shopping-sourcing", "/assets/service-shopping-sourcing.png", "Inquiry", "Markets|Local Life"],
+            ["where-to-stay", "Best Areas", "Business Stay Area Planning", "Planning", "Stay guidance for trade fairs, sourcing visits, meetings and airport access.", "/trips/shopping-sourcing", "/assets/service-vip-custom-trip.png", "Inquiry", "Business|Best Areas"]
+          ]
+        }
+      };
+
+      let serviceActiveCity = "shanghai";
+      let serviceActiveCategory = "local-experiences";
+      let serviceActiveSubcategory = "all";
+      const tripsHeroImage = document.querySelector("[data-trips-hero-image]");
+      const tripsHeroDescription = document.querySelector("[data-trips-hero-description]");
+
+      function normalizeServiceItem(cityKey, item, index) {
+        const [primaryCategory, subCategory, title, duration, excerpt, href, coverImage, priceType, tagString] = item;
+        return {
+          city: cityKey,
+          primaryCategory,
+          subCategory,
+          title,
+          duration,
+          excerpt,
+          href,
+          coverImage,
+          priceType,
+          tags: String(tagString || "").split("|").filter(Boolean),
+          status: "published",
+          sortOrder: index
+        };
+      }
+
+      function serviceItems(cityKey = serviceActiveCity) {
+        return (serviceCityData[cityKey]?.content || [])
+          .map((item, index) => normalizeServiceItem(cityKey, item, index))
+          .filter((item) => item.status === "published")
+          .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0));
+      }
+
+      function serviceCategory() {
+        return serviceCategoryConfig.find((category) => category.key === serviceActiveCategory) || serviceCategoryConfig[0];
+      }
+
+      function filteredServiceItems() {
+        return serviceItems().filter((item) => (
+          item.primaryCategory === serviceActiveCategory
+          && (serviceActiveSubcategory === "all" || item.subCategory === serviceActiveSubcategory)
+        ));
+      }
+
+      function serviceCategoryCount(categoryKey) {
+        return serviceItems().filter((item) => item.primaryCategory === categoryKey).length;
+      }
+
+      function productTypeFor(item) {
+        if (item.primaryCategory === "journeys") return "Private";
+        if (item.primaryCategory === "hidden-spots") return "Self-guided";
+        if (item.primaryCategory === "where-to-stay") return "Guide";
+        if (item.primaryCategory === "food-cafes") {
+          if (item.subCategory === "Coffee") return "Café";
+          if (item.subCategory === "Bars") return "Evening";
+          if (item.subCategory === "Fine Dining") return "Dining";
+          return "Food";
+        }
+        if (item.subCategory === "Art & Design" || item.subCategory === "Traditional Culture") return "Walking";
+        return "Private";
+      }
+
+      function priceFor(item) {
+        if (item.primaryCategory === "journeys") return "From ¥4800 / journey";
+        if (item.primaryCategory === "where-to-stay") return "From ¥299 / plan";
+        if (item.primaryCategory === "hidden-spots") return "From ¥399 / person";
+        if (item.subCategory === "Fine Dining") return "From ¥1200 / person";
+        if (item.subCategory === "Bars") return "From ¥680 / person";
+        if (String(item.duration).includes("Full Day") || String(item.duration).includes("Day Route")) return "From ¥980 / person";
+        if (String(item.duration).includes("Half Day")) return "From ¥680 / person";
+        return "From ¥299 / person";
+      }
+
+      function isEditorialGuideCategory(category) {
+        return ["food-cafes", "hidden-spots", "where-to-stay"].includes(category);
+      }
+
+      function slugifyServiceTitle(title) {
+        return String(title || "experience")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/&/g, " and ")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "") || "experience";
+      }
+
+      function serviceDetailHref(item) {
+        if (item.primaryCategory === "journeys") return item.href;
+        return `/trips/${slugifyServiceTitle(item.title)}`;
+      }
+
+      function serviceDetailPayload(item, href) {
+        const slug = href.split("/").filter(Boolean).at(-1);
+        return encodeURIComponent(JSON.stringify({
+          title: item.title,
+          slug,
+          city: item.city,
+          type: item.primaryCategory === "journeys" ? "recommended_journey" : "short_experience",
+          duration: item.duration,
+          excerpt: item.excerpt,
+          price: priceFor(item),
+          coverImage: item.coverImage,
+          tags: item.tags,
+          primaryCategory: item.primaryCategory,
+          subCategory: item.subCategory,
+          priceType: item.priceType
+        }));
+      }
+
+      function descriptionForFoodGuide(item) {
+        const descriptions = {
+          "french-concession-cafe-morning": "Independent cafés and slower local mornings.",
+          "rooftop-cocktail-evening": "Skyline views and relaxed evening drinks.",
+          "private-riverside-dinner": "A calm riverside dinner with city lights.",
+          "quiet-streets-behind-the-main-route": "Softer corners selected around your hotel area.",
+          "where-to-stay-in-shanghai": "Area guidance for a smoother first arrival.",
+          "bund-skyline-stay-planning": "Stay-level guidance for skyline views and easier arrival."
+        };
+        return descriptions[item.slug] || descriptions[slugifyServiceTitle(item.title)] || item.excerpt || "A curated place selected for atmosphere and local rhythm.";
+      }
+
+      function renderFoodGuideCard(item) {
+        const href = serviceDetailHref(item);
+        const payloadAttribute = ` data-store-experience="${serviceDetailPayload(item, href)}"`;
+        return `
+          <a class="service-feed-card food-guide-card" href="${escapeHtml(href)}"${payloadAttribute}>
+            <div class="service-feed-media">
+              <img src="${escapeHtml(item.coverImage)}" alt="${escapeHtml(item.title)}" />
+            </div>
+            <div class="service-feed-copy">
+              <h3>${escapeHtml(item.title)}</h3>
+              <small>${escapeHtml(descriptionForFoodGuide(item))}</small>
+            </div>
+          </a>
+        `;
+      }
+
+      function ratingDetailsFor(item) {
+        const seed = Array.from(item.title).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+        const score = 4 + ((seed % 10) / 10);
+        const roundedStars = Math.max(1, Math.round(score));
+        return {
+          score: score.toFixed(1),
+          stars: "★★★★★".slice(0, roundedStars),
+          count: 18 + (seed % 32)
+        };
+      }
+
+      function renderServiceCityTabs() {
+        selector.innerHTML = cityOrder.map((cityKey) => `
+          <button type="button" class="${cityKey === serviceActiveCity ? "is-active" : ""}" data-service-city="${cityKey}">
+            ${escapeHtml(serviceCityData[cityKey]?.name || cityDirectoryData[cityKey]?.name || cityKey)}
+          </button>
+        `).join("");
+      }
+
+      function renderCityHeroAnchor() {
+        const city = serviceCityData[serviceActiveCity];
+        if (!city) return;
+        if (tripsHeroImage) {
+          tripsHeroImage.src = city.image;
+          tripsHeroImage.alt = `${city.name} atmosphere`;
+        }
+        if (tripsHeroDescription) tripsHeroDescription.textContent = city.note;
+      }
+
+      function renderServiceCategoryTabs() {
+        return `
+          <nav class="service-category-tabs" aria-label="Choose service category">
+            ${serviceCategoryConfig.map((category) => `
+              <button type="button" class="${category.key === serviceActiveCategory ? "is-active" : ""}" data-service-category="${category.key}">
+                <span>${escapeHtml(category.label)}</span>
+              </button>
+            `).join("")}
+          </nav>
+        `;
+      }
+
+      function renderServiceSubcategoryTabs(category, items) {
+        if (!category.subcategories.length) return "";
+        const available = category.subcategories.filter((subcategory) =>
+          items.some((item) => item.primaryCategory === category.key && item.subCategory === subcategory)
+        );
+        if (!available.length) return "";
+        return `
+          <nav class="service-subcategory-tabs" aria-label="Choose ${escapeHtml(category.label)} subcategory">
+            <button type="button" class="${serviceActiveSubcategory === "all" ? "is-active" : ""}" data-service-subcategory="all">All</button>
+            ${available.map((subcategory) => `
+              <button type="button" class="${serviceActiveSubcategory === subcategory ? "is-active" : ""}" data-service-subcategory="${escapeHtml(subcategory)}">
+                ${escapeHtml(subcategory)}
+              </button>
+            `).join("")}
+          </nav>
+        `;
+      }
+
+      function renderCustomRouteCard() {
+        return `
+          <button class="service-feed-card custom-route-card" type="button" data-open-inquiry>
+            <div class="service-feed-media custom-route-media">
+                <span class="custom-route-symbol" aria-hidden="true">🧭</span>
+              <div class="service-feed-overlay">
+                <p class="service-product-meta">Custom · Private</p>
+                <h3>Not sure where to start?</h3>
+              </div>
+            </div>
+            <div class="service-feed-copy">
+              <small>Tell us your travel style and we'll suggest routes.</small>
+              <div class="service-feed-tags">
+                <span>Flexible</span>
+                <span>Concierge</span>
+              </div>
+              <div class="service-feed-footer">
+                <span>Start Planning →</span>
+              </div>
+            </div>
+          </button>
+        `;
+      }
+
+      function renderServiceCard(item) {
+        if (isEditorialGuideCategory(item.primaryCategory)) return renderFoodGuideCard(item);
+        const tags = (item.tags || []).slice(0, 2).map((tag) => `<span>${escapeHtml(tag)}</span>`).join("");
+        const rating = ratingDetailsFor(item);
+        const href = serviceDetailHref(item);
+        const payloadAttribute = item.primaryCategory === "journeys"
+          ? ""
+          : ` data-store-experience="${serviceDetailPayload(item, href)}"`;
+        const productMeta = item.primaryCategory === "hidden-spots"
+          ? `Hidden Spot · ${productTypeFor(item)}`
+          : `${item.duration} · ${productTypeFor(item)}`;
+        return `
+          <a class="service-feed-card" href="${escapeHtml(href)}"${payloadAttribute}>
+            <div class="service-feed-media">
+              <img src="${escapeHtml(item.coverImage)}" alt="${escapeHtml(item.title)}" />
+              <span class="service-feed-rating">
+                <span>${escapeHtml(rating.stars)}</span>
+                ${escapeHtml(rating.score)} (${escapeHtml(String(rating.count))})
+              </span>
+              <div class="service-feed-overlay">
+                <p class="service-product-meta">${escapeHtml(productMeta)}</p>
+                <h3>${escapeHtml(item.title)}</h3>
+              </div>
+            </div>
+            <div class="service-feed-copy">
+              <small>${escapeHtml(item.excerpt)}</small>
+              ${tags ? `<div class="service-feed-tags">${tags}</div>` : ""}
+              <div class="service-feed-footer">
+                <span>${escapeHtml(priceFor(item))}</span>
+              </div>
+            </div>
+          </a>
+        `;
+      }
+
+      function renderServiceBrowser() {
+        const city = serviceCityData[serviceActiveCity];
+        const category = serviceCategory();
+        const items = serviceItems();
+        const visibleItems = filteredServiceItems();
+        content.classList.remove("is-visible");
+        window.setTimeout(() => {
+          content.innerHTML = `
+            <section class="city-service-browser" aria-label="${escapeHtml(city.name)} services">
+              ${renderServiceCategoryTabs()}
+              ${renderServiceSubcategoryTabs(category, items)}
+              ${visibleItems.length ? `
+                <div class="service-feed-grid ${isEditorialGuideCategory(serviceActiveCategory) ? "is-food-guide-grid" : ""}">
+                  ${isEditorialGuideCategory(serviceActiveCategory) ? "" : renderCustomRouteCard()}
+                  ${visibleItems.map(renderServiceCard).join("")}
+                </div>
+              ` : `
+                <div class="empty-city-note service-empty-note">
+                  <p class="eyebrow">${escapeHtml(category.label)}</p>
+                  <h2>Curated options are coming soon.</h2>
+                  <p>Tell us your dates and priorities. ChinaMigo can still arrange private local support in ${escapeHtml(city.name)}.</p>
+                  <a class="pill-button dark" href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20${encodeURIComponent(city.name)}.">Chat on WhatsApp</a>
+                </div>
+              `}
+            </section>
+          `;
+          content.classList.add("is-visible");
+        }, 120);
+        renderServiceCityTabs();
+        renderCityHeroAnchor();
+      }
+
+      function initializeServiceBrowser() {
+        renderServiceCityTabs();
+        renderServiceBrowser();
+        selector.addEventListener("click", (event) => {
+          const button = event.target.closest("[data-service-city]");
+          if (!button) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          serviceActiveCity = button.dataset.serviceCity;
+          serviceActiveCategory = "local-experiences";
+          serviceActiveSubcategory = "all";
+          renderServiceBrowser();
+        }, true);
+        content.addEventListener("click", (event) => {
+          const inquiryButton = event.target.closest("[data-open-inquiry]");
+          if (inquiryButton) {
+            event.preventDefault();
+            openInquiryDrawer();
+            return;
+          }
+          const categoryButton = event.target.closest("[data-service-category]");
+          if (categoryButton) {
+            serviceActiveCategory = categoryButton.dataset.serviceCategory;
+            serviceActiveSubcategory = "all";
+            renderServiceBrowser();
+            return;
+          }
+          const subcategoryButton = event.target.closest("[data-service-subcategory]");
+          if (subcategoryButton) {
+            serviceActiveSubcategory = subcategoryButton.dataset.serviceSubcategory;
+            renderServiceBrowser();
+            return;
+          }
+          const detailCard = event.target.closest("[data-store-experience]");
+          if (detailCard) {
+            try {
+              const payload = JSON.parse(decodeURIComponent(detailCard.dataset.storeExperience || ""));
+              if (payload.slug) {
+                localStorage.setItem(`chinamigo:experience:${payload.slug}`, JSON.stringify(payload));
+              }
+            } catch (error) {
+              console.warn("[ChinaMigo] Unable to store experience detail", error);
+            }
+          }
+        });
+      }
+
+      initializeServiceBrowser();
+
+      const inquiryDrawer = document.querySelector("[data-inquiry-drawer]");
       const inquiryForm = document.querySelector("[data-inquiry-form]");
       const inquiryStatus = document.querySelector("[data-inquiry-status]");
       const inquirySubmit = inquiryForm?.querySelector(".inquiry-submit");
@@ -304,6 +796,33 @@
       const tripStyleSummary = document.querySelector("[data-trip-style-summary]");
       const tripStyleInputs = Array.from(document.querySelectorAll("[data-trip-style-chips] input"));
       let inquirySubmitted = false;
+
+      function openInquiryDrawer() {
+        if (!inquiryDrawer) return;
+        inquiryDrawer.hidden = false;
+        document.body.classList.add("is-inquiry-open");
+        const cityInput = inquiryForm?.querySelector("[name='citiesInterestedIn']");
+        if (cityInput && !cityInput.value) cityInput.value = serviceCityData[serviceActiveCity]?.name || "";
+        window.setTimeout(() => inquiryForm?.querySelector("[name='travelDates']")?.focus(), 80);
+      }
+
+      function closeInquiryDrawer() {
+        if (!inquiryDrawer) return;
+        inquiryDrawer.hidden = true;
+        document.body.classList.remove("is-inquiry-open");
+      }
+
+      document.querySelectorAll("[data-inquiry-close]").forEach((button) => {
+        button.addEventListener("click", closeInquiryDrawer);
+      });
+
+      inquiryDrawer?.addEventListener("click", (event) => {
+        if (event.target.closest("[data-inquiry-close]")) closeInquiryDrawer();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && inquiryDrawer && !inquiryDrawer.hidden) closeInquiryDrawer();
+      });
 
       function updateTripStyleSummary() {
         if (!tripStyleSummary) return;
@@ -319,15 +838,7 @@
       tripStyleInputs.forEach((input) => input.addEventListener("change", updateTripStyleSummary));
       updateTripStyleSummary();
 
-      inquiryForm?.addEventListener("submit", () => {
-        inquirySubmitted = true;
-        inquiryForm.classList.add("is-sending");
-        inquiryStatus.textContent = "Sending your inquiry...";
-        if (inquirySubmit) inquirySubmit.textContent = "Sending...";
-      });
-
-      document.querySelector(".inquiry-frame")?.addEventListener("load", () => {
-        if (!inquirySubmitted) return;
+      function showInquirySuccess() {
         inquiryForm.reset();
         inquiryStatus.textContent = "";
         inquiryForm.classList.remove("is-sending");
@@ -337,6 +848,22 @@
           control.disabled = true;
         });
         inquirySubmitted = false;
+      }
+
+      inquiryForm?.addEventListener("submit", (event) => {
+        inquirySubmitted = true;
+        inquiryForm.classList.add("is-sending");
+        inquiryStatus.textContent = "Sending your inquiry...";
+        if (inquirySubmit) inquirySubmit.textContent = "Sending...";
+        if (window.__CHINAMIGO_STATIC__) {
+          event.preventDefault();
+          window.setTimeout(showInquirySuccess, 450);
+        }
+      });
+
+      document.querySelector(".inquiry-frame")?.addEventListener("load", () => {
+        if (!inquirySubmitted) return;
+        showInquirySuccess();
       });
     </script>
   </body>
