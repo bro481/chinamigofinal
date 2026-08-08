@@ -5,6 +5,7 @@ const { spawn } = require("child_process");
 const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
 const docs = path.join(root, "docs");
+const client = path.join(dist, "client");
 
 function run(command, args, env = {}) {
   return new Promise((resolve, reject) => {
@@ -24,7 +25,7 @@ async function main() {
   await run(process.execPath, ["scripts/export-static.js"], { STATIC_BASE_HREF: "/" });
   await fs.rm(dist, { recursive: true, force: true });
   await fs.mkdir(path.join(dist, "server"), { recursive: true });
-  await fs.cp(docs, dist, { recursive: true });
+  await fs.cp(docs, client, { recursive: true });
   await fs.writeFile(
     path.join(dist, "server", "index.js"),
     `const mimeTypes = {
