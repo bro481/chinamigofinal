@@ -26,6 +26,7 @@ async function main() {
   await fs.rm(dist, { recursive: true, force: true });
   await fs.mkdir(path.join(dist, "server"), { recursive: true });
   await fs.cp(docs, client, { recursive: true });
+  await pruneUnusedUploads();
   await fs.writeFile(
     path.join(dist, "server", "index.js"),
     `const mimeTypes = {
@@ -89,6 +90,45 @@ export default {
 `
   );
   console.log(`Sites frontend build created at ${dist}`);
+}
+
+async function listFiles(dir) {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) files.push(...await listFiles(fullPath));
+    else files.push(fullPath);
+  }
+  return files;
+}
+
+async function pruneUnusedUploads() {
+  const uploadsDir = path.join(client, "assets", "uploads");
+  try {
+    await fs.access(uploadsDir);
+  } catch {
+    return;
+  }
+
+  const allClientFiles = await listFiles(client);
+  const textFiles = allClientFiles.filter((file) => {
+    if (file.startsWith(uploadsDir + path.sep)) return false;
+    return /\.(html|css|js|json|txt|xml|svg)$/i.test(file);
+  });
+
+  const corpus = (await Promise.all(
+    textFiles.map((file) => fs.readFile(file, "utf8").catch(() => ""))
+  )).join("\n");
+
+  const uploadFiles = await listFiles(uploadsDir);
+  await Promise.all(uploadFiles.map(async (file) => {
+    const relative = path.relative(client, file).split(path.sep).join("/");
+    const basename = path.basename(file);
+    if (!corpus.includes(relative) && !corpus.includes("/" + relative) && !corpus.includes(basename)) {
+      await fs.rm(file, { force: true });
+    }
+  }));
 }
 
 main().catch((error) => {
