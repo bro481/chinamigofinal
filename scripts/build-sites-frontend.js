@@ -26,6 +26,7 @@ async function main() {
   await fs.rm(dist, { recursive: true, force: true });
   await fs.mkdir(path.join(dist, "server"), { recursive: true });
   await fs.cp(docs, client, { recursive: true });
+  await fs.rm(path.join(client, "data", "media.json"), { force: true });
   await pruneUnusedUploads();
   await fs.writeFile(
     path.join(dist, "server", "index.js"),
