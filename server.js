@@ -20,7 +20,8 @@ const files = {
   templates: path.join(dataDir, "templates.json"),
   media: path.join(dataDir, "media.json"),
   notifications: path.join(dataDir, "email-notifications.json"),
-  users: path.join(dataDir, "users.json")
+  users: path.join(dataDir, "users.json"),
+  siteSettings: path.join(dataDir, "site-settings.json")
 };
 
 const adminUser = process.env.ADMIN_USER || "admin";
@@ -63,6 +64,39 @@ function json(res, status, value, headers = {}) {
 
 function safeString(value, max = 1000) {
   return String(value || "").trim().slice(0, max);
+}
+
+const defaultSiteSettings = {
+  socialLinks: {
+    instagram: "",
+    tiktok: "",
+    youtube: "",
+    facebook: ""
+  }
+};
+
+function normalizeExternalUrl(value = "") {
+  const raw = safeString(value, 500);
+  if (!raw) return "";
+  const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+  try {
+    const parsed = new URL(withProtocol);
+    return /^https?:$/i.test(parsed.protocol) ? parsed.toString() : "";
+  } catch {
+    return "";
+  }
+}
+
+function normalizeSiteSettings(payload = {}) {
+  const socialLinks = payload.socialLinks || {};
+  return {
+    socialLinks: {
+      instagram: normalizeExternalUrl(socialLinks.instagram),
+      tiktok: normalizeExternalUrl(socialLinks.tiktok),
+      youtube: normalizeExternalUrl(socialLinks.youtube),
+      facebook: normalizeExternalUrl(socialLinks.facebook)
+    }
+  };
 }
 
 function normalizeGuideCategory(value) {
@@ -1335,6 +1369,18 @@ async function handleAdminApi(req, res, url) {
     return true;
   }
 
+  if (url.pathname === "/api/admin/site-settings") {
+    if (req.method === "GET") {
+      const settings = normalizeSiteSettings(await readJson(files.siteSettings, defaultSiteSettings));
+      json(res, 200, { ok: true, data: settings });
+    } else if (req.method === "POST") {
+      const settings = normalizeSiteSettings(await parsePayload(req));
+      await writeJson(files.siteSettings, settings);
+      json(res, 200, { ok: true, data: settings });
+    }
+    return true;
+  }
+
   if (url.pathname === "/api/admin/guide-collections") {
     if (req.method === "GET") {
       const collections = await readJson(files.guideCollections, []);
@@ -1390,6 +1436,12 @@ async function handleApi(req, res) {
 
   if (await handleAuth(req, res, url)) return;
   if (url.pathname.startsWith("/api/admin/") && await handleAdminApi(req, res, url)) return;
+
+  if (url.pathname === "/api/public/site-settings" && req.method === "GET") {
+    const settings = normalizeSiteSettings(await readJson(files.siteSettings, defaultSiteSettings));
+    json(res, 200, { ok: true, data: settings }, { "Cache-Control": "no-store" });
+    return;
+  }
 
   if (url.pathname.startsWith("/api/public/guides/") && req.method === "GET") {
     const slug = slugify(decodeURIComponent(url.pathname.replace("/api/public/guides/", "")), "guide");

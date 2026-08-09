@@ -143,6 +143,20 @@ a {
   gap: 16px;
 }
 
+.site-social-form {
+  margin: 14px 0 18px;
+  padding: 18px;
+}
+
+.site-social-form .section-heading {
+  margin-bottom: 0;
+}
+
+.site-social-form h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+
 .login-form {
   margin-top: 28px;
 }

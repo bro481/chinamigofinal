@@ -9,7 +9,7 @@
       content="Contact ChinaMigo for private China travel help, city planning and local concierge support."
     />
     <title>Contact | ChinaMigo</title>
-    <link rel="stylesheet" href="styles.css?v=contact-compact-20260809" />
+    <link rel="stylesheet" href="styles.css?v=contact-social-links-20260809" />
     <script>window.__CHINAMIGO_STATIC__ = true;</script>
     <script src="site.js?v=contact-compact-20260809" defer></script>
   </head>
@@ -67,13 +67,13 @@
 
         <p class="contact-response-note">Usually replies within 24 hours · English support available</p>
 
-        <div class="contact-socials" aria-label="ChinaMigo social placeholders">
+        <div class="contact-socials" aria-label="ChinaMigo social links">
           <p>Follow ChinaMigo</p>
           <div>
-            <span>Instagram</span>
-            <span>TikTok</span>
-            <span>YouTube</span>
-            <span>Facebook</span>
+            <a href="#" data-social-link="instagram" aria-disabled="true">Instagram</a>
+            <a href="#" data-social-link="tiktok" aria-disabled="true">TikTok</a>
+            <a href="#" data-social-link="youtube" aria-disabled="true">YouTube</a>
+            <a href="#" data-social-link="facebook" aria-disabled="true">Facebook</a>
           </div>
         </div>
       </section>
@@ -94,6 +94,42 @@
         input?.addEventListener("keydown", (event) => {
           if (event.key === "Enter") openWhatsApp();
         });
+
+        const socialLabels = {
+          instagram: "Instagram",
+          tiktok: "TikTok",
+          youtube: "YouTube",
+          facebook: "Facebook"
+        };
+        const applySocialLinks = (links = {}) => {
+          Object.entries(socialLabels).forEach(([key, label]) => {
+            const link = document.querySelector(`[data-social-link="${key}"]`);
+            const href = links[key];
+            if (!link) return;
+            link.textContent = label;
+            if (href) {
+              link.href = href;
+              link.target = "_blank";
+              link.rel = "noopener noreferrer";
+              link.removeAttribute("aria-disabled");
+              link.classList.remove("is-disabled");
+            } else {
+              link.href = "#";
+              link.removeAttribute("target");
+              link.removeAttribute("rel");
+              link.setAttribute("aria-disabled", "true");
+              link.classList.add("is-disabled");
+            }
+          });
+        };
+        applySocialLinks();
+        fetch("/api/public/site-settings", { cache: "no-store" })
+          .then((response) => {
+            if (response.ok) return response.json();
+            return fetch("/data/site-settings.json", { cache: "no-store" }).then((fallbackResponse) => fallbackResponse.ok ? fallbackResponse.json() : null);
+          })
+          .then((payload) => applySocialLinks(payload?.data?.socialLinks || payload?.socialLinks || {}))
+          .catch(() => applySocialLinks());
       })();
     </script>
   </body>

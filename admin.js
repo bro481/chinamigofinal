@@ -7,6 +7,7 @@ const state = {
   experiences: [],
   templates: [],
   media: [],
+  siteSettings: { socialLinks: { instagram: "", tiktok: "", youtube: "", facebook: "" } },
   currentGuideId: null,
   currentGuideCollectionId: null,
   currentCityId: null,
@@ -6522,6 +6523,34 @@ async function loadMedia() {
   renderMediaPicker();
 }
 
+async function loadSiteSettings() {
+  const response = await api("/api/admin/site-settings");
+  state.siteSettings = response.data || state.siteSettings;
+  const links = state.siteSettings.socialLinks || {};
+  const form = $("[data-site-settings-form]");
+  if (!form) return;
+  ["instagram", "tiktok", "youtube", "facebook"].forEach((key) => {
+    if (form.elements[key]) form.elements[key].value = links[key] || "";
+  });
+}
+
+async function saveSiteSettings(form) {
+  const payload = {
+    socialLinks: {
+      instagram: form.instagram.value,
+      tiktok: form.tiktok.value,
+      youtube: form.youtube.value,
+      facebook: form.facebook.value
+    }
+  };
+  setStatus("正在保存 Contact 社交链接...");
+  const response = await api("/api/admin/site-settings", { method: "POST", body: JSON.stringify(payload) });
+  state.siteSettings = response.data || payload;
+  await loadSiteSettings();
+  setStatus("Contact 社交链接已保存。");
+  showToast("Contact 社交链接已保存");
+}
+
 function mediaPreviewMarkup(item = {}) {
   const type = item.type || (item.mimeType || "").split("/")[0] || (/\.(mp4|webm|mov|ogg)$/i.test(item.url || "") ? "video" : /\.(mp3|wav|m4a)$/i.test(item.url || "") ? "audio" : "image");
   if (type === "audio") return `<div class="media-file-preview audio"><span>Audio</span><strong>音频素材</strong></div>`;
@@ -6727,7 +6756,7 @@ function applyPickedMedia(url) {
 }
 
 async function refreshAll() {
-  await Promise.all([loadOverview(), loadTemplates(), loadInquiries(), loadGuides(), loadGuideCollections(), loadCities(), loadExperiences(), loadMedia()]);
+  await Promise.all([loadOverview(), loadTemplates(), loadInquiries(), loadGuides(), loadGuideCollections(), loadCities(), loadExperiences(), loadMedia(), loadSiteSettings()]);
 }
 
 function showDashboard() {
@@ -6876,6 +6905,16 @@ $("[data-media-form]").addEventListener("submit", async (event) => {
   await loadOverview();
   setStatus("素材已上传。");
   showToast(`已上传 ${files.length} 张素材`);
+});
+
+$("[data-site-settings-form]")?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  try {
+    await saveSiteSettings(event.currentTarget);
+  } catch (error) {
+    setStatus(`Contact 社交链接保存失败：${error.message}`);
+    showToast(`保存失败：${error.message}`);
+  }
 });
 
 $("[data-template-form]")?.addEventListener("submit", async (event) => {
