@@ -337,6 +337,7 @@ async function serveFile(req, res) {
     "/guides": "/guides.html",
     "/trips": "/trips.html",
     "/about": "/about.html",
+    "/contact": "/contact.html",
     "/admin": "/admin.html"
   };
   const routePath = routes[url.pathname]

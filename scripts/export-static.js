@@ -8,6 +8,7 @@ const baseHref = process.env.STATIC_BASE_HREF ?? "/chinamigo/";
 const htmlRoutes = [
   ["guides.html", "index.html"],
   ["about.html", "about/index.html"],
+  ["contact.html", "contact/index.html"],
   ["guides.html", "guides/index.html"],
   ["trips.html", "trips/index.html"],
   ["trip-detail.html", "trips/shanghai-lifestyle-trip/index.html"],
@@ -47,6 +48,7 @@ function rewriteStaticHtml(html) {
     .replace(/href="\/guides"/g, 'href="guides"')
     .replace(/href="\/trips"/g, 'href="trips"')
     .replace(/href="\/about"/g, 'href="about"')
+    .replace(/href="\/contact"/g, 'href="contact"')
     .replace(/href="\/#contact"/g, 'href="./#contact"')
     .replace(/href="\/#about"/g, 'href="./#about"')
     .replace(/href="\/"/g, 'href="./"')

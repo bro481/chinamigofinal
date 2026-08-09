@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <base href="/">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Contact ChinaMigo for private China travel help, city planning and local concierge support."
+    />
+    <title>Contact | ChinaMigo</title>
+    <link rel="stylesheet" href="styles.css?v=contact-simple-20260809" />
+    <script>window.__CHINAMIGO_STATIC__ = true;</script>
+    <script src="site.js?v=contact-simple-20260809" defer></script>
+  </head>
+  <body class="contact-page-body">
+    <header class="site-header guides-header is-compact" aria-label="Primary navigation">
+      <a class="brand" href="./" aria-label="ChinaMigo home">
+        <span>China</span><strong>Migo</strong>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="guides">China Guides</a>
+        <a href="trips">Trips & Services</a>
+        <a href="about">About</a>
+        <a href="contact" aria-current="page">Contact</a>
+      </nav>
+      <a
+        class="pill-button dark header-cta"
+        href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20my%20China%20visit."
+        aria-label="Chat with ChinaMigo on WhatsApp"
+      >
+        <span>WhatsApp</span>
+      </a>
+    </header>
+
+    <main class="contact-page">
+      <section class="contact-simple" aria-labelledby="contact-title">
+        <div class="contact-simple-copy">
+          <h1 id="contact-title">Start with a simple message.</h1>
+          <p>Tell us your city, dates and what feels difficult. We’ll suggest the next step.</p>
+        </div>
+
+        <div class="contact-simple-actions" aria-label="Contact options">
+          <a
+            class="contact-action contact-action-primary"
+            href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20my%20China%20visit."
+          >
+            <span aria-hidden="true">◌</span>
+            <strong>WhatsApp us</strong>
+          </a>
+          <a class="contact-action contact-action-secondary" href="mailto:hello@chinamigo.com">
+            <span aria-hidden="true">✉</span>
+            <strong>Email us</strong>
+          </a>
+        </div>
+
+        <div class="contact-note" role="search">
+          <label class="sr-only" for="contact-message">Trip note</label>
+          <input
+            id="contact-message"
+            type="text"
+            placeholder="Shanghai · 3 days · family trip..."
+            autocomplete="off"
+          />
+          <button type="button" data-contact-note-send aria-label="Send trip note">→</button>
+        </div>
+
+        <p class="contact-response-note">Usually replies within 24 hours · English support available</p>
+
+        <div class="contact-socials" aria-label="ChinaMigo social placeholders">
+          <p>Follow ChinaMigo</p>
+          <div>
+            <span>Instagram</span>
+            <span>TikTok</span>
+            <span>YouTube</span>
+            <span>Facebook</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (() => {
+        const input = document.querySelector("#contact-message");
+        const button = document.querySelector("[data-contact-note-send]");
+        const openWhatsApp = () => {
+          const value = input?.value.trim();
+          const message = value
+            ? `Hi ChinaMigo, ${value}`
+            : "Hi ChinaMigo, I'd like help planning my China visit.";
+          window.location.href = `https://wa.me/8613800000000?text=${encodeURIComponent(message)}`;
+        };
+        button?.addEventListener("click", openWhatsApp);
+        input?.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") openWhatsApp();
+        });
+      })();
+    </script>
+  </body>
+</html>
