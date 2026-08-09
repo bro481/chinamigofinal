@@ -75,6 +75,11 @@ const defaultSiteSettings = {
   }
 };
 
+const staticSiteSettingsFiles = [
+  path.join(root, "docs", "data", "site-settings.json"),
+  path.join(root, "dist", "client", "data", "site-settings.json")
+];
+
 function normalizeExternalUrl(value = "") {
   const raw = safeString(value, 500);
   if (!raw) return "";
@@ -346,6 +351,16 @@ async function readJson(file, fallback) {
 async function writeJson(file, value) {
   await fs.mkdir(path.dirname(file), { recursive: true });
   await fs.writeFile(file, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+async function syncStaticSiteSettings(settings) {
+  await Promise.all(staticSiteSettingsFiles.map(async (file) => {
+    try {
+      await writeJson(file, settings);
+    } catch (error) {
+      console.warn(`Could not sync site settings to ${file}: ${error.message}`);
+    }
+  }));
 }
 
 async function parsePayload(req) {
@@ -1376,6 +1391,7 @@ async function handleAdminApi(req, res, url) {
     } else if (req.method === "POST") {
       const settings = normalizeSiteSettings(await parsePayload(req));
       await writeJson(files.siteSettings, settings);
+      await syncStaticSiteSettings(settings);
       json(res, 200, { ok: true, data: settings });
     }
     return true;
