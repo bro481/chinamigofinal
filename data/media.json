@@ -1,5 +1,33 @@
 [
   {
+    "id": "media-46ea4323-de48-4f3b-9665-c149d53a69d5",
+    "url": "assets/uploads/1786453339121-367728841181249546.mp4",
+    "alt": "367728841181249546",
+    "folder": "guides",
+    "category": "guides",
+    "type": "video",
+    "mimeType": "video/mp4",
+    "tags": [
+      "video"
+    ],
+    "filename": "1786453339121-367728841181249546.mp4",
+    "createdAt": "2026-08-11T13:02:19.126Z"
+  },
+  {
+    "id": "media-c29eb149-a181-4d90-bb25-6029379ca24e",
+    "url": "assets/uploads/1786440125571-367753609733361668.mp4",
+    "alt": "367753609733361668",
+    "folder": "guides",
+    "category": "guides",
+    "type": "video",
+    "mimeType": "video/mp4",
+    "tags": [
+      "video"
+    ],
+    "filename": "1786440125571-367753609733361668.mp4",
+    "createdAt": "2026-08-11T09:22:05.581Z"
+  },
+  {
     "id": "media-16b66edf-ab70-4cc8-80c3-c23291fc750f",
     "url": "assets/uploads/1784605453295-oristano0381-full-body-portrait-he-stand-in-front-of-an-intric-f4cb8592-6c18-4b04-9b72-bdfddb6701be.png",
     "alt": "oristano0381_Full_body_portrait._he_stand_in_front_of_an_intric_f4cb8592-6c18-4b04-9b72-bdfddb6701be",

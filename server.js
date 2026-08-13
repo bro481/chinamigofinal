@@ -22,6 +22,7 @@ const files = {
   notifications: path.join(dataDir, "email-notifications.json"),
   users: path.join(dataDir, "users.json"),
   siteSettings: path.join(dataDir, "site-settings.json")
+  ,taxonomy: path.join(dataDir, "content-taxonomy.json")
 };
 
 const adminUser = process.env.ADMIN_USER || "admin";
@@ -119,6 +120,30 @@ function slugify(value, fallback = "item") {
   return slug || `${fallback}-${Date.now()}`;
 }
 
+function normalizeTaxonomy(payload = {}) {
+  const categories = Array.isArray(payload.categories) ? payload.categories : [];
+  const normalizedCategories = categories.map((item, index) => ({
+    id: safeString(item.id || slugify(item.name, "category"), 100),
+    name: safeString(item.name, 120),
+    slug: slugify(item.slug || item.name, "category"),
+    editorType: ["journey", "experience", "food", "stay"].includes(item.editorType) ? item.editorType : "experience",
+    active: item.active !== false,
+    sortOrder: Number(item.sortOrder ?? index + 1)
+  })).filter((item) => item.name);
+  const categoryIds = new Set(normalizedCategories.map((item) => item.id));
+  const tags = (Array.isArray(payload.tags) ? payload.tags : []).map((item, index) => ({
+    id: safeString(item.id || slugify(item.name, "tag"), 100),
+    name: safeString(item.name, 100),
+    categoryId: safeString(item.categoryId, 100),
+    active: item.active !== false,
+    sortOrder: Number(item.sortOrder ?? index + 1)
+  })).filter((item) => item.name && categoryIds.has(item.categoryId));
+  return {
+    categories: normalizedCategories.sort((a, b) => a.sortOrder - b.sortOrder),
+    tags: tags.sort((a, b) => a.categoryId.localeCompare(b.categoryId) || a.sortOrder - b.sortOrder)
+  };
+}
+
 function stripHtml(value = "") {
   return String(value || "").replace(/<[^>]+>/g, " ");
 }
@@ -194,6 +219,7 @@ function normalizeGuideCollection(payload, existing = {}) {
     : String(payload.guideSlugs || existing.guideSlugs || "").split(",");
   return {
     id: safeString(existing.id || payload.id || `guide-collection-${crypto.randomUUID()}`, 120),
+    slug: slugify(payload.slug || existing.slug || title, "guide-collection"),
     title,
     description: safeString(payload.description || existing.description || "", 520),
     categories: [...new Set(categories.map(normalizeGuideCategory))].slice(0, 12),
@@ -231,9 +257,7 @@ function publicGuideCollections(collections, guides) {
 
       const firstGuide = matchedGuides[0];
       const image = collection.image || firstGuide.coverImage || "assets/guide-first-time-china.png";
-      const href = collection.categories?.length === 1 && !collection.guideSlugs?.length
-        ? `/?category=${encodeURIComponent(collection.categories[0])}`
-        : `/guides/${firstGuide.slug}`;
+      const href = `/guides/collections/${encodeURIComponent(collection.id)}`;
 
       return {
         ...collection,
@@ -243,7 +267,17 @@ function publicGuideCollections(collections, guides) {
         imageScale: collection.image ? 1.02 : (firstGuide.imageScale || 1.02),
         count: matchedGuides.length,
         href,
-        guides: matchedGuides.slice(0, 6).map((guide) => guide.slug)
+        guides: matchedGuides.map((guide) => ({
+          slug: guide.slug,
+          title: guide.translations?.en?.title || guide.title,
+          excerpt: guide.translations?.en?.excerpt || guide.excerpt || "",
+          category: guide.category,
+          readTime: guide.readTime || estimateReadTimeForGuide(guide),
+          coverImage: guide.coverImage,
+          coverAlt: guide.coverAlt,
+          imagePosition: guide.imagePosition || "center center",
+          imageScale: guide.imageScale || 1.02
+        }))
       };
     })
     .filter(Boolean);
@@ -390,6 +424,7 @@ async function serveFile(req, res) {
     "/admin": "/admin.html"
   };
   const routePath = routes[url.pathname]
+    || (url.pathname.startsWith("/guides/collections/") ? "/guide-collection.html" : null)
     || (url.pathname.startsWith("/guides/") ? "/guide-detail.html" : null)
     || (citySlug ? "/city-experiences.html" : null)
     || (cityRoutes.has(tripSlug) ? "/city-experiences.html" : null)
@@ -465,6 +500,8 @@ function normalizeGuide(payload, existing = {}) {
   const normalized = {
     id: safeString(existing.id || payload.id || `guide-${crypto.randomUUID()}`, 100),
     title,
+    cardTitle: safeString(payload.cardTitle || existing.cardTitle || "", 120),
+    cardSubtitle: safeString(payload.cardSubtitle || existing.cardSubtitle || "", 180),
     slug: slugify(payload.slug || existing.slug || title, "guide"),
     category,
     city: safeString(payload.city || existing.city || "", 120),
@@ -559,6 +596,9 @@ function normalizeExperience(payload, existing = {}) {
     slug: slugify(payload.slug || existing.slug || title, "experience"),
     city: slugify(payload.city || existing.city || "shanghai", "city"),
     type: payload.type === "short_experience" ? "short_experience" : "recommended_journey",
+    categoryId: safeString(payload.categoryId || existing.categoryId || (payload.type === "short_experience" ? "local-experiences" : "journeys"), 100),
+    tagIds: Array.isArray(payload.tagIds) ? payload.tagIds.map((item) => safeString(item, 100)).filter(Boolean).slice(0, 20) : (existing.tagIds || []),
+    journeyKind: safeString(payload.journeyKind || existing.journeyKind || "", 80),
     duration: safeString(payload.duration || existing.duration || "", 80),
     excerpt: safeString(payload.excerpt || existing.excerpt || "", 420),
     coverImage: safeString(payload.coverImage || existing.coverImage || "", 500),
@@ -1128,6 +1168,16 @@ async function handleAuth(req, res, url) {
 }
 
 async function handleAdminApi(req, res, url) {
+  if (url.pathname === "/api/admin/taxonomy") {
+    if (req.method === "GET") {
+      json(res, 200, { ok: true, data: normalizeTaxonomy(await readJson(files.taxonomy, { categories: [], tags: [] })) });
+    } else if (req.method === "POST") {
+      const next = normalizeTaxonomy(await parsePayload(req));
+      await writeJson(files.taxonomy, next);
+      json(res, 200, { ok: true, data: next });
+    }
+    return true;
+  }
   const session = requireAdmin(req, res);
   if (!session) return true;
 

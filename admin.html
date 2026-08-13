@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ChinaMigo 后台</title>
-  <link rel="stylesheet" href="admin.css?v=content-ia-20260718a" />
+  <link rel="stylesheet" href="admin.css?v=journey-flow-20260813" />
   </head>
   <body>
     <main class="admin-shell">
@@ -45,6 +45,7 @@
           <button type="button" data-tab="cities">城市内容</button>
           <button type="button" data-tab="journeys">完整行程</button>
           <button type="button" data-tab="short-experiences">短体验</button>
+          <button type="button" data-tab="taxonomy">分类管理</button>
           <button type="button" data-tab="templates">模板中心</button>
           <button type="button" data-tab="media">素材中心</button>
         </nav>
@@ -123,6 +124,38 @@
             </div>
             <div class="overview-activity" data-recent-activity></div>
           </section>
+        </section>
+
+        <section class="admin-panel is-hidden" data-panel="taxonomy">
+          <div class="section-heading">
+            <div><h2>内容设置</h2><p>管理前台一级分类，以及每个分类可使用的标签。</p></div>
+          </div>
+          <div class="taxonomy-admin-grid">
+            <section class="city-editor-card">
+              <div class="experience-section-head"><div><p class="eyebrow">Frontend Categories</p><h3>分类管理</h3></div></div>
+              <div class="taxonomy-list" data-taxonomy-categories></div>
+              <form class="taxonomy-form" data-taxonomy-category-form>
+                <input name="id" type="hidden" />
+                <input name="name" placeholder="分类名称，例如 Nightlife" required />
+                <select name="editorType"><option value="experience">体验编辑器</option><option value="journey">Journey 编辑器</option><option value="food">Food 编辑器</option><option value="stay">住宿编辑器</option></select>
+                <input name="sortOrder" type="number" value="1" aria-label="分类排序" />
+                <select name="active"><option value="true">开启</option><option value="false">关闭</option></select>
+                <button type="submit">保存分类</button>
+              </form>
+            </section>
+            <section class="city-editor-card">
+              <div class="experience-section-head"><div><p class="eyebrow">Category Tags</p><h3>标签管理</h3></div></div>
+              <div class="taxonomy-list" data-taxonomy-tags></div>
+              <form class="taxonomy-form" data-taxonomy-tag-form>
+                <input name="id" type="hidden" />
+                <select name="categoryId" data-taxonomy-tag-category required></select>
+                <input name="name" placeholder="标签名称，例如 Coffee" required />
+                <input name="sortOrder" type="number" value="1" aria-label="标签排序" />
+                <select name="active"><option value="true">开启</option><option value="false">关闭</option></select>
+                <button type="submit">保存标签</button>
+              </form>
+            </section>
+          </div>
         </section>
 
         <section class="admin-panel is-hidden" data-panel="inquiries">
@@ -683,8 +716,7 @@
               <div class="city-sidebar-tools">
                 <input data-experience-search placeholder="搜索行程" />
                 <select data-experience-filter-type>
-                  <option value="recommended_journey">完整行程</option>
-                  <option value="short_experience">短体验</option>
+                  <option value="">全部内容</option>
                 </select>
               </div>
               <div class="experience-list" data-experiences-list></div>
@@ -696,6 +728,9 @@
               <input name="coverImage" type="hidden" />
               <input name="galleryImages" type="hidden" />
               <input name="tags" type="hidden" />
+              <input name="categoryId" type="hidden" />
+              <input name="tagIds" type="hidden" />
+              <input name="journeyKind" type="hidden" />
               <textarea name="itineraryDays" hidden></textarea>
               <textarea name="shortDetails" hidden></textarea>
               <textarea name="contentBlocks" hidden></textarea>
@@ -718,6 +753,7 @@
                 <div>
                   <p class="eyebrow">正在编辑</p>
                   <h3 data-current-experience-title>请选择行程</h3>
+                  <div class="experience-classification-summary" data-experience-classification-summary></div>
                   <span data-experience-page-preview>/trips/</span>
                   <small class="city-save-status" data-experience-completion>完成度 --</small>
                   <small class="city-save-status" data-experience-save-status>已保存</small>
@@ -826,21 +862,21 @@
                       <button class="secondary subtle-ai" type="button" data-ai-optimize-day>✨ 优化节奏</button>
                     </div>
                   </div>
-                  <div class="journey-toolbar-slot" data-day-toolbar></div>
                   <div class="day-editor-layout">
                     <aside class="day-tabbar">
                       <div class="day-list" data-day-list></div>
                       <button class="secondary" type="button" data-add-day>+ 新增 Day</button>
                     </aside>
+                    <div class="journey-toolbar-slot" data-day-toolbar></div>
                     <div class="day-fields" data-day-fields></div>
                   </div>
                 </section>
 
                 <section class="city-editor-card experience-content-section is-hidden" data-short-editor data-experience-section="content">
-                  <div class="journey-toolbar-slot" data-short-toolbar></div>
                   <div class="short-editor-shell">
+                    <div class="journey-toolbar-slot" data-short-toolbar></div>
                     <div class="document-editor journey-document-editor">
-                      <div class="visual-editor journey-visual-editor" data-visual-editor="short" data-short-field="body" data-short-visual-editor contenteditable="true" aria-label="Short Experience 正文"></div>
+                      <div class="visual-editor journey-visual-editor" data-empty-hint="点击「添加体验模块」开始创建内容" data-visual-editor="short" data-short-field="body" data-short-visual-editor contenteditable="true" aria-label="Short Experience 正文"></div>
                     </div>
                   </div>
                 </section>
@@ -1000,6 +1036,49 @@
 
         <p class="status" data-status></p>
         <div class="admin-toast" data-toast></div>
+        <div class="media-modal is-hidden" data-journey-create-modal>
+          <div class="media-modal-backdrop" data-close-journey-create></div>
+          <section class="media-modal-panel journey-create-panel">
+            <header>
+              <div><p class="eyebrow" data-journey-create-step-label>第 1 步，共 2 步</p><h3 data-journey-create-title>创建完整行程</h3></div>
+              <button class="secondary" type="button" data-close-journey-create>关闭</button>
+            </header>
+            <form data-journey-create-form>
+              <div class="journey-create-scroll">
+              <section data-journey-create-step="basic">
+                <div class="form-grid">
+                  <label class="wide">标题<input name="title" required placeholder="Shanghai Lifestyle Trip" /></label>
+                  <label>所属城市<select name="city" data-journey-create-city required></select></label>
+                  <label>内容类型<select name="type"><option value="recommended_journey">完整行程 Journey</option></select></label>
+                </div>
+              </section>
+              <section class="is-hidden" data-journey-create-step="classification">
+                <div class="journey-create-question"><strong>展示栏目</strong><span>这个内容显示在哪里？</span></div>
+                <div class="journey-create-category-list" data-journey-create-categories></div>
+                <div class="journey-create-secondary is-hidden" data-journey-create-secondary>
+                  <div class="journey-create-question"><strong>Journeys 分类</strong><span>行程类型</span></div>
+                  <div class="journey-kind-list">
+                    <label><input type="radio" name="journeyKind" value="multi-day" checked /><span><strong>Multi-day Journey</strong><small>多日完整旅行</small></span></label>
+                    <label><input type="radio" name="journeyKind" value="city-starter" /><span><strong>City Starter</strong><small>城市入门路线</small></span></label>
+                    <label><input type="radio" name="journeyKind" value="theme-journey" /><span><strong>Theme Journey</strong><small>主题旅行</small></span></label>
+                    <label><input type="radio" name="journeyKind" value="custom-journey" /><span><strong>Custom Journey</strong><small>定制路线</small></span></label>
+                  </div>
+                </div>
+                <div class="form-grid journey-create-properties">
+                  <label>城市<select name="classificationCity" data-journey-create-classification-city disabled></select></label>
+                  <label data-journey-duration-field>旅行天数<input name="duration" placeholder="4-5 Days" value="4-5 Days" /></label>
+                  <fieldset class="wide journey-create-tags"><legend>主题标签</legend><div class="tag-selector" data-journey-create-tags></div></fieldset>
+                </div>
+              </section>
+              </div>
+              <footer class="journey-create-footer">
+                <button class="secondary is-hidden" type="button" data-journey-create-back>上一步</button>
+                <button type="button" data-journey-create-next>创建并继续</button>
+                <button class="is-hidden" type="submit" data-journey-create-submit>保存并进入编辑器</button>
+              </footer>
+            </form>
+          </section>
+        </div>
         <div class="media-modal is-hidden" data-media-modal>
           <div class="media-modal-backdrop" data-close-media-picker></div>
           <section class="media-modal-panel">
@@ -1032,6 +1111,6 @@
         </div>
       </section>
     </main>
-    <script src="admin.js?v=content-ia-20260718a"></script>
+    <script src="admin.js?v=journey-flow-20260813"></script>
   </body>
 </html>

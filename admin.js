@@ -5,6 +5,7 @@ const state = {
   guideCollections: [],
   cities: [],
   experiences: [],
+  taxonomy: { categories: [], tags: [] },
   templates: [],
   media: [],
   siteSettings: { socialLinks: { instagram: "", tiktok: "", youtube: "", facebook: "" } },
@@ -613,6 +614,7 @@ function formValues(form) {
   if ("categories" in payload) payload.categories = csvToList(payload.categories);
   if ("guideSlugs" in payload) payload.guideSlugs = csvToList(payload.guideSlugs);
   if ("tags" in payload) payload.tags = csvToList(payload.tags);
+  if ("tagIds" in payload) payload.tagIds = csvToList(payload.tagIds);
   if ("galleryImages" in payload) payload.galleryImages = csvToList(payload.galleryImages);
   if ("contentBlocks" in payload) payload.contentBlocks = parseBlocks(payload.contentBlocks);
   if ("itineraryDays" in payload) payload.itineraryDays = parseJsonField(payload.itineraryDays, []);
@@ -1046,12 +1048,30 @@ function normalizeItineraryDay(day = {}, index = 0) {
     ...defaultItineraryDay(index),
     ...day
   };
+  if (isLegacyAutoJourneyScaffold(next.body)) next.body = "";
   next.template = inferDayTemplate(next);
   next.outlineFields = Array.isArray(next.outlineFields) ? next.outlineFields.filter((field) => dayFieldMeta[field]) : [];
   if (!next.body && (next.morning || next.afternoon || next.evening || next.stayNotes)) {
     next.body = dayBodyFromLegacy(next);
   }
   return next;
+}
+
+function isLegacyAutoJourneyScaffold(body = "") {
+  const html = String(body || "");
+  if (!html.includes("template-section")) return false;
+  const legacyHeadings = [
+    "Day Overview",
+    "Today’s Highlights",
+    "Today's Highlights",
+    "Route &amp; Schedule",
+    "Route & Schedule",
+    "Places to Visit",
+    "Food &amp; Cafés",
+    "Food & Cafés",
+    "Local Tips"
+  ];
+  return legacyHeadings.filter((heading) => html.includes(heading)).length >= 3;
 }
 
 function defaultExperience(overrides = {}) {
@@ -1061,6 +1081,9 @@ function defaultExperience(overrides = {}) {
     slug: "",
     city: state.cities[0]?.slug || "shanghai",
     type: "recommended_journey",
+    categoryId: "journeys",
+    tagIds: [],
+    journeyKind: "multi-day",
     duration: "3 Days",
     excerpt: "",
     coverImage: "",
@@ -1096,6 +1119,8 @@ function defaultExperienceForMode(mode = state.activeExperienceMode, overrides =
     type: meta.type,
     duration: isShort ? "3 Hours" : "3 Days",
     tags: isShort ? ["Local Experience"] : ["Private Journey"],
+    itineraryDays: [defaultItineraryDay(0)],
+    contentBlocks: [],
     ...overrides
   });
 }
@@ -2736,21 +2761,21 @@ function closestWithinEditor(node, selector, editor) {
 }
 
 const BLOCK_STYLE_MAP = {
-  medium: { tag: "p", label: "Body" },
-  hero: { tag: "h1", label: "H1" },
-  large: { tag: "h2", label: "H2" },
-  small: { tag: "h3", label: "H3" }
+  medium: { tag: "p", label: "正文" },
+  hero: { tag: "h1", label: "标题 1" },
+  large: { tag: "h2", label: "标题 2" },
+  small: { tag: "h3", label: "标题 3" }
 };
 
 const TEXT_COLOR_LABELS = {
-  "#111111": "文字颜色",
+  "#111111": "文字",
   "#8A5A2B": "Highlight",
   "#9B3D2E": "Warning",
   "#2F5F55": "Brand"
 };
 
 const FILL_COLOR_LABELS = {
-  transparent: "背景颜色",
+  transparent: "底色",
   "#F3E7C8": "Tip 背景",
   "#F1E6E0": "Warning 背景",
   "#E8EFE7": "推荐背景",
@@ -2817,8 +2842,8 @@ function updateToolbarState(editor = getActiveVisualEditor()) {
   $$("[data-format-inline='color']").forEach((button) => button.classList.toggle("is-active", button.dataset.formatValue === activeColorValue));
   $$("[data-format-inline='highlight']").forEach((button) => button.classList.toggle("is-active", button.dataset.formatValue === activeFillValue));
   setToolbarCurrent("style", BLOCK_STYLE_MAP[activeBlockValue]?.label || "样式");
-  setToolbarCurrent("color", TEXT_COLOR_LABELS[activeColorValue] || "文字颜色");
-  setToolbarCurrent("fill", FILL_COLOR_LABELS[activeFillValue] || "背景颜色");
+  setToolbarCurrent("color", TEXT_COLOR_LABELS[activeColorValue] || "文字");
+  setToolbarCurrent("fill", FILL_COLOR_LABELS[activeFillValue] || "底色");
   $$("[data-toolbar-menu-trigger]").forEach((trigger) => {
     const kind = trigger.dataset.toolbarMenuTrigger;
     trigger.classList.toggle("is-active", (kind === "style" && activeBlockValue !== "medium") || (kind === "color" && Boolean(activeColorNode)) || (kind === "fill" && Boolean(activeHighlightNode)));
@@ -3113,12 +3138,15 @@ function closeToolbarMenus() {
 function insertHtmlIntoVisualAtSelection(html, lang = state.lastVisualSelection?.lang || state.currentGuideLang) {
   const visual = restoreVisualSelection(lang);
   if (!visual) return false;
+  const wasEmptyTravelEditor = (lang === "journey" || lang === "short") && !editorHasCreatedContent(visual);
   const beforeHtml = visual.innerHTML;
   visual.focus({ preventScroll: true });
-  document.execCommand("insertHTML", false, html);
+  if (wasEmptyTravelEditor) visual.innerHTML = html;
+  else document.execCommand("insertHTML", false, html);
   pushEditorHistory(lang, beforeHtml, visual.innerHTML);
   markVisualEditorChanged(lang);
   rememberVisualSelection();
+  if (wasEmptyTravelEditor) focusFirstCreatedEditorContent(visual);
   return true;
 }
 
@@ -4994,13 +5022,13 @@ function updateExperienceModuleChrome() {
   if (title) title.textContent = meta.title;
   if (description) description.textContent = meta.description;
   if (search) search.placeholder = meta.searchPlaceholder;
-  if (filter) filter.value = meta.type;
   if (newButton) newButton.textContent = meta.newLabel;
   if (contentJump) contentJump.textContent = meta.type === "short_experience" ? "短体验编辑" : "Journey 编辑";
   $$("[data-experience-mode]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.experienceMode === meta.type);
   });
 }
+
 
 function setExperienceWorkflowSection(section = "content") {
   const activeSection = ["content", "modules", "media", "settings", "preview"].includes(section) ? section : "content";
@@ -5041,17 +5069,18 @@ function renderExperienceList() {
   updateExperienceModuleChrome();
   const query = ($("[data-experience-search]")?.value || "").toLowerCase();
   const type = experienceModeMeta().type;
+  const categoryId = $("[data-experience-filter-type]")?.value || "";
   const experiences = [...state.experiences]
     .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0))
     .filter((item) => {
       const haystack = [item.title, item.city, item.duration, item.excerpt, ...(item.tags || [])].join(" ").toLowerCase();
-      return (!query || haystack.includes(query)) && (!type || item.type === type);
+      return (!query || haystack.includes(query)) && (!type || item.type === type) && (!categoryId || (item.categoryId || (item.type === "recommended_journey" ? "journeys" : "local-experiences")) === categoryId);
     });
   list.innerHTML = experiences.map((item) => `
     <button class="experience-row ${item.id === state.currentExperienceId ? "is-active" : ""}" type="button" data-edit-experience="${item.id}">
       <span>
         <strong>${escapeHtml(item.title || `未命名${experienceModeMeta().editLabel}`)}</strong>
-        <small>${escapeHtml([item.city, item.type === "short_experience" ? "短体验" : "完整行程", item.duration].filter(Boolean).join(" · "))}</small>
+        <small>${escapeHtml([item.city, taxonomyCategory(item.categoryId || (item.type === "recommended_journey" ? "journeys" : "local-experiences"))?.name || (item.type === "short_experience" ? "短体验" : "完整行程"), item.duration].filter(Boolean).join(" · "))}</small>
       </span>
       <em>${item.published ? "已发布" : "草稿"}</em>
     </button>
@@ -5061,6 +5090,12 @@ function renderExperienceList() {
 function renderExperienceEditor(experience) {
   const item = normalizeExperienceDraft(experience);
   state.currentExperienceId = item.id;
+  const previousDayFields = $("[data-day-fields]");
+  if (previousDayFields) previousDayFields.innerHTML = "";
+  state.lastDaySelection = null;
+  if (state.lastVisualSelection?.lang === "journey" || state.lastVisualSelection?.lang === "short") {
+    state.lastVisualSelection = null;
+  }
   fillForm($("[data-experience-form]"), item);
   $("[name='itineraryDays']").value = JSON.stringify(item.itineraryDays || []);
   $("[name='shortDetails']").value = JSON.stringify(item.shortDetails || {});
@@ -5077,6 +5112,7 @@ function renderExperienceEditor(experience) {
   const slugInput = $("[data-experience-form] [name='slug']");
   if (slugInput) slugInput.dataset.autoSlug = item.slug ? "false" : "true";
   $("[data-current-experience-title]").textContent = item.title || `未命名${experienceModeMeta(item.type).editLabel}`;
+  renderExperienceClassificationSummary(item);
   $("[data-experience-page-preview]").textContent = `/trips/${item.slug || ""}`;
   $("[data-experience-save-status]").textContent = item.id ? `已保存 · ${formatRelativeDate(item.updatedAt)}` : `新${experienceModeMeta(item.type).editLabel} · 尚未保存`;
   state.currentExperienceDay = 0;
@@ -5262,18 +5298,17 @@ function renderDayToolbar(activeTemplate = "free", options = {}) {
     showTemplate = true,
     templateKind = mediaLang === "short" ? "experience" : "journey"
   } = options;
+  const moduleButtonLabel = mediaLang === "journey" || mediaLang === "short" ? "+ 模块" : journeyLabel;
   const toolbar = $(target);
   if (!toolbar) return;
   toolbar.innerHTML = `
     <div class="markdown-toolbar journey-markdown-toolbar">
       <div class="editor-tool-group">
-        <span class="toolbar-section-label">编辑</span>
-        <button class="secondary" type="button" data-editor-command="undo" title="撤销 Ctrl/Cmd + Z">撤销</button>
-        <button class="secondary" type="button" data-editor-command="redo" title="重做 Shift + Ctrl/Cmd + Z">重做</button>
-        <span class="toolbar-section-label">格式</span>
-        <button class="secondary" type="button" data-format-inline="bold" title="加粗 Ctrl/Cmd + B">加粗</button>
+        <button class="secondary editor-icon-button" type="button" data-editor-command="undo" title="撤销 Ctrl/Cmd + Z" aria-label="撤销">↶</button>
+        <button class="secondary editor-icon-button" type="button" data-editor-command="redo" title="重做 Shift + Ctrl/Cmd + Z" aria-label="重做">↷</button>
+        <span class="toolbar-divider" aria-hidden="true"></span>
         <span class="toolbar-menu" data-toolbar-menu>
-          <button class="secondary toolbar-menu-trigger" type="button" data-toolbar-menu-trigger="style"><span data-toolbar-current="style">Body</span></button>
+          <button class="secondary toolbar-menu-trigger" type="button" data-toolbar-menu-trigger="style"><span data-toolbar-current="style">正文</span></button>
           <div class="toolbar-menu-panel" data-toolbar-menu-panel hidden>
             <button type="button" data-format-inline="size" data-format-value="medium"><span class="toolbar-check"></span><span>正文 Body</span></button>
             <button type="button" data-format-inline="size" data-format-value="hero"><span class="toolbar-check"></span><span>H1 大标题</span></button>
@@ -5281,8 +5316,9 @@ function renderDayToolbar(activeTemplate = "free", options = {}) {
             <button type="button" data-format-inline="size" data-format-value="small"><span class="toolbar-check"></span><span>H3 小标题</span></button>
           </div>
         </span>
+        <button class="secondary editor-icon-button editor-bold-button" type="button" data-format-inline="bold" title="加粗 Ctrl/Cmd + B" aria-label="加粗">B</button>
         <span class="toolbar-menu" data-toolbar-menu>
-          <button class="secondary toolbar-menu-trigger" type="button" data-toolbar-menu-trigger="color"><span data-toolbar-current="color">文字颜色</span></button>
+          <button class="secondary toolbar-menu-trigger toolbar-compact-menu" type="button" data-toolbar-menu-trigger="color" title="文字颜色"><span data-toolbar-current="color">文字</span></button>
           <div class="toolbar-menu-panel" data-toolbar-menu-panel hidden>
             <button type="button" data-format-inline="color" data-format-value="#111111"><span class="toolbar-check"></span><span class="toolbar-swatch color-swatch" style="--swatch:#111111"></span><span>默认文字</span></button>
             <button type="button" data-format-inline="color" data-format-value="#8A5A2B"><span class="toolbar-check"></span><span class="toolbar-swatch color-swatch" style="--swatch:#8A5A2B"></span><span>重点 Highlight</span></button>
@@ -5291,7 +5327,7 @@ function renderDayToolbar(activeTemplate = "free", options = {}) {
           </div>
         </span>
         <span class="toolbar-menu" data-toolbar-menu>
-          <button class="secondary toolbar-menu-trigger" type="button" data-toolbar-menu-trigger="fill"><span data-toolbar-current="fill">背景颜色</span></button>
+          <button class="secondary toolbar-menu-trigger toolbar-compact-menu" type="button" data-toolbar-menu-trigger="fill" title="背景颜色"><span data-toolbar-current="fill">底色</span></button>
           <div class="toolbar-menu-panel" data-toolbar-menu-panel hidden>
             <button type="button" data-format-inline="highlight" data-format-value="transparent"><span class="toolbar-check"></span><span class="toolbar-swatch color-swatch toolbar-swatch-empty"></span><span>无背景</span></button>
             <button type="button" data-format-inline="highlight" data-format-value="#F3E7C8"><span class="toolbar-check"></span><span class="toolbar-swatch color-swatch" style="--swatch:#F3E7C8"></span><span>💡 Tip 背景</span></button>
@@ -5301,7 +5337,7 @@ function renderDayToolbar(activeTemplate = "free", options = {}) {
           </div>
         </span>
         <span class="toolbar-menu" data-toolbar-menu>
-          <button class="secondary toolbar-menu-trigger" type="button" data-toolbar-menu-trigger="insert">Insert</button>
+          <button class="secondary toolbar-menu-trigger" type="button" data-toolbar-menu-trigger="insert">＋ 插入</button>
           <div class="toolbar-menu-panel" data-toolbar-menu-panel hidden>
             <button type="button" data-insert-guide-element="link"><span class="toolbar-check"></span><span>链接</span></button>
             <button type="button" data-insert-media="image" data-media-lang="${escapeHtml(mediaLang)}"><span class="toolbar-check"></span><span>图片</span></button>
@@ -5311,11 +5347,11 @@ function renderDayToolbar(activeTemplate = "free", options = {}) {
           </div>
         </span>
         ${showTemplate ? `<span class="toolbar-menu guide-elements-menu" data-journey-toolbar-menu>
-          <button class="secondary toolbar-menu-trigger" type="button" data-journey-toolbar-menu-trigger="template">Template ▾</button>
+          <button class="secondary toolbar-menu-trigger" type="button" data-journey-toolbar-menu-trigger="template">模板</button>
           ${renderEditorTemplatePanel(templateKind, activeTemplate)}
         </span>` : ""}
         <span class="toolbar-menu guide-elements-menu" data-journey-toolbar-menu>
-          <button class="secondary toolbar-menu-trigger" type="button" data-journey-toolbar-menu-trigger="journey">${escapeHtml(journeyLabel)}</button>
+          <button class="secondary toolbar-menu-trigger module-toolbar-trigger" type="button" data-journey-toolbar-menu-trigger="journey">${escapeHtml(moduleButtonLabel)}</button>
           <div class="toolbar-menu-panel" data-journey-toolbar-menu-panel hidden>
             ${dayInsertButton("experience", "Experience Flow")}
             ${dayInsertButton("timeline", "Timeline")}
@@ -5388,19 +5424,20 @@ function renderDayEditor() {
   const day = normalizeItineraryDay(days[state.currentExperienceDay] || {}, state.currentExperienceDay);
   const templateId = inferDayTemplate(day);
   const displayTitle = cleanDayTitle(day.title || "", state.currentExperienceDay);
+  const canvasText = dayCanvasText(day);
   renderDayToolbar(templateId);
   $("[data-day-fields]").innerHTML = `
     <input data-day-field="title" type="hidden" value="${escapeHtml(displayTitle)}" />
     <textarea data-day-field="summary" hidden>${escapeHtml(day.summary || "")}</textarea>
-    <div class="document-editor journey-document-editor">
-      <div class="visual-editor journey-visual-editor" data-visual-editor="journey" data-day-field="body" data-journey-visual-editor contenteditable="true" aria-label="Journey Day 正文">${editableDayHtml(dayCanvasText(day))}</div>
+    <div class="document-editor journey-document-editor ${canvasText.trim() ? "" : "is-empty-editor"}">
+      <div class="visual-editor journey-visual-editor" data-empty-hint="点击「添加旅行模块」开始创建内容" data-visual-editor="journey" data-day-field="body" data-journey-visual-editor contenteditable="true" aria-label="Journey Day 正文">${editableDayHtml(canvasText)}</div>
     </div>
     <input data-day-field="image" type="hidden" value="${escapeHtml(day.image || "")}" />
   `;
   updateDayWordCount();
   resetJourneyEditorHistory();
   renderItineraryPreview(days);
-  focusEditorStart("[data-journey-visual-editor]");
+  focusFirstCreatedEditorContent("[data-journey-visual-editor]");
 }
 
 function focusEditorStart(selector) {
@@ -5418,11 +5455,45 @@ function focusEditorStart(selector) {
   }, 80);
 }
 
+function editorHasCreatedContent(editor) {
+  if (!editor) return false;
+  return Boolean((editor.innerText || "").replace(/\u200b/g, "").trim()
+    || editor.querySelector("[data-journey-component], .journey-component, figure, img, video, audio"));
+}
+
+function clearEmptyEditorFocus(editor) {
+  if (!editor || editorHasCreatedContent(editor)) return;
+  if (document.activeElement === editor) editor.blur();
+  const selection = window.getSelection();
+  if (selection?.anchorNode && editor.contains(selection.anchorNode)) selection.removeAllRanges();
+}
+
+function focusFirstCreatedEditorContent(editorOrSelector) {
+  window.setTimeout(() => {
+    const editor = typeof editorOrSelector === "string" ? $(editorOrSelector) : editorOrSelector;
+    if (!editor || editor.closest(".is-hidden") || editor.closest(".is-section-hidden")) return;
+    const hasCreatedContent = editorHasCreatedContent(editor);
+    const component = editor.querySelector("[data-journey-component], .journey-component");
+    const target = hasCreatedContent
+      ? (component?.querySelector("p, li") || component || editor.querySelector("p, li, h1, h2, h3") || editor)
+      : editor;
+    editor.focus({ preventScroll: true });
+    const range = document.createRange();
+    range.selectNodeContents(target);
+    range.collapse(true);
+    const selection = window.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    state.lastDaySelection = { element: editor, range: range.cloneRange() };
+    state.lastVisualSelection = { lang: editor.dataset.visualEditor || state.currentGuideLang, range: range.cloneRange() };
+  }, 80);
+}
+
 function focusActiveExperienceEditor() {
   if (state.activeExperienceSection !== "content") return;
   const type = $("[data-experience-type]")?.value || state.activeExperienceMode || "recommended_journey";
   const selector = type === "short_experience" ? "[data-short-visual-editor]" : "[data-journey-visual-editor]";
-  focusEditorStart(selector);
+  focusFirstCreatedEditorContent(selector);
 }
 
 function dayInsertButton(type, label) {
@@ -5574,13 +5645,16 @@ function applyJourneyEditorHistory(command) {
 function insertJourneyHtml(html, toast) {
   const editor = restoreJourneySelection();
   if (!editor) return false;
+  const wasEmpty = !editorHasCreatedContent(editor);
   const beforeHtml = editor.innerHTML;
-  document.execCommand("insertHTML", false, html);
+  if (wasEmpty) editor.innerHTML = html;
+  else document.execCommand("insertHTML", false, html);
   pushJourneyHistory(beforeHtml, editor.innerHTML);
   pushEditorHistory("journey", beforeHtml, editor.innerHTML);
   rememberJourneySelection();
   rememberVisualSelection();
   syncJourneyEditorState({ toast });
+  if (wasEmpty) focusFirstCreatedEditorContent(editor);
   return true;
 }
 
@@ -5591,7 +5665,7 @@ function applyJourneyInlineFormat(kind, value = "") {
   const selectedText = escapeHtml(window.getSelection()?.toString() || "");
   if (kind === "bold") document.execCommand("bold");
   if (kind === "size") {
-    const label = BLOCK_STYLE_MAP[value]?.label || "Body";
+    const label = BLOCK_STYLE_MAP[value]?.label || "正文";
     document.execCommand("insertHTML", false, `<span class="cms-text-size cms-text-size-${escapeHtml(value)}">${selectedText || label}</span>`);
   }
   if (kind === "color") {
@@ -5714,19 +5788,21 @@ function insertTextIntoDayTarget(target, text) {
 }
 
 function appendDayModuleSnippet(type) {
+  const experienceType = $("[data-experience-type]")?.value || state.activeExperienceMode || "recommended_journey";
+  const isContentSection = state.activeExperienceSection === "content";
+  const shortEditor = experienceType === "short_experience" && isContentSection
+    ? $("[data-short-visual-editor]")
+    : (document.activeElement?.matches?.("[data-short-visual-editor]") ? document.activeElement : null);
+  if (shortEditor) {
+    insertHtmlIntoVisualAtSelection(dayBlockHtml(type), "short");
+    return;
+  }
   const detailEditor = document.activeElement?.matches?.("[data-detail-visual-editor]")
     ? document.activeElement
-    : (state.lastVisualSelection?.lang === "details" ? $("[data-detail-visual-editor]") : null);
+    : (state.activeExperienceSection === "modules" && state.lastVisualSelection?.lang === "details" ? $("[data-detail-visual-editor]") : null);
   if (detailEditor) {
     insertHtmlIntoVisualAtSelection(dayBlockHtml(type), "details");
     updateDetailWordCount();
-    return;
-  }
-  const shortEditor = document.activeElement?.matches?.("[data-short-visual-editor]")
-    ? document.activeElement
-    : (state.lastVisualSelection?.lang === "short" || $("[data-experience-type]")?.value === "short_experience" ? $("[data-short-visual-editor]") : null);
-  if (shortEditor) {
-    insertHtmlIntoVisualAtSelection(dayBlockHtml(type), "short");
     return;
   }
   const target = activeDayTextTarget();
@@ -5851,6 +5927,18 @@ function readShortDetails() {
 
 function renderShortEditor() {
   const details = parseJsonField($("[name='shortDetails']")?.value, {});
+  const shortBody = shortBodyFromDetails(details);
+  const shortEditor = $("[data-short-editor]");
+  if (shortEditor) {
+    shortEditor.querySelector(".short-editor-shell").innerHTML = `
+      <div class="journey-toolbar-slot" data-short-toolbar></div>
+      <input data-short-field="location" type="hidden" value="${escapeHtml(details.location || "")}" />
+      <input data-short-field="bookingMethod" type="hidden" value="${escapeHtml(details.bookingMethod || "")}" />
+      <div class="document-editor journey-document-editor ${shortBody.trim() ? "" : "is-empty-editor"}">
+        <div class="visual-editor journey-visual-editor" data-empty-hint="点击「添加体验模块」开始创建内容" data-visual-editor="short" data-short-field="body" data-short-visual-editor contenteditable="true" aria-label="Short Experience 正文">${editableDayHtml(shortBody)}</div>
+      </div>
+    `;
+  }
   renderDayToolbar("free", {
     target: "[data-short-toolbar]",
     mediaLang: "short",
@@ -5859,29 +5947,19 @@ function renderShortEditor() {
     showTemplate: true,
     templateKind: "experience"
   });
-  const shortEditor = $("[data-short-editor]");
-  if (shortEditor) {
-    shortEditor.querySelector(".short-editor-shell").innerHTML = `
-      <input data-short-field="location" type="hidden" value="${escapeHtml(details.location || "")}" />
-      <input data-short-field="bookingMethod" type="hidden" value="${escapeHtml(details.bookingMethod || "")}" />
-      <div class="document-editor journey-document-editor">
-        <div class="visual-editor journey-visual-editor" data-visual-editor="short" data-short-field="body" data-short-visual-editor contenteditable="true" aria-label="Short Experience 正文">${editableDayHtml(shortBodyFromDetails(details))}</div>
-      </div>
-    `;
-  }
   $$("[data-short-field]").forEach((field) => {
     const key = field.dataset.shortField;
     if ("value" in field) {
       field.value = details[key] || "";
     } else if (key === "body") {
-      field.innerHTML = editableDayHtml(shortBodyFromDetails(details));
+      field.innerHTML = editableDayHtml(shortBody);
     } else {
       field.innerHTML = editableDayHtml(details[key] || "");
     }
   });
   resetEditorHistory("short");
   updateShortWordCount();
-  focusEditorStart("[data-short-visual-editor]");
+  focusFirstCreatedEditorContent("[data-short-visual-editor]");
 }
 
 function shortBodyFromDetails(details = {}) {
@@ -6755,7 +6833,112 @@ function applyPickedMedia(url) {
   showToast("图片已应用");
 }
 
+async function saveTaxonomy() {
+  const response = await api("/api/admin/taxonomy", { method: "POST", body: JSON.stringify(state.taxonomy) });
+  state.taxonomy = response.data;
+  renderTaxonomyAdmin();
+}
+
+async function loadTaxonomy() {
+  state.taxonomy = (await api("/api/admin/taxonomy")).data;
+  renderTaxonomyAdmin();
+}
+
+function taxonomyCategory(id = "") {
+  return state.taxonomy.categories.find((item) => item.id === id);
+}
+
+function renderTaxonomyAdmin() {
+  const categoryList = $("[data-taxonomy-categories]");
+  const tagList = $("[data-taxonomy-tags]");
+  const categories = [...state.taxonomy.categories].sort((a, b) => a.sortOrder - b.sortOrder);
+  if (categoryList) categoryList.innerHTML = categories.map((item) => `
+    <div class="taxonomy-row"><small>${item.sortOrder}</small><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.editorType)}</small></span><em>${item.active ? "开启" : "关闭"}</em><span><button class="secondary" type="button" data-edit-taxonomy-category="${escapeHtml(item.id)}">编辑</button> <button class="secondary" type="button" data-delete-taxonomy-category="${escapeHtml(item.id)}">删除</button></span></div>
+  `).join("");
+  if (tagList) tagList.innerHTML = categories.map((category) => {
+    const tags = state.taxonomy.tags.filter((item) => item.categoryId === category.id).sort((a, b) => a.sortOrder - b.sortOrder);
+    return `<div class="taxonomy-tag-group"><strong>${escapeHtml(category.name)}</strong>${tags.map((tag) => `<div class="taxonomy-row"><small>${tag.sortOrder}</small><span>${escapeHtml(tag.name)}</span><em>${tag.active ? "开启" : "关闭"}</em><span><button class="secondary" type="button" data-edit-taxonomy-tag="${escapeHtml(tag.id)}">编辑</button> <button class="secondary" type="button" data-delete-taxonomy-tag="${escapeHtml(tag.id)}">删除</button></span></div>`).join("") || "<p class='empty'>暂无标签</p>"}</div>`;
+  }).join("");
+  const selects = $$('[data-taxonomy-tag-category]');
+  selects.forEach((select) => {
+    const current = select.value;
+    select.innerHTML = categories.filter((item) => item.active || item.id === current).map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join("");
+    if (current && categories.some((item) => item.id === current)) select.value = current;
+  });
+  const contentFilter = $("[data-experience-filter-type]");
+  if (contentFilter) {
+    const current = contentFilter.value;
+    contentFilter.innerHTML = `<option value="">全部内容</option>${categories.filter((item) => item.active).map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join("")}`;
+    if (categories.some((item) => item.id === current)) contentFilter.value = current;
+  }
+}
+
+function renderJourneyCreateTags(categoryId = "", selected = []) {
+  const node = $("[data-journey-create-tags]");
+  if (!node) return;
+  const selectedSet = new Set(selected);
+  const tags = state.taxonomy.tags.filter((tag) => tag.active && tag.categoryId === categoryId).sort((a, b) => a.sortOrder - b.sortOrder);
+  node.innerHTML = tags.length ? tags.map((tag) => `<label><input type="checkbox" value="${escapeHtml(tag.id)}" ${selectedSet.has(tag.id) ? "checked" : ""} /><span>${escapeHtml(tag.name)}</span></label>`).join("") : `<small>该栏目暂无主题标签，可在“分类管理”中添加。</small>`;
+}
+
+function showJourneyCreateStep(step = "basic") {
+  const basic = step === "basic";
+  $("[data-journey-create-step='basic']")?.classList.toggle("is-hidden", !basic);
+  $("[data-journey-create-step='classification']")?.classList.toggle("is-hidden", basic);
+  $("[data-journey-create-step-label]").textContent = basic ? "第 1 步，共 2 步" : "第 2 步，共 2 步";
+  $("[data-journey-create-title]").textContent = basic ? "创建完整行程" : "设置内容分类";
+  $("[data-journey-create-next]")?.classList.toggle("is-hidden", !basic);
+  $("[data-journey-create-back]")?.classList.toggle("is-hidden", basic);
+  $("[data-journey-create-submit]")?.classList.toggle("is-hidden", basic);
+  const scroll = $(".journey-create-scroll");
+  if (scroll) scroll.scrollTop = 0;
+}
+
+function openJourneyCreateModal(overrides = {}) {
+  const modal = $("[data-journey-create-modal]");
+  const form = $("[data-journey-create-form]");
+  if (!modal || !form) return;
+  form.reset();
+  form.dataset.editingId = overrides.id || "";
+  const cities = state.cities.filter((city) => city.active !== false);
+  const cityOptions = cities.map((city) => `<option value="${escapeHtml(city.slug)}">${escapeHtml(city.name)}</option>`).join("");
+  $("[data-journey-create-city]").innerHTML = cityOptions;
+  $("[data-journey-create-classification-city]").innerHTML = cityOptions;
+  const categories = state.taxonomy.categories.filter((item) => item.active).sort((a, b) => a.sortOrder - b.sortOrder);
+  const descriptions = { "local-experiences": "本地短体验", journeys: "完整旅行路线", "food-cafes": "餐饮与咖啡", "hidden-spots": "隐藏地点", "where-to-stay": "住宿推荐" };
+  $("[data-journey-create-categories]").innerHTML = categories.map((category) => `<label><input type="radio" name="categoryId" value="${escapeHtml(category.id)}" ${category.id === "journeys" ? "checked" : ""} /><span><strong>${escapeHtml(category.name)}</strong><small>${escapeHtml(descriptions[category.id] || "内容栏目")}</small></span></label>`).join("");
+  form.elements.title.value = overrides.title || "";
+  if (overrides.city) form.elements.city.value = overrides.city;
+  form.elements.classificationCity.value = form.elements.city.value;
+  renderJourneyCreateTags(form.elements.categoryId?.value || "journeys");
+  $("[data-journey-create-secondary]")?.classList.toggle("is-hidden", form.elements.categoryId?.value !== "journeys");
+  showJourneyCreateStep("basic");
+  modal.classList.remove("is-hidden");
+  requestAnimationFrame(() => form.elements.title.focus());
+}
+
+function closeJourneyCreateModal() {
+  $("[data-journey-create-modal]")?.classList.add("is-hidden");
+}
+
+function journeyKindLabel(value = "") {
+  return ({ "multi-day": "Multi-day Journey", "city-starter": "City Starter", "theme-journey": "Theme Journey", "custom-journey": "Custom Journey" })[value] || "";
+}
+
+function renderExperienceClassificationSummary(item = {}) {
+  const node = $("[data-experience-classification-summary]");
+  if (!node) return;
+  const categoryId = item.categoryId || (item.type === "recommended_journey" ? "journeys" : "local-experiences");
+  const category = taxonomyCategory(categoryId);
+  const tagNames = (item.tagIds || []).map((id) => state.taxonomy.tags.find((tag) => tag.id === id)?.name).filter(Boolean);
+  const chips = [category?.name, journeyKindLabel(item.journeyKind), item.duration, state.cities.find((city) => city.slug === item.city)?.name || item.city, ...tagNames].filter(Boolean);
+  node.innerHTML = chips.map((label, index) => index === 0 || index >= 4
+    ? `<button type="button" data-edit-content-classification title="快速修改内容归属">${escapeHtml(label)}</button>`
+    : `<span>${escapeHtml(label)}</span>`).join("");
+}
+
 async function refreshAll() {
+  await loadTaxonomy();
   await Promise.all([loadOverview(), loadTemplates(), loadInquiries(), loadGuides(), loadGuideCollections(), loadCities(), loadExperiences(), loadMedia(), loadSiteSettings()]);
 }
 
@@ -6859,6 +7042,34 @@ $("[data-city-form]").addEventListener("submit", async (event) => {
   }
 });
 
+$("[data-taxonomy-category-form]").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const values = formValues(event.currentTarget);
+  const item = {
+    id: values.id || slugify(values.name), name: values.name, slug: slugify(values.name),
+    editorType: values.editorType || "experience", active: values.active !== "false", sortOrder: Number(values.sortOrder || 0)
+  };
+  const index = state.taxonomy.categories.findIndex((category) => category.id === item.id);
+  if (index >= 0) state.taxonomy.categories[index] = item; else state.taxonomy.categories.push(item);
+  await saveTaxonomy();
+  event.currentTarget.reset();
+  showToast("分类已保存");
+});
+
+$("[data-taxonomy-tag-form]").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const values = formValues(event.currentTarget);
+  const item = {
+    id: values.id || slugify(`${values.categoryId}-${values.name}`), name: values.name, categoryId: values.categoryId,
+    active: values.active !== "false", sortOrder: Number(values.sortOrder || 0)
+  };
+  const index = state.taxonomy.tags.findIndex((tag) => tag.id === item.id);
+  if (index >= 0) state.taxonomy.tags[index] = item; else state.taxonomy.tags.push(item);
+  await saveTaxonomy();
+  event.currentTarget.reset();
+  showToast("标签已保存");
+});
+
 $("[data-experience-form]").addEventListener("submit", async (event) => {
   event.preventDefault();
   const payload = syncExperienceForm();
@@ -6957,10 +7168,108 @@ $("[data-new-city]").addEventListener("click", () => {
   renderCityCardPreview(nextCity);
   renderCityList();
 });
-$("[data-new-experience]").addEventListener("click", () => renderExperienceEditor(defaultExperienceForMode()));
+$("[data-journey-create-form]")?.addEventListener("change", (event) => {
+  const form = event.currentTarget;
+  if (event.target.name === "city") form.elements.classificationCity.value = event.target.value;
+  if (event.target.name === "categoryId") {
+    renderJourneyCreateTags(event.target.value);
+    $("[data-journey-create-secondary]")?.classList.toggle("is-hidden", event.target.value !== "journeys");
+    $("[data-journey-duration-field]")?.classList.toggle("is-hidden", event.target.value !== "journeys");
+  }
+});
+
+$("[data-journey-create-form]")?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const categoryId = form.elements.categoryId.value;
+  const tagIds = $$('[data-journey-create-tags] input:checked').map((input) => input.value);
+  const existingDraft = form.dataset.editingId ? syncExperienceForm() : {};
+  const payload = defaultExperience({
+    ...existingDraft,
+    id: form.dataset.editingId || "",
+    title: form.elements.title.value.trim(),
+    city: form.elements.city.value,
+    type: "recommended_journey",
+    categoryId,
+    journeyKind: categoryId === "journeys" ? form.elements.journeyKind.value : "",
+    duration: form.elements.duration.value.trim(),
+    tagIds,
+    tags: tagIds.map((id) => state.taxonomy.tags.find((tag) => tag.id === id)?.name).filter(Boolean),
+    published: false
+  });
+  try {
+    const response = await api("/api/admin/experiences", { method: "POST", body: JSON.stringify(payload) });
+    closeJourneyCreateModal();
+    await loadExperiences();
+    renderExperienceEditor(response.data);
+    setStatus("完整行程已创建，请继续编辑内容。");
+    showToast("已创建并进入 Journey 编辑器");
+  } catch (error) {
+    setStatus(`创建失败：${error.message}`);
+  }
+});
 
 document.addEventListener("click", async (event) => {
   const target = event.target.closest("button, [data-focus-toggle], [data-toggle-activity], [data-crm-filter], [data-guide-quick-filter], [data-inquiry-tab], [data-jump-followup], [data-overview-tab], [data-overview-action], [data-overview-edit], [data-overview-inquiry-status], [data-inquiry-status-action], [data-quick-reply], [data-quick-note], [data-save-quick-note], [data-save-followup], [data-toggle-templates], [data-template-category], [data-edit-template], [data-new-template], [data-ai-polish-template], [data-duplicate-template], [data-delete-template], [data-cancel-quick-note], [data-editor-mode], [data-toggle-review-panel], [data-jump-section], [data-cover-dropzone], [data-card-crop-action], [data-editor-tab], [data-edit-guide], [data-edit-guide-collection], [data-new-guide-collection], [data-edit-city-guide], [data-new-guide-for-city], [data-ai-guide-outline-for-city], [data-template-guide-for-city], [data-new-experience-for-city], [data-copy-city-url], [data-open-city-page], [data-preview-row-guide], [data-duplicate-row-guide], [data-lang-tab], [data-open-edit-panel], [data-close-edit-panel], [data-close-guide-editor], [data-format-inline], [data-insert-guide-element], [data-insert-media], [data-editor-media-action], [data-add-block], [data-collapse-block], [data-duplicate-block], [data-remove-block], [data-move-block], [data-remove-related], [data-preview-device], [data-pick-cover], [data-open-media-picker], [data-close-media-picker], [data-pick-media], [data-media-usage-target], [data-upload-guide-cover], [data-upload-city-image], [data-clear-city-image], [data-edit-city], [data-edit-experience], [data-toggle-experience-list], [data-experience-jump], [data-detail-tab], [data-add-detail-item], [data-remove-detail-item], [data-journey-preview-mode], [data-select-day], [data-add-day], [data-insert-day-block], [data-ai-optimize-day], [data-ai-day-field], [data-upload-day-image], [data-clear-day-image], [data-upload-experience-cover], [data-clear-experience-cover], [data-upload-experience-gallery], [data-remove-experience-gallery], [data-add-experience-tag], [data-ai-suggest-tags], [data-view-inquiry], [data-close-inquiry], [data-export-inquiries], [data-copy-contact], [data-copy-field], [data-copy-inquiry], [data-save-inquiry-notes], [data-mark-spam], [data-archive-inquiry], [data-delete-guide], [data-delete-city], [data-delete-experience], [data-delete-inquiry], [data-delete-media], [data-copy-media]") || event.target;
+  if (target.matches("[data-new-experience]")) {
+    if (state.activeExperienceMode === "recommended_journey") openJourneyCreateModal();
+    else renderExperienceEditor(defaultExperienceForMode());
+    return;
+  }
+  if (target.matches("[data-close-journey-create]")) {
+    closeJourneyCreateModal();
+    return;
+  }
+  if (target.matches("[data-journey-create-next]")) {
+    const form = $("[data-journey-create-form]");
+    if (!form.elements.title.value.trim()) {
+      form.elements.title.reportValidity();
+      return;
+    }
+    form.elements.classificationCity.value = form.elements.city.value;
+    showJourneyCreateStep("classification");
+    return;
+  }
+  if (target.matches("[data-journey-create-back]")) {
+    showJourneyCreateStep("basic");
+    return;
+  }
+  if (target.matches("[data-edit-content-classification]")) {
+    const current = syncExperienceForm();
+    openJourneyCreateModal({ id: current.id, title: current.title, city: current.city });
+    const form = $("[data-journey-create-form]");
+    if (form.elements.categoryId && current.categoryId) form.elements.categoryId.value = current.categoryId;
+    if (form.elements.journeyKind && current.journeyKind) form.elements.journeyKind.value = current.journeyKind;
+    form.elements.duration.value = current.duration || "";
+    renderJourneyCreateTags(current.categoryId || "journeys", current.tagIds || []);
+    $("[data-journey-create-secondary]")?.classList.toggle("is-hidden", current.categoryId !== "journeys");
+    $("[data-journey-duration-field]")?.classList.toggle("is-hidden", current.categoryId !== "journeys");
+    showJourneyCreateStep("classification");
+    return;
+  }
+  if (target.matches("[data-edit-taxonomy-category]")) {
+    const item = state.taxonomy.categories.find((category) => category.id === target.dataset.editTaxonomyCategory);
+    if (item) fillForm($("[data-taxonomy-category-form]"), item);
+    return;
+  }
+  if (target.matches("[data-edit-taxonomy-tag]")) {
+    const item = state.taxonomy.tags.find((tag) => tag.id === target.dataset.editTaxonomyTag);
+    if (item) fillForm($("[data-taxonomy-tag-form]"), item);
+    return;
+  }
+  if (target.matches("[data-delete-taxonomy-category]")) {
+    const id = target.dataset.deleteTaxonomyCategory;
+    if (!window.confirm("删除分类会同时删除其标签，确认继续？")) return;
+    state.taxonomy.categories = state.taxonomy.categories.filter((item) => item.id !== id);
+    state.taxonomy.tags = state.taxonomy.tags.filter((item) => item.categoryId !== id);
+    await saveTaxonomy();
+    return;
+  }
+  if (target.matches("[data-delete-taxonomy-tag]")) {
+    state.taxonomy.tags = state.taxonomy.tags.filter((item) => item.id !== target.dataset.deleteTaxonomyTag);
+    await saveTaxonomy();
+    return;
+  }
   const clickedMedia = selectedMediaFigureFromNode(event.target);
   if (clickedMedia) {
     const clickedSlot = event.target.closest(".cms-media-slot:not(.is-empty)");
@@ -7109,7 +7418,7 @@ document.addEventListener("click", async (event) => {
     }
     if (action === "new-experience") {
       switchTab("journeys");
-      renderExperienceEditor(defaultExperienceForMode("recommended_journey"));
+      openJourneyCreateModal();
     }
     if (action === "new-short-experience") {
       switchTab("short-experiences");
@@ -7357,15 +7666,7 @@ document.addEventListener("click", async (event) => {
   }
   if (target.matches("[data-new-experience-for-city]")) {
     switchTab("journeys");
-    renderExperienceEditor(defaultExperience({
-      title: "新完整行程",
-      city: cityKey(target.dataset.newExperienceForCity),
-      type: "recommended_journey",
-      duration: "3 Days",
-      tags: ["Private Journey"],
-      published: true,
-      sortOrder: 0
-    }));
+    openJourneyCreateModal({ city: cityKey(target.dataset.newExperienceForCity) });
   }
   if (target.matches("[data-close-guide-editor]")) {
     $("[data-panel='guides']")?.classList.remove("is-editor-open");
@@ -8145,7 +8446,7 @@ document.addEventListener("click", async (event) => {
 
 document.addEventListener("keydown", (event) => {
   const mod = event.metaKey || event.ctrlKey;
-  const key = event.key.toLowerCase();
+  const key = String(event.key || "").toLowerCase();
   const inGuideEditor = state.guideDraft && !$("[data-panel='guides']")?.classList.contains("is-hidden");
   const isWriting = document.activeElement?.matches?.("[data-visual-editor], [data-raw-editor]");
   const isJourneyWriting = document.activeElement?.matches?.("[data-journey-visual-editor]");
@@ -8624,11 +8925,6 @@ async function importDocxFile(file) {
       renderCityList();
     }
     if (event.target.matches("[data-experience-filter-type]")) {
-      const nextMode = event.target.value === "short_experience" ? "short_experience" : "recommended_journey";
-      if (nextMode !== state.activeExperienceMode) {
-        switchTab(experienceModeMeta(nextMode).tab);
-        return;
-      }
       renderExperienceList();
     }
     if (event.target.matches("[data-experience-search]")) renderExperienceList();

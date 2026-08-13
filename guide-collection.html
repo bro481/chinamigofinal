@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A curated ChinaMigo guide collection for international visitors preparing for modern China."
+    />
+    <title>ChinaMigo Guide Collection</title>
+    <link rel="stylesheet" href="/styles.css?v=guide-collection-travel-20260811" />
+    <script src="/site.js?v=guide-collection-travel-20260811" defer></script>
+  </head>
+  <body class="guides-page-body article-page-body collection-detail-page-body">
+    <header class="site-header guides-header is-compact" aria-label="Primary navigation">
+      <a class="brand" href="/" aria-label="ChinaMigo home">
+        <span>China</span><strong>Migo</strong>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="/guides" aria-current="page">China Guides</a>
+        <a href="/trips">Trips & Services</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+      </nav>
+      <a
+        class="pill-button dark header-cta"
+        href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20my%20China%20visit."
+        aria-label="Chat with ChinaMigo on WhatsApp"
+      >
+        <span>WhatsApp</span>
+      </a>
+    </header>
+
+    <main class="collection-detail-page" data-collection-page>
+      <section class="collection-detail-hero">
+        <div class="collection-detail-hero-copy">
+          <p class="collection-kicker"><a href="/guides">China Guides</a></p>
+          <h1 data-collection-title>Guide Collection</h1>
+          <p class="collection-detail-summary" data-collection-description></p>
+          <div class="collection-detail-meta">
+            <p data-collection-count></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="collection-detail-shell">
+        <div class="collection-detail-body">
+          <section id="guides" data-toc-title="Guides">
+            <div class="collection-detail-heading">
+              <h2>Guides</h2>
+            </div>
+            <div class="collection-guide-grid" data-collection-guides></div>
+            <p class="guide-empty" data-collection-empty hidden>
+              This collection does not have published guides yet.
+            </p>
+          </section>
+          <section class="collection-more" data-collection-more-section hidden>
+            <div class="collection-more-heading">
+              <h2>More collections</h2>
+              <a href="/guides">View all</a>
+            </div>
+            <div class="collection-more-list" data-collection-more></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>ChinaMigo</span>
+      <span>Private China concierge for global visitors.</span>
+    </footer>
+
+    <script>
+      const collectionId = decodeURIComponent(
+        location.pathname.split("/").filter(Boolean).pop()
+          || new URLSearchParams(location.search).get("id")
+          || ""
+      );
+
+      function normalizeImagePath(path) {
+        const image = path || "assets/guide-first-time-china.png";
+        return /^(https?:|data:|blob:|\/)/i.test(image) ? image : `/${image}`;
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function guideCardTitle(guide) {
+        const title = guide.cardTitle || guide.translations?.en?.cardTitle || guide.translations?.en?.title || guide.title || "China guide";
+        const normalized = title.toLowerCase();
+        if (guide.slug === "life-style" || normalized === "payment") return "Paying in China";
+        if (guide.slug === "can-tourists-use-alipay" || normalized.includes("speak english")) return "English in China";
+        if (normalized.includes("foreigners") && normalized.includes("high-speed rail")) return "China High-Speed Rail";
+        if (normalized === "china high-speed rail guide") return "High-Speed Rail Guide";
+        if (guide.slug === "best-cafes-in-shanghai") return "Cafés in Shanghai";
+        return title;
+      }
+
+      function guideCardSubtitle(guide) {
+        if (guide.cardSubtitle) return guide.cardSubtitle;
+        const title = String(guide.title || guide.translations?.en?.title || "").toLowerCase();
+        if (guide.slug === "life-style" || title === "payment") return "Alipay, WeChat Pay and foreign cards";
+        if (guide.slug === "can-tourists-use-alipay" || title.includes("speak english")) return "Where you can communicate easily";
+        if (title.includes("high-speed rail")) return "Tickets, booking and practical travel tips";
+        if (title.includes("payment") || title.includes("alipay") || title.includes("wechat pay")) return "Alipay, WeChat Pay and foreign cards";
+        if (title.includes("english")) return "Where you can communicate easily";
+        return guide.translations?.en?.excerpt || guide.excerpt || "Practical advice for traveling in China";
+      }
+
+      function guideCardMarkup(guide) {
+        const title = guide.translations?.en?.title || guide.title || "China guide";
+        const cardTitle = guideCardTitle(guide);
+        const cardSubtitle = guideCardSubtitle(guide);
+        const readTime = guide.readTime || "5 min read";
+        const image = normalizeImagePath(guide.coverImage || guide.image);
+        const alt = guide.coverAlt || guide.alt || title;
+        return `
+          <a class="collection-guide-card" href="/guides/${encodeURIComponent(guide.slug)}" aria-label="Read ${escapeHtml(title)}" style="--image-position:${guide.imagePosition || "center center"};--image-scale:${guide.imageScale || 1.02}">
+            <span class="collection-guide-image">
+              <img class="collection-guide-thumb" src="${image}" alt="${escapeHtml(alt)}" />
+            </span>
+            <div class="collection-guide-copy">
+              <h3>${escapeHtml(cardTitle)}</h3>
+              <p>${escapeHtml(cardSubtitle)}</p>
+              <small>${escapeHtml(readTime)}</small>
+            </div>
+          </a>
+        `;
+      }
+
+      function collectionSlug(collection) {
+        return String(collection.slug || collection.id || collection.title || "")
+          .trim()
+          .toLowerCase()
+          .replace(/&/g, "and")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "");
+      }
+
+      function collectionHref(collection) {
+        return collection.href || `/guides/collections/${encodeURIComponent(collectionSlug(collection))}`;
+      }
+
+      function collectionCardMarkup(collection) {
+        const image = normalizeImagePath(collection.image || collection.coverImage || "assets/guide-first-time-china.png");
+        const guideCount = Array.isArray(collection.guides) ? collection.guides.length : 0;
+        return `
+          <a class="collection-more-card" href="${collectionHref(collection)}">
+            <img src="${image}" alt="${escapeHtml(collection.title || "Guide collection")}" />
+            <span>
+              <strong>${escapeHtml(collection.title || "Guide collection")}</strong>
+              <small>${guideCount} ${guideCount === 1 ? "guide" : "guides"}</small>
+            </span>
+          </a>
+        `;
+      }
+
+      function collectionMatches(collection) {
+        return collection && [collection.id, String(collection.id || "").replace(/^collection-/, ""), collection.slug, collection.title]
+          .map((item) => String(item || "").trim().toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""))
+          .includes(String(collectionId || "").toLowerCase());
+      }
+
+      function renderMoreCollections(collection, collections) {
+        const section = document.querySelector("[data-collection-more-section]");
+        const list = document.querySelector("[data-collection-more]");
+        const more = collections
+          .filter((item) => item && item !== collection && item.active !== false && item.status !== "disabled")
+          .filter((item) => collectionSlug(item) !== collectionSlug(collection))
+          .slice(0, 5);
+
+        list.innerHTML = more.map(collectionCardMarkup).join("");
+        section.hidden = more.length === 0;
+      }
+
+      function renderCollection(collection, guides, collections) {
+        document.title = `${collection.title} | ChinaMigo`;
+        document.querySelector("[data-collection-title]").textContent = collection.title || "Guide Collection";
+        document.querySelector("[data-collection-description]").textContent = collection.description || "Practical guidance for traveling around China with confidence.";
+        const guideList = (collection.guides || [])
+          .map((item) => typeof item === "string" ? guides.find((guide) => guide.slug === item) : item)
+          .filter(Boolean);
+
+        document.querySelector("[data-collection-count]").textContent = guideList.length
+          ? `${guideList.length} ${guideList.length === 1 ? "Guide" : "Guides"}`
+          : "";
+
+        const grid = document.querySelector("[data-collection-guides]");
+        const empty = document.querySelector("[data-collection-empty]");
+        grid.innerHTML = guideList.map(guideCardMarkup).join("");
+        empty.hidden = guideList.length > 0;
+        renderMoreCollections(collection, collections);
+      }
+
+      Promise.all([
+        fetch("/api/public/guide-collections").then((response) => response.json()).catch(() => ({ data: [] })),
+        fetch("/api/public/guides").then((response) => response.json()).catch(() => ({ data: [] }))
+      ]).then(([collectionResult, guideResult]) => {
+        const collections = Array.isArray(collectionResult.data) ? collectionResult.data : [];
+        const guides = Array.isArray(guideResult.data) ? guideResult.data : [];
+        const collection = collections.find(collectionMatches);
+        if (!collection) {
+          document.querySelector("[data-collection-title]").textContent = "Collection not found";
+          document.querySelector("[data-collection-empty]").hidden = false;
+          return;
+        }
+        renderCollection(collection, guides, collections);
+      });
+    </script>
+  </body>
+</html>

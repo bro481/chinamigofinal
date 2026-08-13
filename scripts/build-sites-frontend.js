@@ -106,6 +106,60 @@ function filterGuides(guides, url) {
     });
 }
 
+function estimateReadTimeForGuide(guide) {
+  const content = [guide.title, guide.excerpt, guide.content, guide.translations?.en?.content, guide.translations?.en?.excerpt]
+    .filter(Boolean)
+    .join(" ");
+  const words = content.trim().split(/\\s+/).filter(Boolean).length;
+  return Math.max(3, Math.ceil(words / 220)) + " min read";
+}
+
+function publicGuideCollections(collections, guides) {
+  const publishedGuides = publicGuides(guides);
+  const bySlug = new Map(publishedGuides.map((guide) => [guide.slug, guide]));
+
+  return (Array.isArray(collections) ? collections : [])
+    .filter((collection) => collection.active !== false)
+    .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0))
+    .map((collection) => {
+      const manualGuides = (collection.guideSlugs || collection.guides || [])
+        .map((item) => bySlug.get(typeof item === "string" ? item : item?.slug))
+        .filter(Boolean);
+      const categoryGuides = publishedGuides.filter((guide) => (collection.categories || []).includes(guide.category));
+      const seen = new Set();
+      const matchedGuides = [...manualGuides, ...categoryGuides].filter((guide) => {
+        if (!guide?.slug || seen.has(guide.slug)) return false;
+        seen.add(guide.slug);
+        return true;
+      });
+      if (!matchedGuides.length) return null;
+
+      const firstGuide = matchedGuides[0];
+      const image = collection.image || firstGuide.coverImage || "assets/guide-first-time-china.png";
+      return {
+        ...collection,
+        image,
+        alt: collection.alt || firstGuide.coverAlt || firstGuide.title || collection.title,
+        imagePosition: collection.image ? "center center" : (firstGuide.imagePosition || "center center"),
+        imageScale: collection.image ? 1.02 : (firstGuide.imageScale || 1.02),
+        count: matchedGuides.length,
+        href: "/guides/collections/" + encodeURIComponent(collection.id),
+        guides: matchedGuides.map((guide) => ({
+          slug: guide.slug,
+          title: guide.translations?.en?.title || guide.title,
+          excerpt: guide.translations?.en?.excerpt || guide.excerpt || "",
+          category: guide.category,
+          readTime: guide.readTime || estimateReadTimeForGuide(guide),
+          coverImage: guide.coverImage,
+          coverAlt: guide.coverAlt,
+          imagePosition: guide.imagePosition || "center center",
+          imageScale: guide.imageScale || 1.02
+        }))
+      };
+    })
+    .filter(Boolean);
+}
+
 async function handleStaticApi(env, request, url) {
   const pathname = decodeURIComponent(url.pathname);
   if (pathname === "/api/guides") {
@@ -137,16 +191,9 @@ async function handleStaticApi(env, request, url) {
       readJsonAsset(env, request, "/data/guide-collections.json", []),
       readJsonAsset(env, request, "/data/guide-articles.json", [])
     ]);
-    const published = new Map(publicGuides(guides).map((guide) => [guide.slug, guide]));
     return jsonResponse({
       ok: true,
-      data: (Array.isArray(collections) ? collections : [])
-        .filter((collection) => collection.enabled !== false)
-        .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0))
-        .map((collection) => ({
-          ...collection,
-          guides: (collection.guideSlugs || collection.guides || []).map((slug) => published.get(slug)).filter(Boolean)
-        }))
+      data: publicGuideCollections(collections, guides)
     });
   }
   if (pathname === "/api/public/cities") {

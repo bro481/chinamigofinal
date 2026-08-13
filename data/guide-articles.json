@@ -2,6 +2,8 @@
   {
     "id": "guide-1784351789399",
     "title": "必修二unit4三期剧本",
+    "cardTitle": "",
+    "cardSubtitle": "",
     "slug": "unit4",
     "category": "Payments",
     "city": "",
@@ -20,8 +22,8 @@
       "en": {
         "title": "必修二unit4三期剧本",
         "excerpt": "第一期剧本：英国历史文化初印象",
-        "rawContent": "hhh",
-        "htmlContent": "hhh&nbsp;",
+        "rawContent": "hhh Video: 367728841181249546 | assets/uploads/1786453339121-367728841181249546.mp4",
+        "htmlContent": "hhh&nbsp;<figure class=\"cms-media cms-editor-media cms-media-video cms-video\" data-editor-media=\"\" data-media-kind=\"video\" data-media-width=\"100\" data-media-width-unit=\"percent\" data-media-height=\"auto\" data-media-ratio=\"auto\" data-media-align=\"center\" data-media-radius=\"18\" data-media-shadow=\"none\" data-media-spacing=\"24\" data-media-max-width=\"none\" data-video-ratio=\"16 / 9\" style=\"--media-width: 100%; --media-height: auto; --media-align: center; --media-radius: 18px; --media-spacing: 24px; --video-ratio: 16 / 9; width: 100%; --media-object-position: center center; --media-fit: cover;\" contenteditable=\"false\" data-media-object-position=\"center center\" data-media-fit=\"cover\"><video controls=\"\" playsinline=\"\" preload=\"metadata\" src=\"/assets/uploads/1786453339121-367728841181249546.mp4\"></video><figcaption>367728841181249546</figcaption></figure><p><br></p>",
         "contentBlocks": [],
         "seo": {
           "title": "",
@@ -48,11 +50,11 @@
       "noindex": false
     },
     "relatedGuides": [],
-    "status": "draft",
-    "publishedAt": "",
+    "status": "published",
+    "publishedAt": "2026-08-11",
     "scheduledAt": "",
     "createdAt": "2026-07-18T05:16:43.546Z",
-    "updatedAt": "2026-07-22T06:52:29.031Z"
+    "updatedAt": "2026-08-11T13:02:30.010Z"
   },
   {
     "id": "guide-1784347994567",
@@ -112,6 +114,8 @@
   {
     "id": "guide-1779607243167",
     "title": "Foreigners’ Complete Guide to Taking China’s High-Speed Rail",
+    "cardTitle": "Taking China’s High-Speed Rail",
+    "cardSubtitle": "Tickets, booking and station tips",
     "slug": "foreigners-complete-guide-to-taking-china-s-high-speed-rail",
     "category": "Transportation",
     "city": "",
@@ -325,6 +329,8 @@
   {
     "id": "guide-high-speed-rail",
     "title": "China High-Speed Rail Guide",
+    "cardTitle": "China High-Speed Rail Guide",
+    "cardSubtitle": "Tickets, apps and practical travel tips",
     "slug": "china-high-speed-rail-guide",
     "category": "Transportation",
     "excerpt": "Tickets, stations and travel tips for moving between Chinese cities.",

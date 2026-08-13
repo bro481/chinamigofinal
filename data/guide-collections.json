@@ -1,32 +1,41 @@
 [
   {
     "id": "collection-transportation-essentials",
-    "title": "Transportation Essentials",
-    "description": "High-speed rail, stations, transfers and practical movement through China.",
+    "title": "Transportation",
+    "description": "Move around China easily. From high-speed rail to metro, everything you need before you go.",
     "categories": [
       "Transportation"
     ],
-    "guideSlugs": [],
+    "guideSlugs": [
+      "life-style",
+      "foreigners-complete-guide-to-taking-china-s-high-speed-rail",
+      "can-tourists-use-alipay",
+      "china-high-speed-rail-guide",
+      "best-cafes-in-shanghai"
+    ],
     "image": "assets/guide-high-speed-rail.png",
     "alt": "International visitor at a modern high-speed rail station in China",
     "sortOrder": 1,
     "active": true,
     "createdAt": "2026-06-07T00:00:00.000Z",
-    "updatedAt": "2026-06-07T00:00:00.000Z"
+    "updatedAt": "2026-08-11T08:12:12.076Z"
   },
   {
     "id": "collection-modern-china-lifestyle",
+    "slug": "food-and-caf-s",
     "title": "Food & Cafés",
     "description": "Cafes, restaurants and softer city food moments worth saving.",
     "categories": [
       "Food & Cafés"
     ],
-    "guideSlugs": [],
+    "guideSlugs": [
+      "foreigners-complete-guide-to-taking-china-s-high-speed-rail"
+    ],
     "image": "assets/guide-shanghai-cafes.png",
     "alt": "Warm modern Shanghai cafe lifestyle",
     "sortOrder": 2,
     "active": true,
     "createdAt": "2026-06-07T00:00:00.000Z",
-    "updatedAt": "2026-06-07T00:00:00.000Z"
+    "updatedAt": "2026-08-11T09:09:39.077Z"
   }
 ]

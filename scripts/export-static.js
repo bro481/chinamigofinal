@@ -35,6 +35,14 @@ const htmlRoutes = [
   ["guide-detail.html", "guides/modern-local-discoveries/index.html"]
 ];
 
+async function guideCollectionRoutes() {
+  const collections = JSON.parse(await fs.readFile(path.join(root, "data", "guide-collections.json"), "utf8").catch(() => "[]"));
+  return (Array.isArray(collections) ? collections : [])
+    .filter((collection) => collection.active !== false)
+    .filter((collection) => collection.id)
+    .map((collection) => ["guide-collection.html", `guides/collections/${collection.id}/index.html`]);
+}
+
 function rewriteStaticHtml(html) {
   let output = html;
   output = output.replace(
@@ -87,7 +95,7 @@ async function main() {
   await copyIfExists(path.join(root, "data"), path.join(outDir, "data"));
   await copyIfExists(path.join(root, "styles.css"), path.join(outDir, "styles.css"));
   await copyIfExists(path.join(root, "site.js"), path.join(outDir, "site.js"));
-  for (const [source, target] of htmlRoutes) await writeRoute(source, target);
+  for (const [source, target] of [...htmlRoutes, ...await guideCollectionRoutes()]) await writeRoute(source, target);
   await fs.writeFile(
     path.join(outDir, "404.html"),
     rewriteStaticHtml(await fs.readFile(path.join(root, "guides.html"), "utf8"))

@@ -10,9 +10,7 @@
     "coverImage": "assets/experience-shanghai-lifestyle.png",
     "galleryImages": [
       "assets/experience-shanghai-lifestyle.png",
-      "assets/guide-shanghai-cafes.png",
-      "assets/uploads/1784605223454-oristano0381-a-museum-exhibition-featuring-traditional-british-606a4c88-85f0-48ba-83bc-16ab6d2bf3e1.png",
-      "assets/uploads/1784605227014-oristano0381-a-museum-exhibition-featuring-traditional-british-50166b5a-d034-403b-b6c5-fd9902b3f48b.png"
+      "assets/guide-shanghai-cafes.png"
     ],
     "tags": [
       "Private",
@@ -37,7 +35,7 @@
         "transfer": "",
         "hotel": "",
         "eveningPlan": "",
-        "body": "",
+        "body": "<section class=\"template-section\" data-template-section=\"\">\n        <p class=\"template-section-title\">📍<strong>Day Overview</strong></p>\n        <p class=\"template-section-prompt\">时候和now</p></section><section class=\"template-section\" data-template-section=\"\"><p class=\"template-section-title\"><strong>Today’s Highlights</strong></p>\n        <p class=\"template-section-prompt\">填写今天最值得体验的重点。</p></section><section class=\"template-section\" data-template-section=\"\">\n        <p class=\"template-section-title\">🗺<strong>Route &amp; Schedule</strong></p>\n        <p class=\"template-section-prompt\">填写路线节奏、时间点或交通安排。<span style=\"background-color: transparent; color: rgba(0, 0, 0, 0.86); font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro Text&quot;, &quot;Segoe UI&quot;, sans-serif; font-size: 1rem; font-weight: 760;\">📍</span></p></section><section class=\"template-section\" data-template-section=\"\"><p class=\"template-section-title\"><strong>Places to Visit</strong></p>\n        <p class=\"template-section-prompt\">填写核心地点、为什么值得去和停留建议。</p></section><section class=\"template-section\" data-template-section=\"\">\n        <p class=\"template-section-title\">🍜<strong>Food &amp; Cafés</strong></p>\n        <p class=\"template-section-prompt\">填写推荐餐厅、咖啡馆或美食体验。</p></section><section class=\"template-section\" data-template-section=\"\">\n        <p class=\"template-section-title\">💡<strong>Local Tips</strong></p>\n        <p class=\"template-section-prompt\">填写实用提醒、避坑或本地建议。</p>\n      </section><p><br></p>",
         "morning": "",
         "afternoon": "",
         "evening": "",
@@ -137,7 +135,7 @@
         "id": "day-1",
         "type": "itinerary_day",
         "title": "Arrival & Slow Evening",
-        "body": "Bund skyline hotel or similar.",
+        "body": "<section class=\"template-section\" data-template-section=\"\">\n        <p class=\"template-section-title\">📍<strong>Day Overview</strong></p>\n        <p class=\"template-section-prompt\">时候和now</p></section><section class=\"template-section\" data-template-section=\"\"><p class=\"template-section-title\"><strong>Today’s Highlights</strong></p>\n        <p class=\"template-section-prompt\">填写今天最值得体验的重点。</p></section><section class=\"template-section\" data-template-section=\"\">\n        <p class=\"template-section-title\">🗺<strong>Route &amp; Schedule</strong></p>\n        <p class=\"template-section-prompt\">填写路线节奏、时间点或交通安排。<span style=\"background-color: transparent; color: rgba(0, 0, 0, 0.86); font-family: -apple-system, BlinkMacSystemFont, &quot;SF Pro Text&quot;, &quot;Segoe UI&quot;, sans-serif; font-size: 1rem; font-weight: 760;\">📍</span></p></section><section class=\"template-section\" data-template-section=\"\"><p class=\"template-section-title\"><strong>Places to Visit</strong></p>\n        <p class=\"template-section-prompt\">填写核心地点、为什么值得去和停留建议。</p></section><section class=\"template-section\" data-template-section=\"\">\n        <p class=\"template-section-title\">🍜<strong>Food &amp; Cafés</strong></p>\n        <p class=\"template-section-prompt\">填写推荐餐厅、咖啡馆或美食体验。</p></section><section class=\"template-section\" data-template-section=\"\">\n        <p class=\"template-section-title\">💡<strong>Local Tips</strong></p>\n        <p class=\"template-section-prompt\">填写实用提醒、避坑或本地建议。</p>\n      </section><p><br></p>",
         "morning": "",
         "afternoon": "",
         "evening": "",
@@ -182,7 +180,7 @@
     "sortOrder": 1,
     "published": true,
     "createdAt": "2026-05-16T00:00:00.000Z",
-    "updatedAt": "2026-08-04T05:40:12.372Z"
+    "updatedAt": "2026-08-11T13:28:35.834Z"
   },
   {
     "id": "experience-shenzhen-tech-journey",
@@ -224,6 +222,77 @@
     "published": true,
     "createdAt": "2026-05-16T00:00:00.000Z",
     "updatedAt": "2026-05-16T00:00:00.000Z"
+  },
+  {
+    "id": "experience-8f7f5dfd-1c08-45a2-8ad4-b14cc74976ae",
+    "title": "上海",
+    "slug": "experience-1786592675695",
+    "city": "shenzhen",
+    "type": "recommended_journey",
+    "duration": "4-5 Days",
+    "excerpt": "",
+    "coverImage": "",
+    "galleryImages": [],
+    "tags": [],
+    "itineraryDays": [
+      {
+        "title": "Day 1",
+        "template": "free",
+        "outlineFields": [],
+        "summary": "",
+        "highlights": "",
+        "timeline": "",
+        "places": "",
+        "experience": "",
+        "participation": "",
+        "food": "",
+        "practical": "",
+        "tips": "",
+        "arrival": "",
+        "transfer": "",
+        "hotel": "",
+        "eveningPlan": "",
+        "body": "",
+        "morning": "",
+        "afternoon": "",
+        "evening": "",
+        "stayNotes": "",
+        "image": ""
+      }
+    ],
+    "shortDetails": {
+      "location": "",
+      "highlights": "",
+      "bookingMethod": "",
+      "notes": ""
+    },
+    "experienceFlow": [],
+    "experienceDetails": [],
+    "includedSupport": [],
+    "notIncluded": [],
+    "reviews": [],
+    "faqs": [],
+    "expert": {
+      "name": "",
+      "role": "",
+      "details": "",
+      "image": "",
+      "initials": ""
+    },
+    "cta": {
+      "title": "",
+      "responseTime": "",
+      "buttonLabel": "",
+      "description": ""
+    },
+    "rating": "",
+    "reviewCount": "",
+    "recommendRate": "",
+    "contentBlocks": [],
+    "sortOrder": 5,
+    "published": false,
+    "createdAt": "2026-08-13T03:44:35.696Z",
+    "updatedAt": "2026-08-13T03:44:35.696Z"
   },
   {
     "id": "experience-french-concession-cafe-walk",

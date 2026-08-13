@@ -178,7 +178,8 @@
       let cmsCollections = [];
       const collectionDefinitions = [
         {
-          title: "Transportation Essentials",
+          slug: "transportation-essentials",
+          title: "Transportation",
           description: "High-speed rail, stations, transfers and practical movement through China.",
           categories: ["Transportation"],
           image: "assets/guide-high-speed-rail.png",
@@ -288,11 +289,24 @@
         `;
       }
 
+      function collectionSlug(collection) {
+        return String(collection.id || collection.slug || collection.title || "collection")
+          .trim()
+          .toLowerCase()
+          .replace(/&/g, "and")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "") || "collection";
+      }
+
+      function collectionHref(collection) {
+        return collection.href || `/guides/collections/${encodeURIComponent(collectionSlug(collection))}`;
+      }
+
       function collectionMarkup(collection) {
         if (Number(collection.count) > 0 && collection.href) {
           const countLabel = `${collection.count} ${collection.count === 1 ? "guide" : "guides"}`;
           return `
-            <a class="collection-card" href="${collection.href}" style="--image-position:${collection.imagePosition || "center center"};--image-scale:${collection.imageScale || 1.02}">
+            <a class="collection-card" href="${collectionHref(collection)}" style="--image-position:${collection.imagePosition || "center center"};--image-scale:${collection.imageScale || 1.02}">
               <img src="${collection.image}" alt="${collection.alt}" />
               <div>
                 <h3>${collection.title}</h3>
@@ -305,9 +319,7 @@
         const matched = articles.filter((article) => collection.categories.includes(article.category));
         if (!matched.length) return "";
         const firstGuide = matched[0];
-        const href = collection.categories.length === 1
-          ? `/?category=${encodeURIComponent(collection.categories[0])}`
-          : `/guides/${firstGuide.slug}`;
+        const href = collectionHref(collection);
         const image = firstGuide.image || collection.image;
         const alt = firstGuide.alt || collection.alt;
         const countLabel = `${matched.length} ${matched.length === 1 ? "guide" : "guides"}`;

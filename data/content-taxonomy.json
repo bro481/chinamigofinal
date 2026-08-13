@@ -1,0 +1,28 @@
+{
+  "categories": [
+    { "id": "local-experiences", "name": "Local Experiences", "slug": "local-experiences", "editorType": "experience", "active": true, "sortOrder": 1 },
+    { "id": "journeys", "name": "Journeys", "slug": "journeys", "editorType": "journey", "active": true, "sortOrder": 2 },
+    { "id": "food-cafes", "name": "Food & Cafés", "slug": "food-cafes", "editorType": "food", "active": true, "sortOrder": 3 },
+    { "id": "hidden-spots", "name": "Hidden Spots", "slug": "hidden-spots", "editorType": "experience", "active": true, "sortOrder": 4 },
+    { "id": "where-to-stay", "name": "Where to Stay", "slug": "where-to-stay", "editorType": "stay", "active": true, "sortOrder": 5 }
+  ],
+  "tags": [
+    { "id": "traditional-culture", "name": "Traditional Culture", "categoryId": "local-experiences", "active": true, "sortOrder": 1 },
+    { "id": "scenic-views", "name": "Scenic Views", "categoryId": "local-experiences", "active": true, "sortOrder": 2 },
+    { "id": "food", "name": "Food", "categoryId": "local-experiences", "active": true, "sortOrder": 3 },
+    { "id": "art-design", "name": "Art & Design", "categoryId": "local-experiences", "active": true, "sortOrder": 4 },
+    { "id": "technology", "name": "Technology", "categoryId": "local-experiences", "active": true, "sortOrder": 5 },
+    { "id": "culture", "name": "Culture", "categoryId": "journeys", "active": true, "sortOrder": 1 },
+    { "id": "journey-scenic-views", "name": "Scenic Views", "categoryId": "journeys", "active": true, "sortOrder": 2 },
+    { "id": "journey-food", "name": "Food", "categoryId": "journeys", "active": true, "sortOrder": 3 },
+    { "id": "journey-walking", "name": "Walking", "categoryId": "journeys", "active": true, "sortOrder": 4 },
+    { "id": "journey-photography", "name": "Photography", "categoryId": "journeys", "active": true, "sortOrder": 5 },
+    { "id": "local-food", "name": "Local Food", "categoryId": "food-cafes", "active": true, "sortOrder": 1 },
+    { "id": "breakfast", "name": "Breakfast", "categoryId": "food-cafes", "active": true, "sortOrder": 2 },
+    { "id": "coffee", "name": "Coffee", "categoryId": "food-cafes", "active": true, "sortOrder": 3 },
+    { "id": "bars", "name": "Bars", "categoryId": "food-cafes", "active": true, "sortOrder": 4 },
+    { "id": "fine-dining", "name": "Fine Dining", "categoryId": "food-cafes", "active": true, "sortOrder": 5 },
+    { "id": "best-areas", "name": "Best Areas", "categoryId": "where-to-stay", "active": true, "sortOrder": 1 },
+    { "id": "luxury-hotels", "name": "Luxury Hotels", "categoryId": "where-to-stay", "active": true, "sortOrder": 2 }
+  ]
+}

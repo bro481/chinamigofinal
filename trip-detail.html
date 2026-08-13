@@ -8,7 +8,7 @@
       content="A private ChinaMigo concierge experience proposal for modern China travel and lifestyle support."
     />
     <title>ChinaMigo Trip</title>
-    <link rel="stylesheet" href="/styles.css?v=trip-detail-product-20260530" />
+    <link rel="stylesheet" href="/styles.css?v=trip-expect-structure-20260811" />
     <script src="/site.js?v=i18n-auth-20260523d" defer></script>
   </head>
   <body class="trip-page-body">
@@ -863,36 +863,31 @@
       }
 
       function defaultExperienceDetails(trip) {
-        return trip.experienceDetails || [
+        return Array.isArray(trip.experienceDetails) && trip.experienceDetails.length ? trip.experienceDetails : [
           {
             icon: "📍",
-            title: "Meeting Location",
-            description: "A riverside cafe, hotel lobby or central metro exit can be suggested after your request."
+            title: "Meeting Point",
+            description: "Central Shanghai.\nExact location confirmed after booking."
           },
           {
-            icon: "⏰",
-            title: "Typical Duration",
-            description: "Most experiences run around 2.5 to 3 hours, with flexible pacing rather than a fixed group schedule."
-          },
-          {
-            icon: "📷",
-            title: "Photo Opportunities",
-            description: "Skyline views, street details and natural local scenes without making the route feel staged."
+            icon: "⏱",
+            title: "Duration",
+            description: "2.5–3 hours.\nFlexible pace."
           },
           {
             icon: "🚶",
             title: "Walking Level",
-            description: "Expect an easy local walk. Tell us about mobility needs, kids or older travelers before arrival."
+            description: "Easy walking.\nComfortable shoes recommended."
           },
           {
-            icon: "💡",
-            title: "Local Tips",
-            description: "Finish with food, cafe or next-stop suggestions based on your plans for the rest of the day."
+            icon: "👥",
+            title: "Experience Style",
+            description: "Private and personalized."
           },
           {
-            icon: "🌦",
+            icon: "☁",
             title: "Weather Alternatives",
-            description: "The route can shift toward cafes, indoor design stops or covered streets if the weather changes."
+            description: "Indoor options available if needed."
           }
         ];
       }
@@ -938,7 +933,7 @@
             ${items.map((item) => `
               <article>
                 <h4><span>${escapeHtml(item.icon || "")}</span>${escapeHtml(item.title)}</h4>
-                <p>${escapeHtml(item.description)}</p>
+                <p>${escapeHtml(item.description).replace(/\n/g, "<br>")}</p>
               </article>
             `).join("")}
           </div>
@@ -951,7 +946,7 @@
             <summary>
               <div>
                 <h3>What To Expect</h3>
-                <p>Useful notes before you join, kept flexible around the day rather than treated as a fixed itinerary.</p>
+                <p>Useful notes before you join.<br>Flexible timing, local pace and practical tips.</p>
               </div>
               <span>Show details ↓</span>
             </summary>
@@ -1375,6 +1370,7 @@
         `).join("");
 
         document.querySelector("[data-trip-itinerary]").innerHTML = isEditorial ? "" : (isExperience ? renderExperienceFlow(nextTrip) : renderJourneyItinerary(nextTrip));
+        document.querySelector("[data-trip-expect-section]").classList.toggle("is-short-experience", isExperience);
         document.querySelector("[data-trip-expect]").innerHTML = isEditorial ? "" : (isExperience ? renderExperienceDetails(nextTrip) : renderJourneyExpectations(nextTrip));
         if (isEditorial) renderEditorialDetail(nextTrip);
 
