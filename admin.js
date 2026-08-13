@@ -1039,8 +1039,7 @@ function defaultItineraryDay(index = 0) {
     afternoon: "",
     evening: "",
     stayNotes: "",
-    image: "",
-    stops: []
+    image: ""
   };
 }
 
@@ -1052,12 +1051,6 @@ function normalizeItineraryDay(day = {}, index = 0) {
   if (isLegacyAutoJourneyScaffold(next.body)) next.body = "";
   next.template = inferDayTemplate(next);
   next.outlineFields = Array.isArray(next.outlineFields) ? next.outlineFields.filter((field) => dayFieldMeta[field]) : [];
-  next.stops = Array.isArray(next.stops) ? next.stops.map((stop) => ({
-    time: stop.time || "",
-    title: stop.title || "",
-    description: stop.description || "",
-    images: Array.isArray(stop.images) ? stop.images.slice(0, 5) : csvToList(stop.images || "")
-  })) : [];
   if (!next.body && (next.morning || next.afternoon || next.evening || next.stayNotes)) {
     next.body = dayBodyFromLegacy(next);
   }
@@ -1164,8 +1157,7 @@ function normalizeExperienceDraft(experience = {}) {
         afternoon: block.afternoon || "",
         evening: block.evening || "",
         stayNotes: block.stayNotes || block.body || "",
-        image: block.image || "",
-        stops: Array.isArray(block.stops) ? block.stops : []
+        image: block.image || ""
       })) : [defaultItineraryDay(0)]),
     shortDetails: experience.shortDetails || { location: "", highlights: "", bookingMethod: "", notes: "" },
     experienceFlow: Array.isArray(experience.experienceFlow) ? experience.experienceFlow : [],
@@ -5185,17 +5177,6 @@ function readItineraryDays() {
       next[index].template = next[index].template || "free";
     }
   });
-  const stopRows = $$('[data-journey-stop-row]');
-  if (stopRows.length) {
-    next[index].stops = stopRows.map((row) => ({
-      time: row.querySelector('[data-stop-field="time"]')?.value.trim() || "",
-      title: row.querySelector('[data-stop-field="title"]')?.value.trim() || "",
-      description: row.querySelector('[data-stop-field="description"]')?.value.trim() || "",
-      images: csvToList(row.querySelector('[data-stop-field="images"]')?.value || "").slice(0, 5)
-    }));
-  } else if ($('[data-journey-stop-list]')) {
-    next[index].stops = [];
-  }
   next[index].template = inferDayTemplate(next[index]);
   if (!next[index].stayNotes && next[index].body && !looksLikeHtmlContent(next[index].body)) {
     next[index].stayNotes = next[index].body;
@@ -5441,35 +5422,22 @@ function renderDayEditor() {
   if (state.currentExperienceDay >= days.length) state.currentExperienceDay = 0;
   renderDayListTitles(days);
   const day = normalizeItineraryDay(days[state.currentExperienceDay] || {}, state.currentExperienceDay);
+  const templateId = inferDayTemplate(day);
   const displayTitle = cleanDayTitle(day.title || "", state.currentExperienceDay);
-  const stops = Array.isArray(day.stops) ? day.stops : [];
-  const toolbar = $("[data-day-toolbar]");
-  if (toolbar) toolbar.innerHTML = "";
+  const canvasText = dayCanvasText(day);
+  renderDayToolbar(templateId);
   $("[data-day-fields]").innerHTML = `
-    <div class="journey-structured-day">
-      <div class="journey-day-basics">
-        <label><span>Day 标题</span><input data-day-field="title" value="${escapeHtml(displayTitle)}" placeholder="Arrival & Slow Evening" /></label>
-        <label><span>Day 简介</span><textarea data-day-field="summary" rows="3" placeholder="简要说明当天的节奏和体验。">${escapeHtml(day.summary || "")}</textarea></label>
-      </div>
-      <div class="journey-stop-editor-head"><div><strong>Itinerary Stops</strong><small>前台只显示这里真实填写的内容，空字段不会显示。</small></div><button class="secondary" type="button" data-add-journey-stop>+ 添加 Stop</button></div>
-      <div class="journey-stop-editor-list" data-journey-stop-list>
-        ${stops.map((stop, stopIndex) => renderJourneyStopEditor(stop, stopIndex)).join("") || `<p class="empty journey-stop-empty">还没有 Stop。点击「添加 Stop」开始编辑当天行程。</p>`}
-      </div>
+    <input data-day-field="title" type="hidden" value="${escapeHtml(displayTitle)}" />
+    <textarea data-day-field="summary" hidden>${escapeHtml(day.summary || "")}</textarea>
+    <div class="document-editor journey-document-editor ${canvasText.trim() ? "" : "is-empty-editor"}">
+      <div class="visual-editor journey-visual-editor" data-empty-hint="点击「添加旅行模块」开始创建内容" data-visual-editor="journey" data-day-field="body" data-journey-visual-editor contenteditable="true" aria-label="Journey Day 正文">${editableDayHtml(canvasText)}</div>
     </div>
+    <input data-day-field="image" type="hidden" value="${escapeHtml(day.image || "")}" />
   `;
+  updateDayWordCount();
+  resetJourneyEditorHistory();
   renderItineraryPreview(days);
-}
-
-function renderJourneyStopEditor(stop = {}, index = 0) {
-  return `<article class="journey-stop-editor" data-journey-stop-row data-stop-index="${index}">
-    <div class="journey-stop-editor-top"><strong>Stop ${index + 1}</strong><div><button type="button" class="secondary" data-move-journey-stop="up">↑</button><button type="button" class="secondary" data-move-journey-stop="down">↓</button><button type="button" class="secondary" data-remove-journey-stop>删除</button></div></div>
-    <div class="journey-stop-fields">
-      <label><span>时间</span><input data-stop-field="time" value="${escapeHtml(stop.time || "")}" placeholder="14:00" /></label>
-      <label class="journey-stop-title-field"><span>Stop 标题</span><input data-stop-field="title" value="${escapeHtml(stop.title || "")}" placeholder="French Concession Walk" /></label>
-      <label class="journey-stop-description-field"><span>Stop 描述</span><textarea data-stop-field="description" rows="3" placeholder="游客在这里会做什么、看到什么。">${escapeHtml(stop.description || "")}</textarea></label>
-      <label class="journey-stop-images-field"><span>图片（0–5 张，每行一个路径）</span><textarea data-stop-field="images" rows="3" placeholder="assets/uploads/photo.jpg">${escapeHtml((stop.images || []).join("\n"))}</textarea></label>
-    </div>
-  </article>`;
+  focusFirstCreatedEditorContent("[data-journey-visual-editor]");
 }
 
 function focusEditorStart(selector) {
@@ -6587,8 +6555,7 @@ function syncExperienceForm() {
     afternoon: day.afternoon || "",
     evening: day.evening || "",
     stayNotes: day.stayNotes || "",
-    image: day.image || "",
-    stops: Array.isArray(day.stops) ? day.stops : []
+    image: day.image || ""
   }));
   form.itineraryDays.value = JSON.stringify(values.itineraryDays);
   form.shortDetails.value = JSON.stringify(values.shortDetails);
@@ -7273,7 +7240,7 @@ $("[data-journey-create-form]")?.addEventListener("submit", async (event) => {
 });
 
 document.addEventListener("click", async (event) => {
-  const target = event.target.closest("button, [data-focus-toggle], [data-toggle-activity], [data-crm-filter], [data-guide-quick-filter], [data-inquiry-tab], [data-jump-followup], [data-overview-tab], [data-overview-action], [data-overview-edit], [data-overview-inquiry-status], [data-inquiry-status-action], [data-quick-reply], [data-quick-note], [data-save-quick-note], [data-save-followup], [data-toggle-templates], [data-template-category], [data-edit-template], [data-new-template], [data-ai-polish-template], [data-duplicate-template], [data-delete-template], [data-cancel-quick-note], [data-editor-mode], [data-toggle-review-panel], [data-jump-section], [data-cover-dropzone], [data-card-crop-action], [data-editor-tab], [data-edit-guide], [data-edit-guide-collection], [data-new-guide-collection], [data-edit-city-guide], [data-new-guide-for-city], [data-ai-guide-outline-for-city], [data-template-guide-for-city], [data-new-experience-for-city], [data-copy-city-url], [data-open-city-page], [data-preview-row-guide], [data-duplicate-row-guide], [data-lang-tab], [data-open-edit-panel], [data-close-edit-panel], [data-close-guide-editor], [data-format-inline], [data-insert-guide-element], [data-insert-media], [data-editor-media-action], [data-add-block], [data-collapse-block], [data-duplicate-block], [data-remove-block], [data-move-block], [data-remove-related], [data-preview-device], [data-pick-cover], [data-open-media-picker], [data-close-media-picker], [data-pick-media], [data-media-usage-target], [data-upload-guide-cover], [data-upload-city-image], [data-clear-city-image], [data-edit-city], [data-edit-experience], [data-toggle-experience-list], [data-experience-jump], [data-detail-tab], [data-add-detail-item], [data-remove-detail-item], [data-journey-preview-mode], [data-select-day], [data-add-day], [data-add-journey-stop], [data-remove-journey-stop], [data-move-journey-stop], [data-insert-day-block], [data-ai-optimize-day], [data-ai-day-field], [data-upload-day-image], [data-clear-day-image], [data-upload-experience-cover], [data-clear-experience-cover], [data-upload-experience-gallery], [data-remove-experience-gallery], [data-add-experience-tag], [data-ai-suggest-tags], [data-view-inquiry], [data-close-inquiry], [data-export-inquiries], [data-copy-contact], [data-copy-field], [data-copy-inquiry], [data-save-inquiry-notes], [data-mark-spam], [data-archive-inquiry], [data-delete-guide], [data-delete-city], [data-delete-experience], [data-delete-inquiry], [data-delete-media], [data-copy-media]") || event.target;
+  const target = event.target.closest("button, [data-focus-toggle], [data-toggle-activity], [data-crm-filter], [data-guide-quick-filter], [data-inquiry-tab], [data-jump-followup], [data-overview-tab], [data-overview-action], [data-overview-edit], [data-overview-inquiry-status], [data-inquiry-status-action], [data-quick-reply], [data-quick-note], [data-save-quick-note], [data-save-followup], [data-toggle-templates], [data-template-category], [data-edit-template], [data-new-template], [data-ai-polish-template], [data-duplicate-template], [data-delete-template], [data-cancel-quick-note], [data-editor-mode], [data-toggle-review-panel], [data-jump-section], [data-cover-dropzone], [data-card-crop-action], [data-editor-tab], [data-edit-guide], [data-edit-guide-collection], [data-new-guide-collection], [data-edit-city-guide], [data-new-guide-for-city], [data-ai-guide-outline-for-city], [data-template-guide-for-city], [data-new-experience-for-city], [data-copy-city-url], [data-open-city-page], [data-preview-row-guide], [data-duplicate-row-guide], [data-lang-tab], [data-open-edit-panel], [data-close-edit-panel], [data-close-guide-editor], [data-format-inline], [data-insert-guide-element], [data-insert-media], [data-editor-media-action], [data-add-block], [data-collapse-block], [data-duplicate-block], [data-remove-block], [data-move-block], [data-remove-related], [data-preview-device], [data-pick-cover], [data-open-media-picker], [data-close-media-picker], [data-pick-media], [data-media-usage-target], [data-upload-guide-cover], [data-upload-city-image], [data-clear-city-image], [data-edit-city], [data-edit-experience], [data-toggle-experience-list], [data-experience-jump], [data-detail-tab], [data-add-detail-item], [data-remove-detail-item], [data-journey-preview-mode], [data-select-day], [data-add-day], [data-insert-day-block], [data-ai-optimize-day], [data-ai-day-field], [data-upload-day-image], [data-clear-day-image], [data-upload-experience-cover], [data-clear-experience-cover], [data-upload-experience-gallery], [data-remove-experience-gallery], [data-add-experience-tag], [data-ai-suggest-tags], [data-view-inquiry], [data-close-inquiry], [data-export-inquiries], [data-copy-contact], [data-copy-field], [data-copy-inquiry], [data-save-inquiry-notes], [data-mark-spam], [data-archive-inquiry], [data-delete-guide], [data-delete-city], [data-delete-experience], [data-delete-inquiry], [data-delete-media], [data-copy-media]") || event.target;
   if (target.matches("[data-new-experience]")) {
     openJourneyCreateModal({ type: state.activeExperienceMode });
     return;
@@ -8206,33 +8173,6 @@ document.addEventListener("click", async (event) => {
     renderDayEditor();
     $("[data-experience-save-status]").textContent = "未保存";
   }
-  if (target.matches("[data-add-journey-stop]")) {
-    const days = readItineraryDays();
-    const day = days[state.currentExperienceDay] ||= defaultItineraryDay(state.currentExperienceDay);
-    day.stops ||= [];
-    day.stops.push({ time: "", title: "", description: "", images: [] });
-    $("[name='itineraryDays']").value = JSON.stringify(days);
-    renderDayEditor();
-    $("[data-experience-save-status]").textContent = "未保存";
-  }
-  if (target.matches("[data-remove-journey-stop]")) {
-    const index = Number(target.closest("[data-journey-stop-row]")?.dataset.stopIndex);
-    const days = readItineraryDays();
-    days[state.currentExperienceDay]?.stops?.splice(index, 1);
-    $("[name='itineraryDays']").value = JSON.stringify(days);
-    renderDayEditor();
-    $("[data-experience-save-status]").textContent = "未保存";
-  }
-  if (target.matches("[data-move-journey-stop]")) {
-    const index = Number(target.closest("[data-journey-stop-row]")?.dataset.stopIndex);
-    const days = readItineraryDays();
-    const stops = days[state.currentExperienceDay]?.stops || [];
-    const nextIndex = target.dataset.moveJourneyStop === "up" ? index - 1 : index + 1;
-    if (nextIndex >= 0 && nextIndex < stops.length) [stops[index], stops[nextIndex]] = [stops[nextIndex], stops[index]];
-    $("[name='itineraryDays']").value = JSON.stringify(days);
-    renderDayEditor();
-    $("[data-experience-save-status]").textContent = "未保存";
-  }
   if (target.matches("[data-ai-optimize-day]")) {
     const days = readItineraryDays();
     const day = days[state.currentExperienceDay];
@@ -8691,13 +8631,6 @@ document.addEventListener("mouseup", () => {
 
 document.addEventListener("input", (event) => {
   const target = event.target;
-  if (target.matches("[data-stop-field]")) {
-    const days = readItineraryDays();
-    $("[name='itineraryDays']").value = JSON.stringify(days);
-    renderItineraryPreview(days);
-    $("[data-experience-save-status]").textContent = "未保存";
-    return;
-  }
   if (target.matches("[data-editor-media-control]")) {
     handleMediaStyleControl(target, { toast: false });
     return;
