@@ -36,7 +36,6 @@
         <div class="collection-detail-hero-copy">
           <p class="collection-kicker"><a href="/guides">China Guides</a></p>
           <h1 data-collection-title>Guide Collection</h1>
-          <p class="collection-detail-summary" data-collection-description></p>
           <div class="collection-detail-meta">
             <p data-collection-count></p>
           </div>
@@ -46,9 +45,6 @@
       <section class="collection-detail-shell">
         <div class="collection-detail-body">
           <section id="guides" data-toc-title="Guides">
-            <div class="collection-detail-heading">
-              <h2>Guides</h2>
-            </div>
             <div class="collection-guide-grid" data-collection-guides></div>
             <p class="guide-empty" data-collection-empty hidden>
               This collection does not have published guides yet.
@@ -182,7 +178,6 @@
       function renderCollection(collection, guides, collections) {
         document.title = `${collection.title} | ChinaMigo`;
         document.querySelector("[data-collection-title]").textContent = collection.title || "Guide Collection";
-        document.querySelector("[data-collection-description]").textContent = collection.description || "Practical guidance for traveling around China with confidence.";
         const guideList = (collection.guides || [])
           .map((item) => typeof item === "string" ? guides.find((guide) => guide.slug === item) : item)
           .filter(Boolean);
