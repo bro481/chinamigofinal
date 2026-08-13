@@ -41,6 +41,28 @@ async function contentRoutes() {
   ];
 }
 
+function slugify(value) {
+  return String(value || "experience")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "experience";
+}
+
+async function serviceDetailRoutes() {
+  const html = await fs.readFile(path.join(root, "trips.html"), "utf8");
+  const catalog = html.split("const serviceCityData =", 2)[1]?.split("let serviceActiveCity =", 1)[0] || "";
+  const categories = new Set(["local-experiences", "journeys", "food-cafes", "hidden-spots", "where-to-stay"]);
+  const slugs = new Set();
+  const rowPattern = /^\s*\["([^"]+)",\s*"[^"]*",\s*"([^"]+)"/gm;
+  for (const match of catalog.matchAll(rowPattern)) {
+    if (categories.has(match[1])) slugs.add(slugify(match[2]));
+  }
+  return [...slugs].map((slug) => ["trip-detail.html", `trips/${slug}/index.html`]);
+}
+
 async function guideCollectionRoutes() {
   const collections = await readData("guide-collections.json");
   return (Array.isArray(collections) ? collections : [])
@@ -129,7 +151,14 @@ async function main() {
   await copyIfExists(path.join(root, "data"), path.join(outDir, "data"));
   await copyIfExists(path.join(root, "styles.css"), path.join(outDir, "styles.css"));
   await copyIfExists(path.join(root, "site.js"), path.join(outDir, "site.js"));
-  for (const [source, target] of [...htmlRoutes, ...await contentRoutes(), ...await guideCollectionRoutes()]) await writeRoute(source, target);
+  const routes = [
+    ...htmlRoutes,
+    ...await contentRoutes(),
+    ...await serviceDetailRoutes(),
+    ...await guideCollectionRoutes()
+  ];
+  const uniqueRoutes = new Map(routes.map((route) => [route[1], route]));
+  for (const [source, target] of uniqueRoutes.values()) await writeRoute(source, target);
   const [guides, collections, experiences, cities] = await Promise.all([
     readData("guide-articles.json"),
     readData("guide-collections.json"),

@@ -538,7 +538,6 @@
       }
 
       function serviceDetailHref(item) {
-        if (item.primaryCategory === "journeys") return item.href;
         return `/trips/${slugifyServiceTitle(item.title)}`;
       }
 
@@ -676,9 +675,7 @@
         const tags = (item.tags || []).slice(0, 2).map((tag) => `<span>${escapeHtml(tag)}</span>`).join("");
         const rating = ratingDetailsFor(item);
         const href = serviceDetailHref(item);
-        const payloadAttribute = item.primaryCategory === "journeys"
-          ? ""
-          : ` data-store-experience="${serviceDetailPayload(item, href)}"`;
+        const payloadAttribute = ` data-store-experience="${serviceDetailPayload(item, href)}"`;
         const productMeta = item.primaryCategory === "hidden-spots"
           ? `Hidden Spot · ${productTypeFor(item)}`
           : `${item.duration} · ${productTypeFor(item)}`;
