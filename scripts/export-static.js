@@ -3,7 +3,9 @@ const path = require("path");
 
 const root = path.resolve(__dirname, "..");
 const outDir = path.join(root, "docs");
-const baseHref = process.env.STATIC_BASE_HREF ?? "/chinamigo/";
+// Vercel and custom-domain deployments serve this export from the domain root.
+// GitHub Pages can still opt into a repository subpath with STATIC_BASE_HREF.
+const baseHref = process.env.STATIC_BASE_HREF ?? "/";
 
 const htmlRoutes = [
   ["guides.html", "index.html"],

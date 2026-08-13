@@ -8,6 +8,7 @@
     "start": "node server.js",
     "dev": "HOST=127.0.0.1 PORT=4174 node server.js",
     "export:static": "node scripts/export-static.js",
+    "export:github": "STATIC_BASE_HREF=/chinamigo/ node scripts/export-static.js",
     "check": "node --check server.js && node --check site.js && node --check admin.js && node scripts/check-food-template.js && node scripts/check-food-guide-cards.js && node scripts/check-guide-cms-home.js && node scripts/check-guide-collections-cms.js && node scripts/check-guide-editor-workspace.js"
   },
   "engines": {
