@@ -97,9 +97,7 @@
           </section>
 
           <section class="trip-itinerary trip-booklet-section" id="itinerary" data-section-anchor="itinerary" data-standard-only aria-labelledby="itinerary-title">
-            <div class="trip-booklet-heading">
-              <h2 id="itinerary-title" data-flow-title>Itinerary</h2>
-            </div>
+            <h2 id="itinerary-title" data-flow-title hidden>Itinerary</h2>
             <div class="trip-day-list" data-trip-itinerary></div>
           </section>
 
@@ -876,17 +874,7 @@
           description: stop.description || stop.body || stop.notes || "",
           images: (stop.images || stop.galleryImages || (stop.image ? [stop.image] : [])).slice(0, 5)
         })).filter(Boolean);
-        const fields = [
-          ["morning", "Morning"], ["arrival", "Arrival"], ["transfer", "Transfer"],
-          ["hotel", "Hotel Check-in"], ["afternoon", "Afternoon"], ["food", "Local Food"],
-          ["evening", "Evening"], ["eveningPlan", "Evening Plan"]
-        ];
-        const stops = fields.filter(([key]) => day[key] && !isPlaceholderContent(day[key])).map(([key, title], index) => ({
-          time: timeFromLabel(key, index), title, description: day[key], images: []
-        }));
-        if (!stops.length && day.body) stops.push(...stopsFromEditorBody(day.body));
-        if (day.image && stops.length) stops[Math.min(1, stops.length - 1)].images = [day.image];
-        return stops;
+        return [];
       }
 
       function renderStopCarousel(images, dayIndex, stopIndex, title) {
@@ -902,11 +890,11 @@
 
       function renderJourneyDayPanel(day, dayIndex) {
         const stops = journeyDayStops(day);
-        const subtitle = day.summary || day.overview || "A flexible day shaped around local rhythm and comfortable timing.";
+        const subtitle = day.summary || day.overview || "";
         const highlights = String(day.highlights || "").split(/[\n,|·]+/).map((item) => item.trim()).filter(Boolean);
         return `<section class="journey-day-panel ${dayIndex === 0 ? "is-active" : ""}" role="tabpanel" data-journey-day-panel="${dayIndex}" ${dayIndex === 0 ? "" : "hidden"}>
-          <header><p>Day ${dayIndex + 1}</p><h3>${escapeHtml(dayTabTitle(day.title, dayIndex))}</h3><span>${escapeHtml(subtitle)}</span></header>
-          <div class="journey-day-timeline">
+          <header><p>Day ${dayIndex + 1}</p>${dayTabTitle(day.title, dayIndex) ? `<h3>${escapeHtml(dayTabTitle(day.title, dayIndex))}</h3>` : ""}${subtitle ? `<span>${escapeHtml(subtitle)}</span>` : ""}</header>
+          <div class="journey-day-timeline ${stops.length ? "" : "is-empty"}">
             ${stops.map((stop, stopIndex) => `<article class="journey-timeline-stop ${(stop.images || []).length ? "has-image" : "no-image"}"><time>${escapeHtml(stop.time)}</time><span class="journey-timeline-dot" aria-hidden="true"></span><div class="journey-stop-copy"><h4>${escapeHtml(stop.title)}</h4><p>${escapeHtml(stop.description)}</p></div>${renderStopCarousel(stop.images || [], dayIndex, stopIndex, stop.title)}</article>`).join("")}
           </div>
           ${highlights.length ? `<div class="journey-day-highlights"><strong>☆ Day ${dayIndex + 1} Highlights</strong><div>${highlights.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div></div>` : ""}
@@ -1512,7 +1500,7 @@
             evening: day.evening || "",
             notes: day.stayNotes || "",
             stops: day.stops || day.activities || day.scheduleItems || day.timelineItems || [],
-            image: normalizeImagePath(day.image || gallery[index] || experience.coverImage || "assets/experience-shanghai-lifestyle.png"),
+            image: day.image ? normalizeImagePath(day.image) : "",
             alt: `${experience.title} ${day.title || `Day ${index + 1}`}`
           }))
           : [{
