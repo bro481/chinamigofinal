@@ -735,24 +735,7 @@
       }
 
       function defaultExperienceFlow(trip) {
-        return trip.experienceFlow || trip.flow || [
-          {
-            title: "Coffee & introduction",
-            description: "Meet your host at a local cafe and ease into the route together."
-          },
-          {
-            title: "Neighborhood walk",
-            description: "Move through quieter streets, local shops and everyday city corners."
-          },
-          {
-            title: "Photo moments",
-            description: "Pause at natural viewpoints, textures and small local scenes along the way."
-          },
-          {
-            title: "Local recommendations",
-            description: "Finish with food, cafe or next-stop suggestions based on your plans."
-          }
-        ];
+        return trip.experienceFlow || trip.flow || [];
       }
 
       function dayHasStory(day = {}) {
@@ -902,19 +885,24 @@
       }
 
       function renderExperienceFlow(trip) {
-        const icons = ["☕", "🚶", "📸", "🍜"];
+        const steps = defaultExperienceFlow(trip);
+        const highlights = Array.from(new Set((trip.highlights || trip.tags || []).filter(Boolean))).slice(0, 6);
         return `
+          <div class="experience-flow-meta">${[trip.duration, trip.walkingLevel, steps.length ? `${steps.length} Stops` : ""].filter(Boolean).map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>
           <div class="experience-flow">
-            ${defaultExperienceFlow(trip).map((step, index) => `
-              <article class="experience-flow-node">
-                <span>${escapeHtml(step.icon || icons[index % icons.length])}</span>
-                <div>
+            ${steps.map((step, index) => `
+              <article class="experience-flow-node ${(step.images || []).length ? "has-image" : "no-image"}">
+                <span class="experience-flow-dot" aria-hidden="true"></span>
+                <time>${escapeHtml(step.time || step.duration || "")}</time>
+                <div class="experience-flow-copy">
                   <h3>${escapeHtml(step.title)}</h3>
                   <p>${escapeHtml(step.description)}</p>
                 </div>
+                ${renderStopCarousel((step.images || []).slice(0, 5), 0, index, step.title)}
               </article>
             `).join("")}
           </div>
+          ${highlights.length ? `<div class="experience-highlights"><strong>Experience Highlights</strong><div>${highlights.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div></div>` : ""}
         `;
       }
 

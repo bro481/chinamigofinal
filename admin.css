@@ -2792,6 +2792,26 @@ textarea {
   background: #fff;
 }
 
+.experience-flow-editor { display: grid; gap: 14px; margin-top: 22px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,.08); }
+.experience-flow-editor-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; }
+.experience-flow-editor-head > div { display: grid; gap: 4px; }
+.experience-flow-editor-head small { color: rgba(0,0,0,.46); }
+.experience-flow-editor-list { display: grid; gap: 12px; }
+.experience-flow-stop-editor { padding: 15px; border: 1px solid rgba(0,0,0,.09); border-radius: 10px; background: #fff; }
+.experience-flow-stop-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 13px; }
+.experience-flow-stop-head > div { display: flex; gap: 6px; }
+.experience-flow-stop-head button { min-height: 30px; padding-inline: 9px; }
+.experience-flow-stop-fields { display: grid; grid-template-columns: minmax(150px,.55fr) minmax(220px,1fr) minmax(280px,1.35fr); gap: 12px; }
+.experience-flow-stop-fields label { display: grid; gap: 7px; }
+.experience-flow-stop-fields label > span { color: rgba(0,0,0,.54); font-size: .76rem; font-weight: 700; }
+.experience-flow-stop-fields input, .experience-flow-stop-fields textarea { width: 100%; padding: 10px 11px; border: 1px solid rgba(0,0,0,.1); border-radius: 8px; font: inherit; resize: vertical; }
+.experience-flow-stop-fields .flow-images { grid-column: 2 / -1; }
+
+@media (max-width: 760px) {
+  .experience-flow-stop-fields { grid-template-columns: 1fr; }
+  .experience-flow-stop-fields .flow-images { grid-column: auto; }
+}
+
 .journey-toolbar-slot .markdown-toolbar {
   position: static;
   margin: 0;

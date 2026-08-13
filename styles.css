@@ -4425,37 +4425,35 @@ details p {
 
 .experience-flow {
   display: grid;
-  max-width: 760px;
+  max-width: 900px;
   margin: 0;
 }
+
+.experience-flow-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 28px; }
+.experience-flow-meta span, .experience-highlights span { padding: 6px 10px; border: 1px solid rgba(0,0,0,.09); border-radius: 999px; color: rgba(0,0,0,.55); font-size: .74rem; }
 
 .experience-flow-node {
   position: relative;
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
-  gap: 18px;
-  padding: 0 0 22px 18px;
+  grid-template-columns: 16px 72px minmax(240px, 1fr) minmax(230px, 310px);
+  column-gap: 18px;
+  align-items: start;
+  padding: 0 0 44px;
 }
+.experience-flow-node.no-image { grid-template-columns: 16px 72px minmax(0, 1fr); }
 
 .experience-flow-node::before {
   content: "";
   position: absolute;
-  left: 3px;
+  left: 4px;
   top: 9px;
-  bottom: -9px;
+  bottom: 0;
   width: 1px;
   background: rgba(0, 0, 0, 0.075);
 }
 
 .experience-flow-node::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 7px;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.34);
+  display: none;
 }
 
 .experience-flow-node:last-child {
@@ -4466,11 +4464,8 @@ details p {
   display: none;
 }
 
-.experience-flow-node > span {
-  color: rgba(0, 0, 0, 0.58);
-  font-size: 1.02rem;
-  line-height: 1.1;
-}
+.experience-flow-dot { position: relative; z-index: 1; width: 9px; height: 9px; margin-top: 5px; border: 2px solid #fff; border-radius: 50%; background: #8f8f8f; box-shadow: 0 0 0 1px rgba(0,0,0,.12); }
+.experience-flow-node time { padding-top: 1px; color: rgba(0,0,0,.48); font-size: .8rem; font-variant-numeric: tabular-nums; }
 
 .experience-flow-node h3 {
   margin: 0;
@@ -4487,6 +4482,10 @@ details p {
   font-size: 0.94rem;
   line-height: 1.62;
 }
+.experience-flow-node .journey-stop-carousel { max-width: 310px; }
+.experience-highlights { margin: 2px 0 4px 106px; padding-top: 18px; border-top: 1px solid rgba(0,0,0,.08); }
+.experience-highlights > strong { display: block; margin-bottom: 11px; font-size: .86rem; font-weight: 580; }
+.experience-highlights > div { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .experience-details {
   max-width: 820px;
@@ -7818,10 +7817,15 @@ details p {
   }
 
   .experience-flow-node {
-    grid-template-columns: 78px minmax(0, 1fr);
-    gap: 16px;
-    padding: 0 0 20px 16px;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 9px 12px;
+    padding: 0 0 34px;
   }
+  .experience-flow-node.no-image { grid-template-columns: 16px minmax(0, 1fr); }
+  .experience-flow-node time { grid-column: 2; }
+  .experience-flow-copy { grid-column: 2; }
+  .experience-flow-node .journey-stop-carousel { grid-column: 2; max-width: none; margin-top: 6px; }
+  .experience-highlights { margin-left: 28px; }
 
   .experience-details summary {
     display: grid;

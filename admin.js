@@ -5937,6 +5937,10 @@ function renderShortEditor() {
       <div class="document-editor journey-document-editor ${shortBody.trim() ? "" : "is-empty-editor"}">
         <div class="visual-editor journey-visual-editor" data-empty-hint="点击「添加体验模块」开始创建内容" data-visual-editor="short" data-short-field="body" data-short-visual-editor contenteditable="true" aria-label="Short Experience 正文">${editableDayHtml(shortBody)}</div>
       </div>
+      <section class="experience-flow-editor">
+        <div class="experience-flow-editor-head"><div><strong>Experience Flow</strong><small>按实际体验顺序编辑节点；时间和图片均可留空。</small></div><button class="secondary" type="button" data-add-experience-flow-stop>+ 添加节点</button></div>
+        <div class="experience-flow-editor-list" data-experience-flow-editor-list></div>
+      </section>
     `;
   }
   renderDayToolbar("free", {
@@ -5959,7 +5963,45 @@ function renderShortEditor() {
   });
   resetEditorHistory("short");
   updateShortWordCount();
+  renderExperienceFlowEditor(parseJsonField($("[name='experienceFlow']")?.value, []));
   focusFirstCreatedEditorContent("[data-short-visual-editor]");
+}
+
+function normalizeExperienceFlowStop(stop = {}) {
+  return {
+    time: stop.time || stop.duration || "",
+    title: stop.title || "",
+    description: stop.description || "",
+    images: Array.isArray(stop.images) ? stop.images.slice(0, 5) : csvToList(stop.images || "")
+  };
+}
+
+function readExperienceFlowEditor() {
+  const rows = $$('[data-experience-flow-stop]');
+  if (!rows.length) return [];
+  return rows.map((row) => ({
+    time: row.querySelector('[data-flow-field="time"]')?.value.trim() || "",
+    title: row.querySelector('[data-flow-field="title"]')?.value.trim() || "",
+    description: row.querySelector('[data-flow-field="description"]')?.value.trim() || "",
+    images: csvToList(row.querySelector('[data-flow-field="images"]')?.value || "").slice(0, 5)
+  })).filter((stop) => stop.time || stop.title || stop.description || stop.images.length);
+}
+
+function renderExperienceFlowEditor(items = []) {
+  const list = $('[data-experience-flow-editor-list]');
+  if (!list) return;
+  list.innerHTML = items.map((item, index) => {
+    const stop = normalizeExperienceFlowStop(item);
+    return `<article class="experience-flow-stop-editor" data-experience-flow-stop data-flow-index="${index}">
+      <div class="experience-flow-stop-head"><strong>Stop ${index + 1}</strong><div><button class="secondary" type="button" data-move-experience-flow-stop="up">↑</button><button class="secondary" type="button" data-move-experience-flow-stop="down">↓</button><button class="secondary" type="button" data-remove-experience-flow-stop>删除</button></div></div>
+      <div class="experience-flow-stop-fields">
+        <label><span>时间 / 时长（可选）</span><input data-flow-field="time" value="${escapeHtml(stop.time)}" placeholder="10:00 或 Approx. 45 min" /></label>
+        <label><span>标题</span><input data-flow-field="title" value="${escapeHtml(stop.title)}" placeholder="Neighborhood Walk" /></label>
+        <label class="flow-description"><span>简短说明</span><textarea data-flow-field="description" rows="3">${escapeHtml(stop.description)}</textarea></label>
+        <label class="flow-images"><span>图片（0–5 张，每行一个路径）</span><textarea data-flow-field="images" rows="3">${escapeHtml(stop.images.join("\n"))}</textarea></label>
+      </div>
+    </article>`;
+  }).join("") || `<p class="empty">还没有 Experience Flow 节点。</p>`;
 }
 
 function shortBodyFromDetails(details = {}) {
@@ -6034,7 +6076,8 @@ function linesFromFaqs(items = []) {
 
 function readExperienceDetailContent() {
   syncActiveDetailEditorToFields();
-  const flow = titleDescriptionFromLines($("[data-experience-lines='experienceFlow']")?.value || "");
+  const structuredFlow = readExperienceFlowEditor();
+  const flow = structuredFlow.length ? structuredFlow : titleDescriptionFromLines($("[data-experience-lines='experienceFlow']")?.value || "");
   const details = titleDescriptionFromLines($("[data-experience-lines='experienceDetails']")?.value || "");
   const included = listFromLines($("[data-experience-list='includedSupport']")?.value || "");
   const notIncluded = listFromLines($("[data-experience-list='notIncluded']")?.value || "");
@@ -6054,6 +6097,7 @@ function readExperienceDetailContent() {
 function renderExperienceDetailContent(item = {}) {
   const flow = $("[data-experience-lines='experienceFlow']");
   if (flow) flow.value = linesFromTitleDescription(item.experienceFlow || []);
+  renderExperienceFlowEditor(item.experienceFlow || []);
   const details = $("[data-experience-lines='experienceDetails']");
   if (details) details.value = linesFromTitleDescription(item.experienceDetails || []);
   const included = $("[data-experience-list='includedSupport']");
@@ -7241,6 +7285,27 @@ $("[data-journey-create-form]")?.addEventListener("submit", async (event) => {
 
 document.addEventListener("click", async (event) => {
   const target = event.target.closest("button, [data-focus-toggle], [data-toggle-activity], [data-crm-filter], [data-guide-quick-filter], [data-inquiry-tab], [data-jump-followup], [data-overview-tab], [data-overview-action], [data-overview-edit], [data-overview-inquiry-status], [data-inquiry-status-action], [data-quick-reply], [data-quick-note], [data-save-quick-note], [data-save-followup], [data-toggle-templates], [data-template-category], [data-edit-template], [data-new-template], [data-ai-polish-template], [data-duplicate-template], [data-delete-template], [data-cancel-quick-note], [data-editor-mode], [data-toggle-review-panel], [data-jump-section], [data-cover-dropzone], [data-card-crop-action], [data-editor-tab], [data-edit-guide], [data-edit-guide-collection], [data-new-guide-collection], [data-edit-city-guide], [data-new-guide-for-city], [data-ai-guide-outline-for-city], [data-template-guide-for-city], [data-new-experience-for-city], [data-copy-city-url], [data-open-city-page], [data-preview-row-guide], [data-duplicate-row-guide], [data-lang-tab], [data-open-edit-panel], [data-close-edit-panel], [data-close-guide-editor], [data-format-inline], [data-insert-guide-element], [data-insert-media], [data-editor-media-action], [data-add-block], [data-collapse-block], [data-duplicate-block], [data-remove-block], [data-move-block], [data-remove-related], [data-preview-device], [data-pick-cover], [data-open-media-picker], [data-close-media-picker], [data-pick-media], [data-media-usage-target], [data-upload-guide-cover], [data-upload-city-image], [data-clear-city-image], [data-edit-city], [data-edit-experience], [data-toggle-experience-list], [data-experience-jump], [data-detail-tab], [data-add-detail-item], [data-remove-detail-item], [data-journey-preview-mode], [data-select-day], [data-add-day], [data-insert-day-block], [data-ai-optimize-day], [data-ai-day-field], [data-upload-day-image], [data-clear-day-image], [data-upload-experience-cover], [data-clear-experience-cover], [data-upload-experience-gallery], [data-remove-experience-gallery], [data-add-experience-tag], [data-ai-suggest-tags], [data-view-inquiry], [data-close-inquiry], [data-export-inquiries], [data-copy-contact], [data-copy-field], [data-copy-inquiry], [data-save-inquiry-notes], [data-mark-spam], [data-archive-inquiry], [data-delete-guide], [data-delete-city], [data-delete-experience], [data-delete-inquiry], [data-delete-media], [data-copy-media]") || event.target;
+  if (target.matches("[data-add-experience-flow-stop]")) {
+    const items = readExperienceFlowEditor();
+    items.push({ time: "", title: "", description: "", images: [] });
+    renderExperienceFlowEditor(items);
+    $("[name='experienceFlow']").value = JSON.stringify(items);
+    $("[data-experience-save-status]").textContent = "未保存";
+    return;
+  }
+  if (target.matches("[data-remove-experience-flow-stop], [data-move-experience-flow-stop]")) {
+    const index = Number(target.closest("[data-experience-flow-stop]")?.dataset.flowIndex);
+    const items = readExperienceFlowEditor();
+    if (target.matches("[data-remove-experience-flow-stop]")) items.splice(index, 1);
+    else {
+      const nextIndex = target.dataset.moveExperienceFlowStop === "up" ? index - 1 : index + 1;
+      if (nextIndex >= 0 && nextIndex < items.length) [items[index], items[nextIndex]] = [items[nextIndex], items[index]];
+    }
+    renderExperienceFlowEditor(items);
+    $("[name='experienceFlow']").value = JSON.stringify(items);
+    $("[data-experience-save-status]").textContent = "未保存";
+    return;
+  }
   if (target.matches("[data-new-experience]")) {
     openJourneyCreateModal({ type: state.activeExperienceMode });
     return;
@@ -8631,6 +8696,14 @@ document.addEventListener("mouseup", () => {
 
 document.addEventListener("input", (event) => {
   const target = event.target;
+  if (target.matches("[data-flow-field]")) {
+    const items = readExperienceFlowEditor();
+    $("[name='experienceFlow']").value = JSON.stringify(items);
+    const flow = $("[data-experience-lines='experienceFlow']");
+    if (flow) flow.value = linesFromTitleDescription(items);
+    $("[data-experience-save-status]").textContent = "未保存";
+    return;
+  }
   if (target.matches("[data-editor-media-control]")) {
     handleMediaStyleControl(target, { toast: false });
     return;
