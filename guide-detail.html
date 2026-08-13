@@ -35,13 +35,11 @@
       <section class="article-hero">
         <div class="article-hero-copy">
           <a class="article-back" href="/guides">← China Guides</a>
-          <p class="article-meta" data-article-meta>PAYMENTS · 5 MIN READ</p>
           <h1 data-article-title>Can Tourists Use Alipay in China?</h1>
-          <p data-article-subtitle>
-            Everything international visitors need to know about mobile payments in China.
-          </p>
           <div class="article-source">
             <span data-article-updated>Updated Jun 2026</span>
+            <span aria-hidden="true">·</span>
+            <span data-article-read-time>5 min read</span>
           </div>
         </div>
       </section>
@@ -291,10 +289,9 @@
 
       function applyArticle(article) {
         document.title = `${article.title} | ChinaMigo`;
-        document.querySelector("[data-article-meta]").textContent = article.meta;
         const titleNode = document.querySelector("[data-article-title]");
         titleNode.textContent = article.title;
-        document.querySelector("[data-article-subtitle]").textContent = article.subtitle;
+        document.querySelector("[data-article-read-time]").textContent = article.readTime || article.meta?.split(" · ")[1]?.toLowerCase() || "5 min read";
         const updatedNode = document.querySelector("[data-article-updated]");
         updatedNode.textContent = "Updated Jun 2026";
         if (article.updatedAt) {
@@ -310,6 +307,7 @@
         const translation = guide.translations?.en || {};
         return {
           meta: `${String(guide.category || "Guide").toUpperCase()} · ${String(guide.readTime || "5 min read").toUpperCase()}`,
+          readTime: String(guide.readTime || "5 min read").toLowerCase(),
           title: translation.title || guide.title,
           subtitle: translation.excerpt || guide.excerpt || "",
           image: normalizeImagePath(guide.coverImage || "assets/guide-first-time-china.png"),
@@ -653,9 +651,22 @@
         document.querySelector("[data-toc]").innerHTML = tocMarkup;
         document.querySelector("[data-mobile-toc]").innerHTML = tocMarkup;
         const tocLinks = [...document.querySelectorAll("[data-toc] a")];
+        const mobileTocLinks = [...document.querySelectorAll("[data-mobile-toc] a")];
         if (!tocLinks.length) return;
 
-        tocLinks[0].classList.add("is-active");
+        const setActiveSection = (id) => {
+          [...tocLinks, ...mobileTocLinks].forEach((link) => link.classList.toggle("is-active", link.getAttribute("href") === `#${id}`));
+        };
+        setActiveSection(sections[0].id);
+        [...tocLinks, ...mobileTocLinks].forEach((link) => link.addEventListener("click", (event) => {
+          const target = document.querySelector(link.getAttribute("href"));
+          if (!target) return;
+          event.preventDefault();
+          history.replaceState(null, "", link.getAttribute("href"));
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          setActiveSection(target.id);
+          link.closest("details")?.removeAttribute("open");
+        }));
         if ("IntersectionObserver" in window) {
           tocObserver = new IntersectionObserver(
             (entries) => {
@@ -663,7 +674,7 @@
                 .filter((entry) => entry.isIntersecting)
                 .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
               if (!active) return;
-              tocLinks.forEach((link) => link.classList.toggle("is-active", link.getAttribute("href") === `#${active.target.id}`));
+              setActiveSection(active.target.id);
             },
             { rootMargin: "-22% 0px -62% 0px", threshold: [0.1, 0.24, 0.4] }
           );
