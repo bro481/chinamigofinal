@@ -811,12 +811,7 @@
         if (!days.length) return "";
         return `
           <div class="journey-day-tabs" role="tablist" aria-label="Journey days">
-            ${days.map((day, index) => {
-              const title = dayTabTitle(day.title, index);
-              return `<button type="button" role="tab" aria-selected="${index === 0}" class="${index === 0 ? "is-active" : ""}" data-journey-day-tab="${index}">
-                <span>Day ${index + 1}</span><strong>${escapeHtml(title)}</strong>
-              </button>`;
-            }).join("")}
+            ${days.map((day, index) => `<button type="button" role="tab" aria-selected="${index === 0}" class="${index === 0 ? "is-active" : ""}" data-journey-day-tab="${index}">Day ${index + 1}</button>`).join("")}
           </div>
           <div class="journey-day-panels">
             ${days.map((day, index) => renderJourneyDayPanel(day, index)).join("")}
@@ -835,28 +830,61 @@
         return defaults[label] ?? `${String(9 + index * 2).padStart(2, "0")}:00`;
       }
 
+      function decodeContent(value) {
+        const textarea = document.createElement("textarea");
+        textarea.innerHTML = String(value || "");
+        return textarea.value.replace(/\u00a0/g, " ").trim();
+      }
+
+      function isPlaceholderContent(value) {
+        const text = decodeContent(value).replace(/\s+/g, " ");
+        return !text || /^(填写|请输入|请填写|添加)(今天|这一|路线|核心|推荐|实用|内容|行程|地点|住宿|活动)/.test(text);
+      }
+
+      function cleanStop(stop) {
+        const title = decodeContent(stop.title);
+        const description = decodeContent(stop.description);
+        if (/^day overview$/i.test(title) || isPlaceholderContent(description)) return null;
+        return { ...stop, title, description };
+      }
+
+      function stopsFromEditorBody(body) {
+        if (!body) return [];
+        const parser = new DOMParser();
+        const documentBody = parser.parseFromString(`<div>${body}</div>`, "text/html");
+        const sections = [...documentBody.querySelectorAll(".template-section")];
+        if (sections.length) return sections.map((section, index) => cleanStop({
+          time: timeFromLabel(section.textContent, index),
+          title: section.querySelector(".template-section-title")?.textContent || "",
+          description: section.querySelector(".template-section-prompt")?.textContent || "",
+          images: []
+        })).filter(Boolean);
+        const parts = documentBody.body.textContent.split(/\n+/).map((part) => decodeContent(part)).filter(Boolean);
+        const stops = [];
+        for (let index = 0; index < parts.length; index += 2) {
+          const stop = cleanStop({ time: timeFromLabel(parts[index], index / 2), title: parts[index], description: parts[index + 1] || "", images: [] });
+          if (stop) stops.push(stop);
+        }
+        return stops;
+      }
+
       function journeyDayStops(day) {
         const structured = day.stops || day.activities || day.scheduleItems || day.timelineItems;
-        if (Array.isArray(structured) && structured.length) return structured.map((stop, index) => ({
+        if (Array.isArray(structured) && structured.length) return structured.map((stop, index) => cleanStop({
           time: stop.time || timeFromLabel(stop.title, index),
           title: stop.title || stop.place || stop.activity || `Stop ${index + 1}`,
           description: stop.description || stop.body || stop.notes || "",
           images: (stop.images || stop.galleryImages || (stop.image ? [stop.image] : [])).slice(0, 5)
-        }));
+        })).filter(Boolean);
         const fields = [
           ["morning", "Morning"], ["arrival", "Arrival"], ["transfer", "Transfer"],
           ["hotel", "Hotel Check-in"], ["afternoon", "Afternoon"], ["food", "Local Food"],
           ["evening", "Evening"], ["eveningPlan", "Evening Plan"]
         ];
-        const stops = fields.filter(([key]) => day[key]).map(([key, title], index) => ({
+        const stops = fields.filter(([key]) => day[key] && !isPlaceholderContent(day[key])).map(([key, title], index) => ({
           time: timeFromLabel(key, index), title, description: day[key], images: []
         }));
-        if (!stops.length && day.body) {
-          const parts = String(day.body).replace(/<[^>]+>/g, "\n").split(/\n+/).map((part) => part.trim()).filter(Boolean);
-          for (let index = 0; index < parts.length; index += 2) {
-            stops.push({ time: timeFromLabel(parts[index], index / 2), title: parts[index], description: parts[index + 1] || "", images: [] });
-          }
-        }
+        if (!stops.length && day.body) stops.push(...stopsFromEditorBody(day.body));
         if (day.image && stops.length) stops[Math.min(1, stops.length - 1)].images = [day.image];
         return stops;
       }
@@ -879,7 +907,7 @@
         return `<section class="journey-day-panel ${dayIndex === 0 ? "is-active" : ""}" role="tabpanel" data-journey-day-panel="${dayIndex}" ${dayIndex === 0 ? "" : "hidden"}>
           <header><p>Day ${dayIndex + 1}</p><h3>${escapeHtml(dayTabTitle(day.title, dayIndex))}</h3><span>${escapeHtml(subtitle)}</span></header>
           <div class="journey-day-timeline">
-            ${stops.map((stop, stopIndex) => `<article class="journey-timeline-stop"><time>${escapeHtml(stop.time)}</time><span class="journey-timeline-dot" aria-hidden="true"></span><div class="journey-stop-copy"><h4>${escapeHtml(stop.title)}</h4><p>${escapeHtml(stop.description)}</p></div>${renderStopCarousel(stop.images || [], dayIndex, stopIndex, stop.title)}</article>`).join("")}
+            ${stops.map((stop, stopIndex) => `<article class="journey-timeline-stop ${(stop.images || []).length ? "has-image" : "no-image"}"><time>${escapeHtml(stop.time)}</time><span class="journey-timeline-dot" aria-hidden="true"></span><div class="journey-stop-copy"><h4>${escapeHtml(stop.title)}</h4><p>${escapeHtml(stop.description)}</p></div>${renderStopCarousel(stop.images || [], dayIndex, stopIndex, stop.title)}</article>`).join("")}
           </div>
           ${highlights.length ? `<div class="journey-day-highlights"><strong>☆ Day ${dayIndex + 1} Highlights</strong><div>${highlights.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div></div>` : ""}
         </section>`;
@@ -1483,6 +1511,7 @@
             afternoon: day.afternoon || "",
             evening: day.evening || "",
             notes: day.stayNotes || "",
+            stops: day.stops || day.activities || day.scheduleItems || day.timelineItems || [],
             image: normalizeImagePath(day.image || gallery[index] || experience.coverImage || "assets/experience-shanghai-lifestyle.png"),
             alt: `${experience.title} ${day.title || `Day ${index + 1}`}`
           }))
