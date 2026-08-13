@@ -13,12 +13,6 @@ const htmlRoutes = [
   ["contact.html", "contact/index.html"],
   ["guides.html", "guides/index.html"],
   ["trips.html", "trips/index.html"],
-  ["trip-detail.html", "trips/shanghai-lifestyle-trip/index.html"],
-  ["trip-detail.html", "trips/china-beauty-trip/index.html"],
-  ["trip-detail.html", "trips/shenzhen-tech-journey/index.html"],
-  ["trip-detail.html", "trips/visa-local-support/index.html"],
-  ["trip-detail.html", "trips/shopping-sourcing/index.html"],
-  ["trip-detail.html", "trips/vip-custom-trip/index.html"],
   ["city-experiences.html", "trips/shanghai/index.html"],
   ["city-experiences.html", "trips/beijing/index.html"],
   ["city-experiences.html", "trips/shenzhen/index.html"],
@@ -26,23 +20,40 @@ const htmlRoutes = [
   ["city-experiences.html", "trips/guangzhou/index.html"],
   ["city-experiences.html", "trips/hangzhou/index.html"],
   ["city-experiences.html", "trips/chongqing/index.html"],
-  ["guide-detail.html", "guides/can-tourists-use-alipay/index.html"],
-  ["guide-detail.html", "guides/can-tourists-use-alipay-in-china/index.html"],
-  ["guide-detail.html", "guides/china-high-speed-rail-guide/index.html"],
-  ["guide-detail.html", "guides/best-cafes-in-shanghai/index.html"],
-  ["guide-detail.html", "guides/china-beauty-clinic-guide/index.html"],
-  ["guide-detail.html", "guides/shenzhen-electronics-market-guide/index.html"],
-  ["guide-detail.html", "guides/essential-apps-for-china/index.html"],
-  ["guide-detail.html", "guides/internet-setup-in-china/index.html"],
-  ["guide-detail.html", "guides/modern-local-discoveries/index.html"]
 ];
 
+async function readData(name, fallback = []) {
+  return JSON.parse(await fs.readFile(path.join(root, "data", name), "utf8").catch(() => JSON.stringify(fallback)));
+}
+
+async function contentRoutes() {
+  const [guides, experiences] = await Promise.all([
+    readData("guide-articles.json"),
+    readData("experiences.json")
+  ]);
+  return [
+    ...(Array.isArray(guides) ? guides : [])
+      .filter((guide) => guide.slug && guide.status === "published")
+      .map((guide) => ["guide-detail.html", `guides/${guide.slug}/index.html`]),
+    ...(Array.isArray(experiences) ? experiences : [])
+      .filter((experience) => experience.slug && experience.published !== false)
+      .map((experience) => ["trip-detail.html", `trips/${experience.slug}/index.html`])
+  ];
+}
+
 async function guideCollectionRoutes() {
-  const collections = JSON.parse(await fs.readFile(path.join(root, "data", "guide-collections.json"), "utf8").catch(() => "[]"));
+  const collections = await readData("guide-collections.json");
   return (Array.isArray(collections) ? collections : [])
     .filter((collection) => collection.active !== false)
     .filter((collection) => collection.id)
-    .map((collection) => ["guide-collection.html", `guides/collections/${collection.id}/index.html`]);
+    .flatMap((collection) => {
+      const aliases = new Set([
+        collection.id,
+        collection.slug,
+        String(collection.id).replace(/^collection-/, "")
+      ].filter(Boolean));
+      return [...aliases].map((slug) => ["guide-collection.html", `guides/collections/${slug}/index.html`]);
+    });
 }
 
 function rewriteStaticHtml(html) {
@@ -52,23 +63,14 @@ function rewriteStaticHtml(html) {
     `<script>window.__CHINAMIGO_STATIC__ = true;</script>\n    <script src="site.js$1" defer></script>`
   );
   output = output
-    .replace(/(href|src)="\/assets\//g, '$1="assets/')
-    .replace(/href="\/guides\/([^"]+)"/g, 'href="guides/$1"')
-    .replace(/href="\/trips\/([^"]+)"/g, 'href="trips/$1"')
-    .replace(/href="\/guides"/g, 'href="guides"')
-    .replace(/href="\/trips"/g, 'href="trips"')
-    .replace(/href="\/about"/g, 'href="about"')
-    .replace(/href="\/contact"/g, 'href="contact"')
-    .replace(/href="\/#contact"/g, 'href="./#contact"')
-    .replace(/href="\/#about"/g, 'href="./#about"')
-    .replace(/href="\/"/g, 'href="./"')
-    .replace(/src="\/site\.js/g, 'src="site.js')
-    .replace(/href="\/styles\.css/g, 'href="styles.css')
+    .replace(/href="\.\/"/g, 'href="/"')
     .replace(/action="\/api\/inquiries"/g, 'data-static-action="inquiry"');
 
-  output = output.replace(/(["'`])\/assets\//g, "$1assets/");
-  output = output.replace(/(["'`])\/trips\//g, "$1trips/");
-  output = output.replace(/(["'`])\/guides\//g, "$1guides/");
+  output = output.replace(/(["'`])assets\//g, "$1/assets/");
+  output = output.replace(/(["'`])trips\//g, "$1/trips/");
+  output = output.replace(/(["'`])guides\//g, "$1/guides/");
+  output = output.replace(/(["'])styles\.css/g, "$1/styles.css");
+  output = output.replace(/(["'])site\.js/g, "$1/site.js");
   if (baseHref && !output.includes("<base ")) {
     output = output.replace(/<head>/i, `<head>\n    <base href="${baseHref}">`);
   }
@@ -90,6 +92,36 @@ async function writeRoute(source, target) {
   await fs.writeFile(targetPath, rewriteStaticHtml(html));
 }
 
+async function writeStaticApi(target, data) {
+  const targetPath = path.join(outDir, target);
+  await fs.mkdir(path.dirname(targetPath), { recursive: true });
+  await fs.writeFile(targetPath, JSON.stringify({ ok: true, data }));
+}
+
+function collectionSlug(collection = {}) {
+  return String(collection.slug || collection.id || collection.title || "collection")
+    .trim().toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function publicCollections(collections, guides) {
+  const publishedGuides = (guides || []).filter((guide) => guide.status === "published");
+  const bySlug = new Map(publishedGuides.map((guide) => [guide.slug, guide]));
+  return (collections || []).filter((collection) => collection.active !== false).map((collection) => {
+    const manual = (collection.guideSlugs || []).map((slug) => bySlug.get(slug)).filter(Boolean);
+    const category = publishedGuides.filter((guide) => (collection.categories || []).includes(guide.category));
+    const seen = new Set();
+    const matched = [...manual, ...category].filter((guide) => guide?.slug && !seen.has(guide.slug) && seen.add(guide.slug));
+    return {
+      ...collection,
+      count: matched.length,
+      href: `/guides/collections/${collectionSlug(collection)}`,
+      guides: matched,
+      imagePosition: collection.imagePosition || "center center",
+      imageScale: collection.imageScale || 1.02
+    };
+  });
+}
+
 async function main() {
   await fs.rm(outDir, { recursive: true, force: true });
   await fs.mkdir(outDir, { recursive: true });
@@ -97,7 +129,19 @@ async function main() {
   await copyIfExists(path.join(root, "data"), path.join(outDir, "data"));
   await copyIfExists(path.join(root, "styles.css"), path.join(outDir, "styles.css"));
   await copyIfExists(path.join(root, "site.js"), path.join(outDir, "site.js"));
-  for (const [source, target] of [...htmlRoutes, ...await guideCollectionRoutes()]) await writeRoute(source, target);
+  for (const [source, target] of [...htmlRoutes, ...await contentRoutes(), ...await guideCollectionRoutes()]) await writeRoute(source, target);
+  const [guides, collections, experiences, cities] = await Promise.all([
+    readData("guide-articles.json"),
+    readData("guide-collections.json"),
+    readData("experiences.json"),
+    readData("cities.json")
+  ]);
+  const publishedGuides = (guides || []).filter((guide) => guide.status === "published");
+  await writeStaticApi("api/public/guides/index.html", publishedGuides);
+  for (const guide of publishedGuides) await writeStaticApi(`api/public/guides/${guide.slug}/index.html`, guide);
+  await writeStaticApi("api/public/guide-collections/index.html", publicCollections(collections, guides));
+  await writeStaticApi("api/public/experiences/index.html", (experiences || []).filter((experience) => experience.published !== false));
+  await writeStaticApi("api/public/cities/index.html", (cities || []).filter((city) => city.active !== false));
   await fs.writeFile(
     path.join(outDir, "404.html"),
     rewriteStaticHtml(await fs.readFile(path.join(root, "guides.html"), "utf8"))
