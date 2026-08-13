@@ -566,6 +566,7 @@
         })[char]);
       }
 
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
       const slug = location.pathname.split("/").filter(Boolean).at(-1);
       const trip = tripData[slug] || tripData["shanghai-lifestyle-trip"];
 
@@ -1497,6 +1498,16 @@
 
       const storedExperience = tripData[slug] ? null : storedExperienceForSlug(slug);
       applyTrip(storedExperience ? experienceToTrip(storedExperience) : trip);
+
+      function resetInitialDetailScroll() {
+        if (location.hash) return;
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      }
+      resetInitialDetailScroll();
+      requestAnimationFrame(resetInitialDetailScroll);
+      window.addEventListener("pageshow", (event) => {
+        if (event.persisted || !location.hash) resetInitialDetailScroll();
+      });
 
       document.querySelector("[data-trip-gallery]").addEventListener("click", (event) => {
         const trigger = event.target.closest("[data-gallery-index]");
