@@ -3843,7 +3843,7 @@ details p {
 
 .journey-day-timeline { position: relative; }
 .journey-day-timeline::before { content: ""; position: absolute; top: 10px; bottom: 24px; left: 79px; width: 1px; background: rgba(0, 0, 0, 0.12); }
-.journey-timeline-stop { position: relative; display: grid; grid-template-columns: 64px 20px minmax(320px, 400px) minmax(300px, 350px); column-gap: 12px; align-items: start; padding-bottom: 52px; }
+.journey-timeline-stop { position: relative; display: grid; grid-template-columns: 64px 20px minmax(320px, 400px) minmax(300px, 340px); column-gap: 12px; align-items: start; padding-bottom: 48px; }
 .journey-timeline-stop.no-image { grid-template-columns: 64px 20px minmax(0, 1fr); }
 .journey-timeline-stop time { padding-top: 1px; color: rgba(0, 0, 0, 0.48); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
 .journey-timeline-dot { position: relative; z-index: 1; width: 9px; height: 9px; margin-top: 5px; border: 2px solid #fff; border-radius: 50%; background: #969696; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12); }
@@ -3858,7 +3858,7 @@ details p {
   padding-top: 12px;
 }
 
-.journey-stop-carousel { position: relative; align-self: start; width: calc(100% - 20px); max-width: 350px; margin: 0 0 0 20px; overflow: hidden; border-radius: 10px; background: #eeeae3; touch-action: pan-y; }
+.journey-stop-carousel { position: relative; align-self: start; width: calc(100% - 20px); max-width: 320px; margin: 0 0 0 20px; overflow: hidden; border-radius: 10px; background: #eeeae3; touch-action: pan-y; }
 .journey-stop-slides { aspect-ratio: 3 / 2; }
 .journey-stop-slides img { display: none; width: 100%; height: 100%; object-fit: cover; }
 .journey-stop-slides img.is-active { display: block; animation: journey-image-in 180ms ease-out; }
