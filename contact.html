@@ -35,35 +35,40 @@
       <section class="contact-simple" aria-labelledby="contact-title">
         <div class="contact-simple-copy">
           <h1 id="contact-title">Start with a simple message.</h1>
-          <p>Tell us your city, dates and what feels difficult. We’ll suggest the next step.</p>
+          <p>Tell us your city, dates and what you need help with.</p>
         </div>
 
         <div class="contact-simple-actions" aria-label="Contact options">
-          <a
-            class="contact-action contact-action-primary"
-            href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20my%20China%20visit."
-          >
-            <span aria-hidden="true">◌</span>
-            <strong>WhatsApp us</strong>
-          </a>
+          <div class="contact-action-option">
+            <a
+              class="contact-action contact-action-primary"
+              href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20my%20China%20visit."
+            >
+              <span aria-hidden="true">◌</span>
+              <strong>WhatsApp us</strong>
+            </a>
+            <small>Fastest way to reach us</small>
+          </div>
           <a class="contact-action contact-action-secondary" href="mailto:hello@chinamigo.com">
             <span aria-hidden="true">✉</span>
             <strong>Email us</strong>
           </a>
         </div>
 
-        <div class="contact-note" role="search">
-          <label class="sr-only" for="contact-message">Trip note</label>
+        <div class="contact-quick-message">
+          <label for="contact-message">Quick message</label>
+          <div class="contact-note">
           <input
             id="contact-message"
             type="text"
-            placeholder="Shanghai · 3 days · family trip..."
+            placeholder="Shanghai · Sep 12–16 · family of 4 · first trip to China..."
             autocomplete="off"
           />
-          <button type="button" data-contact-note-send aria-label="Send trip note">→</button>
+            <button type="button" data-contact-note-send aria-label="Send quick message with WhatsApp">→</button>
+          </div>
         </div>
 
-        <p class="contact-response-note">Usually replies within 24 hours · English support available</p>
+        <p class="contact-response-note">Usually replies within 12 hours · English support available</p>
 
         <div class="contact-socials" aria-label="ChinaMigo social links">
           <p>Follow ChinaMigo</p>

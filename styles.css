@@ -2383,7 +2383,7 @@ details p {
 
 .contact-page {
   min-height: calc(100vh - 74px);
-  padding: clamp(72px, 8vw, 104px) clamp(20px, 5vw, 84px) clamp(54px, 7vw, 82px);
+  padding: clamp(52px, 6vw, 76px) clamp(20px, 5vw, 84px) clamp(44px, 5vw, 64px);
   background:
     radial-gradient(circle at 50% 42%, rgba(0, 0, 0, 0.026), transparent 30%),
     #fafaf8;
@@ -2400,7 +2400,7 @@ details p {
   margin: 0 auto;
   color: rgba(0, 0, 0, 0.9);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.85rem, 4.8vw, 4.65rem);
+  font-size: clamp(2.55rem, 4vw, 3.85rem);
   font-weight: 400;
   line-height: 1.03;
 }
@@ -2418,7 +2418,21 @@ details p {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   width: min(100%, 660px);
-  margin: clamp(34px, 4vw, 44px) auto 0;
+  margin: clamp(28px, 3.2vw, 36px) auto 0;
+}
+
+.contact-action-option {
+  display: grid;
+  gap: 8px;
+}
+
+.contact-action-option .contact-action {
+  width: 100%;
+}
+
+.contact-action-option small {
+  color: rgba(0, 0, 0, 0.46);
+  font-size: 0.76rem;
 }
 
 .contact-action {
@@ -2477,13 +2491,27 @@ details p {
   border-color: #050505;
 }
 
+.contact-quick-message {
+  width: min(100%, 660px);
+  margin: clamp(24px, 3vw, 32px) auto 0;
+  text-align: left;
+}
+
+.contact-quick-message > label {
+  display: block;
+  margin-bottom: 9px;
+  color: rgba(0, 0, 0, 0.62);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
 .contact-note {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  width: min(100%, 660px);
+  width: 100%;
   min-height: 52px;
-  margin: clamp(28px, 3.4vw, 38px) auto 0;
+  margin: 0;
   border: 1px solid rgba(0, 0, 0, 0.38);
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.66);
@@ -2527,13 +2555,13 @@ details p {
 }
 
 .contact-socials {
-  margin-top: clamp(48px, 6vw, 70px);
+  margin-top: clamp(62px, 8vw, 92px);
   color: rgba(0, 0, 0, 0.48);
 }
 
 .contact-socials p {
   margin: 0 0 16px;
-  font-size: 0.94rem;
+  font-size: 0.8rem;
 }
 
 .contact-socials div {
@@ -2553,7 +2581,7 @@ details p {
   min-height: 28px;
   padding: 0 22px;
   color: rgba(0, 0, 0, 0.58);
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   text-decoration: none;
   transition: color 180ms ease;
 }
@@ -8112,6 +8140,10 @@ details p {
 
   .contact-note {
     min-height: 50px;
+    margin-top: 0;
+  }
+
+  .contact-quick-message {
     margin-top: 24px;
   }
 
