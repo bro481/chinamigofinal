@@ -2383,7 +2383,7 @@ details p {
 
 .contact-page {
   min-height: calc(100vh - 74px);
-  padding: clamp(52px, 6vw, 76px) clamp(20px, 5vw, 84px) clamp(44px, 5vw, 64px);
+  padding: clamp(116px, 8vw, 132px) clamp(20px, 5vw, 84px) clamp(44px, 5vw, 64px);
   background:
     radial-gradient(circle at 50% 42%, rgba(0, 0, 0, 0.026), transparent 30%),
     #fafaf8;
