@@ -3803,7 +3803,7 @@ details p {
   display: flex;
   overflow-x: auto;
   gap: 0;
-  margin-bottom: 36px;
+  margin-bottom: 30px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.11);
   scrollbar-width: thin;
 }
@@ -4135,6 +4135,10 @@ details p {
 .trip-day-list {
   display: grid;
   gap: clamp(20px, 2.9vw, 34px);
+}
+
+.trip-day-list:has(.journey-day-tabs) {
+  gap: 0;
 }
 
 .trip-day {
@@ -8093,7 +8097,7 @@ details p {
     scroll-margin-top: 120px;
   }
 
-  .journey-day-tabs { margin-bottom: 30px; }
+  .journey-day-tabs { margin-bottom: 28px; }
   .journey-day-tabs button { min-width: 82px; min-height: 52px; padding: 9px 24px 10px 0; }
   .journey-timeline-stop { grid-template-columns: 58px 15px minmax(0, 1fr); gap: 12px; min-height: 0; padding-bottom: 38px; }
   .journey-day-timeline::before { left: 65px; }
