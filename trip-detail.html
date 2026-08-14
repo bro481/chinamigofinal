@@ -871,6 +871,30 @@
         </div>`;
       }
 
+      function safeStopDescriptionHtml(value = "") {
+        const parser = new DOMParser();
+        const parsed = parser.parseFromString(`<div>${String(value || "")}</div>`, "text/html");
+        const root = parsed.body.firstElementChild;
+        const allowed = new Set(["DIV", "P", "BR", "STRONG", "B", "EM", "I", "U", "UL", "OL", "LI", "A"]);
+        root.querySelectorAll("script, style, iframe, object, embed, form, input, button, svg").forEach((node) => node.remove());
+        [...root.querySelectorAll("*")].forEach((node) => {
+          if (!allowed.has(node.tagName)) {
+            node.replaceWith(...node.childNodes);
+            return;
+          }
+          [...node.attributes].forEach((attribute) => node.removeAttribute(attribute.name));
+        });
+        root.querySelectorAll("div, p").forEach((node) => {
+          const meaningfulText = node.textContent.replace(/\u00a0/g, "").trim();
+          const meaningfulMedia = node.querySelector("ul, ol, li, strong, b, em, i, u, a");
+          if (!meaningfulText && !meaningfulMedia) node.remove();
+        });
+        root.querySelectorAll("br").forEach((node) => {
+          if (!node.previousSibling && !node.nextSibling) node.remove();
+        });
+        return root.innerHTML.trim();
+      }
+
       function renderJourneyDayPanel(day, dayIndex) {
         const stops = journeyDayStops(day);
         const subtitle = day.summary || day.overview || "";
@@ -878,7 +902,7 @@
         return `<section class="journey-day-panel ${dayIndex === 0 ? "is-active" : ""}" role="tabpanel" data-journey-day-panel="${dayIndex}" ${dayIndex === 0 ? "" : "hidden"}>
           <header><p>Day ${dayIndex + 1}</p>${dayTabTitle(day.title, dayIndex) ? `<h3>${escapeHtml(dayTabTitle(day.title, dayIndex))}</h3>` : ""}${subtitle ? `<span>${escapeHtml(subtitle)}</span>` : ""}</header>
           <div class="journey-day-timeline ${stops.length ? "" : "is-empty"}">
-            ${stops.map((stop, stopIndex) => `<article class="journey-timeline-stop ${(stop.images || []).length ? "has-image" : "no-image"}"><time>${escapeHtml(stop.time)}</time><span class="journey-timeline-dot" aria-hidden="true"></span><div class="journey-stop-copy"><h4>${escapeHtml(stop.title)}</h4><p>${escapeHtml(stop.description)}</p></div>${renderStopCarousel(stop.images || [], dayIndex, stopIndex, stop.title)}</article>`).join("")}
+            ${stops.map((stop, stopIndex) => `<article class="journey-timeline-stop ${(stop.images || []).length ? "has-image" : "no-image"}"><time>${escapeHtml(stop.time)}</time><span class="journey-timeline-dot" aria-hidden="true"></span><div class="journey-stop-copy"><h4>${escapeHtml(stop.title)}</h4>${stop.description ? `<div class="journey-stop-description">${safeStopDescriptionHtml(stop.description)}</div>` : ""}</div>${renderStopCarousel(stop.images || [], dayIndex, stopIndex, stop.title)}</article>`).join("")}
           </div>
           ${highlights.length ? `<div class="journey-day-highlights"><strong>☆ Day ${dayIndex + 1} Highlights</strong><div>${highlights.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div></div>` : ""}
         </section>`;
