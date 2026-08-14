@@ -3764,7 +3764,7 @@ details p {
 }
 
 .trip-booklet-section {
-  scroll-margin-top: 132px;
+  scroll-margin-top: 156px;
   padding-top: clamp(22px, 2.8vw, 34px);
   padding-bottom: clamp(24px, 3vw, 38px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.052);
@@ -3772,7 +3772,7 @@ details p {
 
 .trip-booklet-intro,
 .trip-final-inquiry {
-  scroll-margin-top: 132px;
+  scroll-margin-top: 156px;
 }
 
 .trip-booklet-intro + .trip-love {
@@ -3837,7 +3837,6 @@ details p {
 
 .journey-day-panel[hidden] { display: none; }
 .journey-day-panel > header { max-width: 680px; margin-bottom: 28px; }
-.journey-day-panel > header > p { margin: 0 0 7px; color: rgba(0, 0, 0, 0.43); font-size: 0.76rem; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; }
 .journey-day-panel > header h3 { margin: 0 0 10px; font-size: clamp(1.35rem, 2vw, 1.8rem); font-weight: 560; }
 .journey-day-panel > header span { display: block; max-width: 590px; color: rgba(0, 0, 0, 0.53); line-height: 1.62; }
 
@@ -3846,8 +3845,9 @@ details p {
 .journey-timeline-stop { position: relative; display: grid; grid-template-columns: 64px 20px minmax(320px, 400px) minmax(300px, 340px); column-gap: 12px; align-items: start; padding-bottom: 48px; }
 .journey-timeline-stop.no-image { grid-template-columns: 64px 20px minmax(0, 1fr); }
 .journey-timeline-stop time { padding-top: 1px; color: rgba(0, 0, 0, 0.48); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
-.journey-timeline-dot { position: relative; z-index: 1; width: 9px; height: 9px; margin-top: 5px; border: 2px solid #fff; border-radius: 50%; background: #969696; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12); }
+.journey-timeline-dot { position: relative; z-index: 1; width: 9px; height: 9px; margin-top: 7px; border: 2px solid #fff; border-radius: 50%; background: #969696; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12); }
 .journey-stop-copy { min-width: 0; }
+.journey-timeline-stop.no-image .journey-stop-copy { max-width: 720px; }
 .journey-stop-copy h4 { margin: 0 0 11px; font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
 .journey-stop-description { color: rgba(0, 0, 0, 0.52); line-height: 1.62; }
 .journey-stop-description :where(div, p, ul, ol) { margin: 0 0 8px; }

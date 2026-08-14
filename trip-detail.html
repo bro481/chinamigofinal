@@ -897,10 +897,10 @@
 
       function renderJourneyDayPanel(day, dayIndex) {
         const stops = journeyDayStops(day);
-        const subtitle = day.summary || day.overview || "";
+        const subtitle = day.intro || day.summary || day.overview || "";
         const highlights = String(day.highlights || "").split(/[\n,|·]+/).map((item) => item.trim()).filter(Boolean);
         return `<section class="journey-day-panel ${dayIndex === 0 ? "is-active" : ""}" role="tabpanel" data-journey-day-panel="${dayIndex}" ${dayIndex === 0 ? "" : "hidden"}>
-          <header><p>Day ${dayIndex + 1}</p>${dayTabTitle(day.title, dayIndex) ? `<h3>${escapeHtml(dayTabTitle(day.title, dayIndex))}</h3>` : ""}${subtitle ? `<span>${escapeHtml(subtitle)}</span>` : ""}</header>
+          <header>${dayTabTitle(day.title, dayIndex) ? `<h3>${escapeHtml(dayTabTitle(day.title, dayIndex))}</h3>` : ""}${subtitle ? `<span>${escapeHtml(subtitle)}</span>` : ""}</header>
           <div class="journey-day-timeline ${stops.length ? "" : "is-empty"}">
             ${stops.map((stop, stopIndex) => `<article class="journey-timeline-stop ${(stop.images || []).length ? "has-image" : "no-image"}"><time>${escapeHtml(stop.time)}</time><span class="journey-timeline-dot" aria-hidden="true"></span><div class="journey-stop-copy"><h4>${escapeHtml(stop.title)}</h4>${stop.description ? `<div class="journey-stop-description">${safeStopDescriptionHtml(stop.description)}</div>` : ""}</div>${renderStopCarousel(stop.images || [], dayIndex, stopIndex, stop.title)}</article>`).join("")}
           </div>
