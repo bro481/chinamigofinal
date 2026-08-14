@@ -45,9 +45,11 @@
               href="https://wa.me/8613800000000?text=Hi%20ChinaMigo%2C%20I%27d%20like%20help%20planning%20my%20China%20visit."
             >
               <span aria-hidden="true">◌</span>
-              <strong>WhatsApp us</strong>
+              <span class="contact-action-copy">
+                <strong>WhatsApp us</strong>
+                <small>Fastest response</small>
+              </span>
             </a>
-            <small>Fastest way to reach us</small>
           </div>
           <a class="contact-action contact-action-secondary" href="mailto:hello@chinamigo.com">
             <span aria-hidden="true">✉</span>
@@ -56,7 +58,7 @@
         </div>
 
         <div class="contact-quick-message">
-          <label for="contact-message">Quick message</label>
+          <label for="contact-message">Quick message via WhatsApp</label>
           <div class="contact-note">
           <input
             id="contact-message"
@@ -111,6 +113,7 @@
             if (!link) return;
             link.textContent = label;
             if (href) {
+              link.hidden = false;
               link.href = href;
               link.target = "_blank";
               link.rel = "noopener noreferrer";
@@ -122,8 +125,11 @@
               link.removeAttribute("rel");
               link.setAttribute("aria-disabled", "true");
               link.classList.add("is-disabled");
+              link.hidden = true;
             }
           });
+          const socialSection = document.querySelector(".contact-socials");
+          if (socialSection) socialSection.hidden = !socialSection.querySelector("a:not([hidden])");
         };
         applySocialLinks();
         fetch("/api/public/site-settings", { cache: "no-store" })

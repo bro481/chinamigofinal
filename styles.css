@@ -2396,11 +2396,11 @@ details p {
 }
 
 .contact-simple-copy h1 {
-  max-width: 760px;
+  max-width: 700px;
   margin: 0 auto;
   color: rgba(0, 0, 0, 0.9);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.55rem, 4vw, 3.85rem);
+  font-size: clamp(2.4rem, 3.65vw, 3.5rem);
   font-weight: 400;
   line-height: 1.03;
 }
@@ -2422,17 +2422,23 @@ details p {
 }
 
 .contact-action-option {
-  display: grid;
-  gap: 8px;
+  display: block;
 }
 
 .contact-action-option .contact-action {
   width: 100%;
 }
 
-.contact-action-option small {
-  color: rgba(0, 0, 0, 0.46);
-  font-size: 0.76rem;
+.contact-action-copy {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+}
+
+.contact-action-copy small {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.68rem;
+  font-weight: 450;
 }
 
 .contact-action {
@@ -2493,7 +2499,7 @@ details p {
 
 .contact-quick-message {
   width: min(100%, 660px);
-  margin: clamp(24px, 3vw, 32px) auto 0;
+  margin: clamp(38px, 4vw, 48px) auto 0;
   text-align: left;
 }
 
@@ -8144,7 +8150,7 @@ details p {
   }
 
   .contact-quick-message {
-    margin-top: 24px;
+    margin-top: 34px;
   }
 
   .contact-note input {
