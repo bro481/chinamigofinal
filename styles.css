@@ -3847,7 +3847,7 @@ details p {
 .journey-timeline-stop time { padding-top: 1px; color: rgba(0, 0, 0, 0.48); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
 .journey-timeline-dot { position: relative; z-index: 1; width: 9px; height: 9px; margin-top: 7px; border: 2px solid #fff; border-radius: 50%; background: #969696; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12); }
 .journey-stop-copy { min-width: 0; }
-.journey-timeline-stop.no-image .journey-stop-copy { width: fit-content; max-width: min(680px, 100%); justify-self: start; }
+.journey-timeline-stop.no-image .journey-stop-copy { width: fit-content; max-width: min(800px, 100%); justify-self: start; }
 .journey-stop-copy h4 { margin: 0 0 11px; font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
 .journey-stop-description { color: rgba(0, 0, 0, 0.52); line-height: 1.62; }
 .journey-stop-description :where(div, p, ul, ol) { margin: 0 0 8px; }
