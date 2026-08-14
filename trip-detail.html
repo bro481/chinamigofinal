@@ -860,6 +860,15 @@
         return [];
       }
 
+      function experienceStops(trip) {
+        return defaultExperienceFlow(trip).map((step, index) => cleanStop({
+          time: step.time || step.duration || "",
+          title: step.title || step.place || step.activity || `Stop ${index + 1}`,
+          description: step.description || step.body || step.notes || "",
+          images: (step.images || step.galleryImages || (step.image ? [step.image] : [])).slice(0, 5)
+        })).filter(Boolean);
+      }
+
       function renderStopCarousel(images, dayIndex, stopIndex, title) {
         const normalized = images.map((image) => normalizeImagePath(typeof image === "string" ? image : image.src)).filter(Boolean);
         if (!normalized.length) return "";
@@ -895,37 +904,29 @@
         return root.innerHTML.trim();
       }
 
+      function renderTimelineStops(stops, groupIndex = 0) {
+        return `<div class="journey-day-timeline ${stops.length ? "" : "is-empty"}">
+          ${stops.map((stop, stopIndex) => `<article class="journey-timeline-stop ${(stop.images || []).length ? "has-image" : "no-image"}"><time>${escapeHtml(stop.time || "")}</time><span class="journey-timeline-dot" aria-hidden="true"></span><div class="journey-stop-copy"><h4>${escapeHtml(stop.title)}</h4>${stop.description ? `<div class="journey-stop-description">${safeStopDescriptionHtml(stop.description)}</div>` : ""}</div>${renderStopCarousel(stop.images || [], groupIndex, stopIndex, stop.title)}</article>`).join("")}
+        </div>`;
+      }
+
       function renderJourneyDayPanel(day, dayIndex) {
         const stops = journeyDayStops(day);
         const subtitle = day.intro || day.summary || day.overview || "";
         const highlights = String(day.highlights || "").split(/[\n,|·]+/).map((item) => item.trim()).filter(Boolean);
         return `<section class="journey-day-panel ${dayIndex === 0 ? "is-active" : ""}" role="tabpanel" data-journey-day-panel="${dayIndex}" ${dayIndex === 0 ? "" : "hidden"}>
           <header>${dayTabTitle(day.title, dayIndex) ? `<h3>${escapeHtml(dayTabTitle(day.title, dayIndex))}</h3>` : ""}${subtitle ? `<span>${escapeHtml(subtitle)}</span>` : ""}</header>
-          <div class="journey-day-timeline ${stops.length ? "" : "is-empty"}">
-            ${stops.map((stop, stopIndex) => `<article class="journey-timeline-stop ${(stop.images || []).length ? "has-image" : "no-image"}"><time>${escapeHtml(stop.time)}</time><span class="journey-timeline-dot" aria-hidden="true"></span><div class="journey-stop-copy"><h4>${escapeHtml(stop.title)}</h4>${stop.description ? `<div class="journey-stop-description">${safeStopDescriptionHtml(stop.description)}</div>` : ""}</div>${renderStopCarousel(stop.images || [], dayIndex, stopIndex, stop.title)}</article>`).join("")}
-          </div>
+          ${renderTimelineStops(stops, dayIndex)}
           ${highlights.length ? `<div class="journey-day-highlights"><strong>☆ Day ${dayIndex + 1} Highlights</strong><div>${highlights.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div></div>` : ""}
         </section>`;
       }
 
       function renderExperienceFlow(trip) {
-        const steps = defaultExperienceFlow(trip);
+        const steps = experienceStops(trip);
         const highlights = Array.from(new Set((trip.highlights || trip.tags || []).filter(Boolean))).slice(0, 6);
+        if (!steps.length && !highlights.length) return "";
         return `
-          <div class="experience-flow-meta">${[trip.duration, trip.walkingLevel, steps.length ? `${steps.length} Stops` : ""].filter(Boolean).map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>
-          <div class="experience-flow">
-            ${steps.map((step, index) => `
-              <article class="experience-flow-node ${(step.images || []).length ? "has-image" : "no-image"}">
-                <span class="experience-flow-dot" aria-hidden="true"></span>
-                <time>${escapeHtml(step.time || step.duration || "")}</time>
-                <div class="experience-flow-copy">
-                  <h3>${escapeHtml(step.title)}</h3>
-                  <p>${escapeHtml(step.description)}</p>
-                </div>
-                ${renderStopCarousel((step.images || []).slice(0, 5), 0, index, step.title)}
-              </article>
-            `).join("")}
-          </div>
+          ${renderTimelineStops(steps, 0)}
           ${highlights.length ? `<div class="experience-highlights"><strong>Experience Highlights</strong><div>${highlights.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div></div>` : ""}
         `;
       }
